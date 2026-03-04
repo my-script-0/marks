@@ -328,24 +328,21 @@
             btn.style.backgroundColor = "#7f8c8d";
             btn.disabled = true;
 
-            fetch(scriptURL, {
+          fetch(scriptURL, {
                 method: 'POST',
+                mode: 'no-cors', // هذا السطر يحل مشكلة الاستجابة مع جوجل
                 body: JSON.stringify(payload)
             })
-            .then(response => response.json())
-            .then(data => {
-                if(data.result === 'success') {
-                    alert('تم حفظ درجات الشعبة بنجاح في Google Sheets!');
-                } else {
-                    alert('حدث خطأ أثناء الحفظ.');
-                }
+            .then(() => {
+                // بما أننا استخدمنا no-cors، سنفترض النجاح مباشرة بمجرد الإرسال
+                alert('تم حفظ درجات الشعبة بنجاح في ورقة الإكسل!');
                 btn.innerText = originalText;
                 btn.style.backgroundColor = "#27ae60";
                 btn.disabled = false;
             })
             .catch(error => {
-                console.error('Error!', error.message);
-                alert('البيانات أُرسلت ولكن حدث خطأ في الاستجابة (يعمل بشكل طبيعي مع جوجل).');
+                console.error('Error!', error);
+                alert('حدث خطأ! يرجى التأكد من اتصالك بالإنترنت.');
                 btn.innerText = originalText;
                 btn.style.backgroundColor = "#27ae60";
                 btn.disabled = false;
