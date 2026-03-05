@@ -3,79 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة رصد الدرجات</title>
+    <title>منصة رصد الدرجات - فريق نعاون</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 20px;
             background-color: #f9f9f9;
         }
-        h2 {
-            text-align: center;
-            color: #2c3e50;
-        }
+        h2 { text-align: center; color: #2c3e50; }
         .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex; justify-content: center; gap: 20px;
+            margin-bottom: 20px; background-color: #fff;
+            padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-family: inherit;
-            cursor: pointer;
-            min-width: 150px;
+        select { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer; min-width: 150px; }
+        
+        /* تصميم لوحة التعزيز الجديدة */
+        .gamification-wrapper { margin-bottom: 30px; }
+        .gamification-title { font-size: 18px; font-weight: bold; color: #d35400; margin-bottom: 10px; border-bottom: 2px solid #f39c12; padding-bottom: 5px; display: inline-block; }
+        .interaction-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px; background-color: #fff; padding: 15px;
+            border-radius: 8px; border: 1px solid #fdebd0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            text-align: center;
-            margin-top: 20px;
+        .student-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: #fdfefe; border: 1px solid #d0d3d4;
+            padding: 8px; border-radius: 6px;
         }
-        th, td {
-            border: 1px solid #000;
-            padding: 8px;
-        }
+        .student-card-name { font-size: 13px; font-weight: bold; color: #34495e; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 130px; }
+        .interaction-container { display: flex; align-items: center; gap: 5px; }
+        .btn-interact { width: 24px; height: 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; line-height: 1; }
+        .btn-plus { background-color: #2ecc71; }
+        .btn-minus { background-color: #e74c3c; }
+        .col-interaction { width: 35px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 3px; font-weight: bold; background-color: #fff2cc; }
+        .col-interaction::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* جداول الدرجات الرسمية */
+        table { width: 100%; border-collapse: collapse; background-color: #fff; text-align: center; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 6px; }
         .header-blue { background-color: #cce0f5; }
         .header-green { background-color: #e2f0d9; }
         .header-orange { background-color: #fce4d6; }
         
-        input[type="number"] {
-            width: 45px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 4px;
-            font-weight: bold;
-        }
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        input.col-calc { width: 45px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-weight: bold; }
+        input.col-calc::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
         .btn-submit {
-            display: block;
-            width: 250px;
-            margin: 30px auto;
-            padding: 12px;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
+            display: block; width: 250px; margin: 30px auto; padding: 12px;
+            background-color: #27ae60; color: white; border: none; border-radius: 5px;
+            font-size: 18px; font-weight: bold; cursor: pointer;
         }
-        .btn-submit:hover {
-            background-color: #2ecc71;
-        }
+        .btn-submit:hover { background-color: #2ecc71; }
         .form-section { display: none; }
         .active-form { display: block; }
     </style>
@@ -104,6 +85,12 @@
         </div>
     </div>
 
+    <div class="gamification-wrapper">
+        <div class="gamification-title">🌟 لوحة التعزيز والمشاركة الصفية</div>
+        <div id="interactionPanel" class="interaction-panel">
+            </div>
+    </div>
+
     <div id="form6" class="form-section active-form">
         <table id="gradesTable6">
             <thead>
@@ -130,8 +117,7 @@
                     <th class="header-green">20</th>
                 </tr>
             </thead>
-            <tbody id="tbody6">
-                </tbody>
+            <tbody id="tbody6"></tbody>
         </table>
     </div>
 
@@ -158,15 +144,21 @@
                     <th class="header-green">20</th>
                 </tr>
             </thead>
-            <tbody id="tbody9">
-                </tbody>
+            <tbody id="tbody9"></tbody>
         </table>
     </div>
 
     <button class="btn-submit" onclick="submitData()">حفظ وإرسال البيانات</button>
 
     <script>
-        // قاعدة بيانات الطلاب
+        function changePoints(button, amount) {
+            let input = button.parentElement.querySelector('.col-interaction');
+            let currentValue = parseInt(input.value) || 0;
+            let newValue = currentValue + amount;
+            if (newValue < 0) newValue = 0; 
+            input.value = newValue;
+        }
+
         const studentsData = {
             "9": {
                 "1": ["أحمد بن محمد بن خميس ضحي الغافري", "أنس بن سالم بن مسلم سالم المعمري", "المؤيد بن سباع بن خلفان سعيد الغافري", "المنذر بن سعيد بن علي سالم الشهومي", "تركي بن سعيد بن مطر علي الحاتمي", "تركي بن سلطان بن عبدالله سيف الغافري", "تميم بن خالد بن سيف حمد التميمي", "تيمور بن سعيد بن سليـّم خميس المقرشي", "جاسم بن عبدالله بن حميد راشد العبري", "جراح بن سعيد بن سالم سعيد الغافري", "حميد بن سعيد بن حميد سعيد الغافري", "خالد الوليد عمر يعقوب", "راشد بن جمعه بن عبدالله خميس الغافري", "سامي بن أحمد بن سرور عبدالله المقبالي", "سعود بن راشد بن ظاهر ظاوي الغافري", "سعود بن سعيد بن خلفان سعيد الغافري", "سعيد بن خالد بن سعيد حمد السعيدي", "سلطان بن سعيد بن صياح مبارك الغافري", "سلطان بن محمود بن عيد محبوب الغافري", "سيف بن عبدالله بن سيف سليمان الحاتمي", "عبد الملك بن سعيد بن مانع عامر الغافري", "عمار بن بخيت بن علي بخيت الغافري", "عمر بن سالم بن حميد مرهون الشكيلي", "غيث بن أيوب بن سيف سلطان الغافري", "فلا ح بن ناصر بن سالم أحمد الغافري", "كهلان بن قحطان بن زاهر ناصر الغريبي", "لؤي بن أنور بن حمد راشد الشكيلي", "محمد بن أحمد بن طالب سيف الغافري", "محمد بن عبدالله بن مبارك سعيد الناصري", "محمد بن عمر بن سالم أحمد الغافري", "نهيان بن علي بن خميس سيف الغافري", "نواف بن محمد بن مطر علي الحاتمي", "هشام بن راشد بن مسعود راشد الناصري", "وسام بن عبدالله بن حمد عبيد الغافري", "يوسف بن أحمد بن حمد عبيد الغافري"],
@@ -187,7 +179,6 @@
             const grade = document.getElementById("gradeSelect").value;
             const section = document.getElementById("sectionSelect").value;
 
-            // إخفاء/إظهار خيار الشعبة 5 بناءً على الصف
             if (grade === "9") {
                 document.getElementById("sec5").style.display = "none";
                 if (section === "5") document.getElementById("sectionSelect").value = "1";
@@ -195,27 +186,45 @@
                 document.getElementById("sec5").style.display = "block";
             }
 
-            // إخفاء الجدولين وإظهار الجدول المناسب
             document.getElementById("form6").classList.remove("active-form");
             document.getElementById("form9").classList.remove("active-form");
             document.getElementById("form" + grade).classList.add("active-form");
 
-            renderTable(grade, document.getElementById("sectionSelect").value);
+            renderTableAndGamification(grade, document.getElementById("sectionSelect").value);
         }
 
-        function renderTable(grade, section) {
+        function renderTableAndGamification(grade, section) {
             const tbody = document.getElementById("tbody" + grade);
-            tbody.innerHTML = ""; // مسح البيانات السابقة
+            const panel = document.getElementById("interactionPanel");
+            
+            tbody.innerHTML = ""; 
+            panel.innerHTML = ""; 
             
             const students = studentsData[grade][section] || [];
             
             students.forEach((name, index) => {
+                // 1. توليد بطاقة الطالب في لوحة التعزيز العلوية
+                let card = document.createElement("div");
+                card.className = "student-card";
+                card.innerHTML = `
+                    <span class="student-card-name" title="${name}">${index + 1}. ${name}</span>
+                    <div class="interaction-container">
+                        <button class="btn-interact btn-plus" onclick="changePoints(this, 1)">+</button>
+                        <input type="number" id="interact-${index}" class="col-interaction" value="0">
+                        <button class="btn-interact btn-minus" onclick="changePoints(this, -1)">-</button>
+                    </div>
+                `;
+                panel.appendChild(card);
+
+                // 2. توليد صف الطالب في جدول الدرجات السفلي (بدون عمود التعزيز)
                 let row = document.createElement("tr");
-                
+                let baseHtml = `
+                    <td>${index + 1}</td>
+                    <td style="text-align: right; padding-right: 10px;">${name}</td>
+                `;
+
                 if (grade === "6") {
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td style="text-align: right; padding-right: 10px;">${name}</td>
+                    row.innerHTML = baseHtml + `
                         <td><input type="number" class="col-calc" max="10" oninput="calc(this, '6')"></td>
                         <td><input type="number" class="col-calc" max="10" oninput="calc(this, '6')"></td>
                         <td class="t-dialogue header-orange" style="font-weight: bold;">0</td>
@@ -234,9 +243,7 @@
                         <td class="t-grand header-orange" style="font-weight: bold;">0</td>
                     `;
                 } else if (grade === "9") {
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td style="text-align: right; padding-right: 10px;">${name}</td>
+                    row.innerHTML = baseHtml + `
                         <td><input type="number" class="col-calc" max="10" oninput="calc(this, '9')"></td>
                         <td><input type="number" class="col-calc" max="10" oninput="calc(this, '9')"></td>
                         <td class="t-dialogue header-orange" style="font-weight: bold;">0</td>
@@ -254,10 +261,9 @@
             });
         }
 
-        // دالة الحساب الموحدة
         function calc(input, grade) {
             let tr = input.closest('tr');
-            let inputs = tr.querySelectorAll('input');
+            let inputs = tr.querySelectorAll('.col-calc');
             let values = Array.from(inputs).map(inp => parseFloat(inp.value) || 0);
 
             if (grade === "6") {
@@ -282,7 +288,7 @@
             }
         }
 
-       function submitData() {
+        function submitData() {
             const grade = document.getElementById("gradeSelect").value;
             const section = document.getElementById("sectionSelect").value;
             const tbody = document.getElementById("tbody" + grade);
@@ -290,14 +296,18 @@
             
             let studentsData = [];
             
-            // تجميع درجات جميع الطلاب في الشعبة
-            rows.forEach(row => {
-                let inputs = row.querySelectorAll("input.col-calc");
+            rows.forEach((row, index) => {
+                let inputs = row.querySelectorAll(".col-calc");
                 let name = row.cells[1].innerText;
+                
+                // سحب نقاط التفاعل من اللوحة العلوية باستخدام الـ ID الخاص بالطالب
+                let interactionInput = document.getElementById(`interact-${index}`);
+                let interactionPts = interactionInput ? interactionInput.value : 0;
                 
                 if (grade === "6") {
                     studentsData.push({
                         name: name,
+                        interaction: interactionPts,
                         d1: inputs[0].value || 0, d2: inputs[1].value || 0, tDiag: row.querySelector('.t-dialogue').innerText,
                         q1: inputs[2].value || 0, q2: inputs[3].value || 0, q3: inputs[4].value || 0, q4: inputs[5].value || 0, tQuiz: row.querySelector('.t-quiz').innerText,
                         a1: inputs[6].value || 0, a2: inputs[7].value || 0, tAct: row.querySelector('.t-activity').innerText,
@@ -306,6 +316,7 @@
                 } else if (grade === "9") {
                     studentsData.push({
                         name: name,
+                        interaction: interactionPts,
                         d1: inputs[0].value || 0, d2: inputs[1].value || 0, tDiag: row.querySelector('.t-dialogue').innerText,
                         a1: inputs[2].value || 0, a2: inputs[3].value || 0, tAct: row.querySelector('.t-activity').innerText,
                         test: inputs[4].value || 0, proj: inputs[5].value || 0, total: row.querySelector('.t-grand').innerText
@@ -319,8 +330,7 @@
                 students: studentsData
             };
 
-            // ---- ضع الرابط الخاص بك هنا ----
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxYNk2btGVXGbQAcv_nNw0OpDjdCt3Uon-8iSv27BP3DsxxHKEMc9FmiOZ5bTXKVt5R8A/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbysNE2E_iqkdyL8bld0d7HywP67JpDWPK9t5ZojNm1oqaQG3WpplYbTNgftL1ZXSyBlGg/exec'; // <-- لا تنسَ وضع الرابط الخاص بك هنا
             
             const btn = document.querySelector('.btn-submit');
             const originalText = btn.innerText;
@@ -328,28 +338,33 @@
             btn.style.backgroundColor = "#7f8c8d";
             btn.disabled = true;
 
-          fetch(scriptURL, {
+            fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', // هذا السطر يحل مشكلة الاستجابة مع جوجل
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
                 body: JSON.stringify(payload)
             })
-            .then(() => {
-                // بما أننا استخدمنا no-cors، سنفترض النجاح مباشرة بمجرد الإرسال
-                alert('تم حفظ درجات الشعبة بنجاح في ورقة الإكسل!');
+            .then(response => response.json())
+            .then(data => {
+                if(data.result === 'success') {
+                    alert('تم حفظ البيانات بنجاح في جوجل شيت!');
+                } else {
+                    alert('تم الاتصال ولكن حدث خطأ: ' + data.message);
+                }
                 btn.innerText = originalText;
                 btn.style.backgroundColor = "#27ae60";
                 btn.disabled = false;
             })
             .catch(error => {
                 console.error('Error!', error);
-                alert('حدث خطأ! يرجى التأكد من اتصالك بالإنترنت.');
+                alert('حدث خطأ أثناء محاولة إرسال البيانات.');
                 btn.innerText = originalText;
                 btn.style.backgroundColor = "#27ae60";
                 btn.disabled = false;
             });
         }
 
-        // تشغيل مبدئي عند فتح الصفحة
         window.onload = updateView;
     </script>
 </body>
