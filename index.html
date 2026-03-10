@@ -559,27 +559,36 @@
             });
 
             const payload = { grade: grade, section: section, students: studentsData };
-            // رابط السيرفر الخاص بك
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxxVK_4VLghguu-ulK7aL3E5IBaODj8DGJqrTqT87TlXB4iT2EpBlMdDvjOHP6oOnljIA/exec';
             
-            const btn = document.querySelector('.btn-submit'); const originalText = btn.innerText;
-            btn.innerText = "جاري إرسال الدرجات..."; btn.style.backgroundColor = "#7f8c8d"; btn.disabled = true;
+            // --- ضع رابطك الجديد هنا ---
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxf6rVYaj5FRSy-EkKW9gyzw0P5G0siuQBb1-UVkKUHysVjmEliP2nGxYt_K39HzsFBHQ/exec';
+            
+            const btn = document.querySelector('.btn-submit'); 
+            const originalText = btn.innerText;
+            btn.innerText = "جاري إرسال الدرجات..."; 
+            btn.style.backgroundColor = "#7f8c8d"; 
+            btn.disabled = true;
 
-            // --- الحل الجذري هنا (استخدام no-cors) ---
+            // تحويل البيانات إلى صيغة (Form Data) لتخطي حظر جوجل بقوة
+            const formData = new URLSearchParams();
+            formData.append('data', JSON.stringify(payload));
+
             fetch(scriptURL, { 
                 method: 'POST', 
-                mode: 'no-cors', // هذا الأمر يتخطى حظر المتصفحات الصارم
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify(payload) 
+                body: formData // إرسالها كبيانات نموذج عادية
             })
-            .then(() => {
-                // سيتم التنفيذ هنا فوراً بفضل تخطي الحظر
-                alert('تم حفظ البيانات بنجاح في جوجل شيت!'); 
+            .then(response => response.json())
+            .then(data => {
+                if(data.result === 'success') { 
+                    alert('تم حفظ البيانات بنجاح في جوجل شيت!'); 
+                } else { 
+                    alert('رسالة من السيرفر: ' + data.message); 
+                }
                 btn.innerText = originalText; btn.style.backgroundColor = "#27ae60"; btn.disabled = false;
             })
             .catch(error => {
-                console.error('Error!', error); 
-                alert('حدث خطأ. تأكد من اتصالك بالإنترنت!');
+                console.error('Error:', error); 
+                alert('حدث خطأ ولم يتم الحفظ! تأكد من اتصال الإنترنت أو من الرابط.');
                 btn.innerText = originalText; btn.style.backgroundColor = "#27ae60"; btn.disabled = false;
             });
         }
