@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة رصد الدرجات </title>
+    <title>منصة رصد الدرجات - فريق نعاون</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -113,7 +113,7 @@
 </head>
 <body>
 
-    <h2>نظام إدارة وتقييم الطلاب</h2>
+    <h2>نظام إدارة وتقييم الطلاب - فريق نعاون</h2>
 
     <div class="sticky-submit-container">
         <button class="btn-submit" onclick="submitData()">حفظ وإرسال البيانات</button>
@@ -250,111 +250,41 @@
             }
         };
 
-        // =========================================================
-        // --- إعداد نظام الصوت المدمج لجميع الأدوات (مؤقت + عجلة) ---
-        // =========================================================
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
+        // --- أصوات عجلة الاختيار العشوائي ---
+        const tickSound = new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg');
+        const winSound = new Audio('https://actions.google.com/sounds/v1/alarms/ding.ogg');
 
-        // 1. دالة الإنذار القوي للمؤقت
-        function playLoudAlarm() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            
-            // تشغيل 6 نغمات تنبيه حادة وعالية متتالية
-            for (let i = 0; i < 6; i++) {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'square'; // موجة مربعة لصوت حاد وقوي
-                osc.frequency.setValueAtTime(900, audioCtx.currentTime + (i * 0.4));
-                
-                gain.gain.setValueAtTime(0, audioCtx.currentTime + (i * 0.4));
-                gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + (i * 0.4) + 0.05);
-                gain.gain.setValueAtTime(1, audioCtx.currentTime + (i * 0.4) + 0.2); 
-                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (i * 0.4) + 0.25); 
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start(audioCtx.currentTime + (i * 0.4));
-                osc.stop(audioCtx.currentTime + (i * 0.4) + 0.3);
-            }
-        }
-
-        // 2. دوال أصوات العجلة العشوائية
-        function playTickSound() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime); 
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
-        }
-
-        function playWinSound() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(500, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.5);
-        }
-
-        // =========================================================
         // --- المؤقت ---
-        // =========================================================
         let timerInterval; let timeRemaining = 300; 
+        const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg'); 
 
         function updateTimerDisplay() {
             let minutes = Math.floor(timeRemaining / 60); let seconds = timeRemaining % 60;
             document.getElementById("timerDisplay").innerText = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
         }
-
         function startTimer() {
             clearInterval(timerInterval);
-            
-            // تنشيط الصوت بمجرد ضغط المعلم على زر البدء
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-
             timerInterval = setInterval(() => {
                 if (timeRemaining > 0) { 
                     timeRemaining--; updateTimerDisplay(); 
                 } else { 
                     clearInterval(timerInterval); 
-                    
-                    // إطلاق الإنذار القوي
-                    playLoudAlarm();
-                    
-                    // إظهار الرسالة بعد ثانيتين ونصف 
+                    alarmSound.play().catch(e => console.log("الصوت قيد الانتظار", e));
                     setTimeout(() => { 
                         alert("⏳ انتهى الوقت يا شباب!"); 
-                    }, 2500);
+                        alarmSound.pause(); alarmSound.currentTime = 0; 
+                    }, 1000);
                 }
             }, 1000);
         }
-
         function pauseTimer() { clearInterval(timerInterval); }
-        
         function resetTimer() {
             clearInterval(timerInterval);
             let inputMins = parseInt(document.getElementById("timerInput").value) || 5;
             timeRemaining = inputMins * 60; updateTimerDisplay();
         }
 
-        // =========================================================
         // --- شاشة الاختيار العشوائي ---
-        // =========================================================
         function spinWheel() {
             const grade = document.getElementById("gradeSelect").value;
             const section = document.getElementById("sectionSelect").value;
@@ -363,10 +293,7 @@
 
             const box = document.getElementById("randomBox");
             const btn = document.querySelector(".btn-spin");
-            btn.disabled = true; 
-            box.style.backgroundColor = "#ecf0f1";
-            
-            if(audioCtx.state === 'suspended') audioCtx.resume();
+            btn.disabled = true; box.style.backgroundColor = "#ecf0f1";
             
             let spins = 0; const maxSpins = 25; 
             const spinInterval = setInterval(() => {
@@ -374,13 +301,15 @@
                 box.innerText = currentStudents[randomIndex];
                 spins++;
                 
-                playTickSound();
+                tickSound.currentTime = 0;
+                tickSound.play().catch(e => console.log("الصوت قيد الانتظار", e));
                 
                 if (spins >= maxSpins) {
                     clearInterval(spinInterval);
                     box.style.backgroundColor = "#f1c40f"; 
                     
-                    playWinSound();
+                    winSound.currentTime = 0;
+                    winSound.play().catch(e => console.log("الصوت قيد الانتظار", e));
 
                     setTimeout(() => { box.style.backgroundColor = "#ecf0f1"; }, 1500);
                     btn.disabled = false;
@@ -388,9 +317,7 @@
             }, 80);
         }
 
-        // =========================================================
         // --- مقسم المجموعات الذكي ---
-        // =========================================================
         function generateGroups() {
             const grade = document.getElementById("gradeSelect").value;
             const section = document.getElementById("sectionSelect").value;
@@ -427,9 +354,7 @@
             });
         }
 
-        // =========================================================
-        // --- التحديث والحسابات والربط ---
-        // =========================================================
+        // --- التحديث والحسابات ---
         function changePoints(button, amount) {
             let input = button.parentElement.querySelector('.col-interaction');
             let currentValue = parseInt(input.value) || 0;
@@ -559,40 +484,23 @@
             });
 
             const payload = { grade: grade, section: section, students: studentsData };
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbx_QT7_7lZ0IODRjzg0GNxkBuEpqt5azI5d06dhOnvTKJ9GLxTnaer1Krl93nBE8KxAjg/exec'; // <-- لا تنسَ وضع الرابط الخاص بك هنا
             
-            // --- ضع رابطك الجديد هنا ---
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxf6rVYaj5FRSy-EkKW9gyzw0P5G0siuQBb1-UVkKUHysVjmEliP2nGxYt_K39HzsFBHQ/exec';
-            
-            const btn = document.querySelector('.btn-submit'); 
-            const originalText = btn.innerText;
-            btn.innerText = "جاري إرسال الدرجات..."; 
-            btn.style.backgroundColor = "#7f8c8d"; 
-            btn.disabled = true;
+            const btn = document.querySelector('.btn-submit'); const originalText = btn.innerText;
+            btn.innerText = "جاري إرسال الدرجات..."; btn.style.backgroundColor = "#7f8c8d"; btn.disabled = true;
 
-            // تحويل البيانات إلى صيغة (Form Data) لتخطي حظر جوجل بقوة
-            const formData = new URLSearchParams();
-            formData.append('data', JSON.stringify(payload));
-
-            fetch(scriptURL, { 
-                method: 'POST', 
-                body: formData // إرسالها كبيانات نموذج عادية
-            })
+            fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
             .then(response => response.json())
             .then(data => {
-                if(data.result === 'success') { 
-                    alert('تم حفظ البيانات بنجاح في جوجل شيت!'); 
-                } else { 
-                    alert('رسالة من السيرفر: ' + data.message); 
-                }
+                if(data.result === 'success') { alert('تم حفظ البيانات بنجاح في جوجل شيت!'); } 
+                else { alert('تم الاتصال ولكن حدث خطأ: ' + data.message); }
                 btn.innerText = originalText; btn.style.backgroundColor = "#27ae60"; btn.disabled = false;
             })
             .catch(error => {
-                console.error('Error:', error); 
-                alert('حدث خطأ ولم يتم الحفظ! تأكد من اتصال الإنترنت أو من الرابط.');
+                console.error('Error!', error); alert('حدث خطأ أثناء محاولة إرسال البيانات.');
                 btn.innerText = originalText; btn.style.backgroundColor = "#27ae60"; btn.disabled = false;
             });
         }
-
 
         window.onload = () => { updateView(); resetTimer(); };
     </script>
