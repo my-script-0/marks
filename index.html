@@ -408,7 +408,7 @@
         // --- قسم التحديث والحسابات والربط الذكي ---
         // =========================================================
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzYWTmeuZgGgzsY1MlQtCKOtCxxhXcr_5kXGkveriNWuwxBCOUd2MtvnLGhbVDJykuVVA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx_QT7_7lZ0IODRjzg0GNxkBuEpqt5azI5d06dhOnvTKJ9GLxTnaer1Krl93nBE8KxAjg/exec';
         let currentSheetData = {}; // لحفظ البيانات المسترجعة
 
         function changePoints(button, amount) {
@@ -577,12 +577,11 @@
             btn.style.backgroundColor = "#7f8c8d"; 
             btn.disabled = true;
 
-            const formData = new URLSearchParams();
-            formData.append('data', JSON.stringify(payload));
-
+            // --- الإرسال بشكل نصي نقي لتخطي خطأ السيرفر ---
             fetch(scriptURL, { 
-                method: 'POST', 
-                body: formData 
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload) 
             })
             .then(response => response.json())
             .then(data => {
