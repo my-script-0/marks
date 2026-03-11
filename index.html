@@ -250,42 +250,7 @@
             }
         };
 
-        // --- أصوات عجلة الاختيار العشوائي ---
-        const tickSound = new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg');
-        const winSound = new Audio('https://actions.google.com/sounds/v1/alarms/ding.ogg');
-
-        // --- المؤقت ---
-        let timerInterval; let timeRemaining = 300; 
-        const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg'); 
-
-        function updateTimerDisplay() {
-            let minutes = Math.floor(timeRemaining / 60); let seconds = timeRemaining % 60;
-            document.getElementById("timerDisplay").innerText = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-        }
-        function startTimer() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (timeRemaining > 0) { 
-                    timeRemaining--; updateTimerDisplay(); 
-                } else { 
-                    clearInterval(timerInterval); 
-                    alarmSound.play().catch(e => console.log("الصوت قيد الانتظار", e));
-                    setTimeout(() => { 
-                        alert("⏳ انتهى الوقت يا شباب!"); 
-                        alarmSound.pause(); alarmSound.currentTime = 0; 
-                    }, 1000);
-                }
-            }, 1000);
-        }
-        function pauseTimer() { clearInterval(timerInterval); }
-        function resetTimer() {
-            clearInterval(timerInterval);
-            let inputMins = parseInt(document.getElementById("timerInput").value) || 5;
-            timeRemaining = inputMins * 60; updateTimerDisplay();
-        }
-
-        // --- شاشة الاختيار العشوائي ---
-       // --- نظام الصوت المدمج للعجلة (يعمل على جميع الأجهزة وبدون إنترنت) ---
+        // --- نظام الصوت المدمج للعجلة والمؤقت ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
 
@@ -318,6 +283,56 @@
             osc.stop(audioCtx.currentTime + 1.5);
         }
 
+        function playLoudAlarm() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            // تشغيل 6 نغمات تنبيه حادة وعالية متتالية
+            for (let i = 0; i < 6; i++) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(900, audioCtx.currentTime + (i * 0.4));
+                
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + (i * 0.4));
+                gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + (i * 0.4) + 0.05);
+                gain.gain.setValueAtTime(1, audioCtx.currentTime + (i * 0.4) + 0.2); 
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (i * 0.4) + 0.25); 
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + (i * 0.4));
+                osc.stop(audioCtx.currentTime + (i * 0.4) + 0.3);
+            }
+        }
+
+        // --- المؤقت ---
+        let timerInterval; let timeRemaining = 300; 
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timeRemaining / 60); let seconds = timeRemaining % 60;
+            document.getElementById("timerDisplay").innerText = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        }
+        function startTimer() {
+            clearInterval(timerInterval);
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) { 
+                    timeRemaining--; updateTimerDisplay(); 
+                } else { 
+                    clearInterval(timerInterval); 
+                    playLoudAlarm();
+                    setTimeout(() => { alert("⏳ انتهى الوقت يا شباب!"); }, 2500);
+                }
+            }, 1000);
+        }
+        function pauseTimer() { clearInterval(timerInterval); }
+        function resetTimer() {
+            clearInterval(timerInterval);
+            let inputMins = parseInt(document.getElementById("timerInput").value) || 5;
+            timeRemaining = inputMins * 60; updateTimerDisplay();
+        }
+
         // --- شاشة الاختيار العشوائي ---
         function spinWheel() {
             const grade = document.getElementById("gradeSelect").value;
@@ -330,7 +345,6 @@
             btn.disabled = true; 
             box.style.backgroundColor = "#ecf0f1";
             
-            // تنشيط نظام الصوت عند الضغط (مهم جداً للمتصفحات)
             if(audioCtx.state === 'suspended') audioCtx.resume();
             
             let spins = 0; const maxSpins = 25; 
@@ -339,14 +353,12 @@
                 box.innerText = currentStudents[randomIndex];
                 spins++;
                 
-                // تشغيل صوت التكة البرمجي
                 playTickSound();
                 
                 if (spins >= maxSpins) {
                     clearInterval(spinInterval);
                     box.style.backgroundColor = "#f1c40f"; 
                     
-                    // تشغيل رنة الفوز البرمجية
                     playWinSound();
 
                     setTimeout(() => { box.style.backgroundColor = "#ecf0f1"; }, 1500);
@@ -392,7 +404,13 @@
             });
         }
 
-        // --- التحديث والحسابات ---
+        // =========================================================
+        // --- قسم التحديث والحسابات والربط الذكي ---
+        // =========================================================
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzYWTmeuZgGgzsY1MlQtCKOtCxxhXcr_5kXGkveriNWuwxBCOUd2MtvnLGhbVDJykuVVA/exec';
+        let currentSheetData = {}; // لحفظ البيانات المسترجعة
+
         function changePoints(button, amount) {
             let input = button.parentElement.querySelector('.col-interaction');
             let currentValue = parseInt(input.value) || 0;
@@ -415,7 +433,29 @@
             document.getElementById("form9").classList.remove("active-form");
             document.getElementById("form" + grade).classList.add("active-form");
 
-            renderTableAndGamification(grade, document.getElementById("sectionSelect").value);
+            // عرض رسالة "جاري التحميل"
+            const tbody = document.getElementById("tbody" + grade);
+            tbody.innerHTML = `<tr><td colspan="15" style="text-align:center; padding:20px; font-weight:bold; color:#2980b9;">جاري جلب بيانات الطلاب السابقة من جوجل شيت... ⏳</td></tr>`;
+            document.getElementById("interactionPanel").innerHTML = "";
+
+            // استدعاء البيانات القديمة من جوجل شيت
+            const fetchUrl = `${scriptURL}?grade=${grade}&section=${document.getElementById("sectionSelect").value}`;
+            
+            fetch(fetchUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    currentSheetData = data.data; 
+                } else {
+                    currentSheetData = {}; 
+                }
+                renderTableAndGamification(grade, document.getElementById("sectionSelect").value);
+            })
+            .catch(error => {
+                console.error('خطأ في جلب البيانات:', error);
+                currentSheetData = {};
+                renderTableAndGamification(grade, document.getElementById("sectionSelect").value);
+            });
             
             document.getElementById("randomBox").innerText = "اضغط لاختيار طالب";
             document.getElementById("groupsDisplay").innerHTML = "";
@@ -429,12 +469,20 @@
             const students = studentsData[grade][section] || [];
             
             students.forEach((name, index) => {
+                // جلب درجات الطالب من البيانات المسترجعة (إن وجدت)
+                let sData = currentSheetData[name] || [];
+                const val = (idx) => (sData[idx] !== undefined && sData[idx] !== 0 && sData[idx] !== "") ? sData[idx] : "";
+                const valZero = (idx) => (sData[idx] !== undefined && sData[idx] !== "") ? sData[idx] : 0;
+                
+                let interactIdx = (grade === "6") ? 14 : 10;
+                let interactionPts = valZero(interactIdx);
+
                 let card = document.createElement("div"); card.className = "student-card";
                 card.innerHTML = `
                     <span class="student-card-name" title="${name}">${index + 1}. ${name}</span>
                     <div class="interaction-container">
                         <button class="btn-interact btn-plus" onclick="changePoints(this, 1)">+</button>
-                        <input type="number" id="interact-${index}" class="col-interaction" value="0">
+                        <input type="number" id="interact-${index}" class="col-interaction" value="${interactionPts}">
                         <button class="btn-interact btn-minus" onclick="changePoints(this, -1)">-</button>
                     </div>`;
                 panel.appendChild(card);
@@ -444,30 +492,30 @@
 
                 if (grade === "6") {
                     row.innerHTML = baseHtml + `
-                        <td><input type="number" class="col-calc" max="10" oninput="calc(this, '6')"></td>
-                        <td><input type="number" class="col-calc" max="10" oninput="calc(this, '6')"></td>
-                        <td class="t-dialogue header-orange" style="font-weight: bold;">0</td>
-                        <td><input type="number" class="col-calc" max="5" oninput="calc(this, '6')"></td>
-                        <td><input type="number" class="col-calc" max="5" oninput="calc(this, '6')"></td>
-                        <td><input type="number" class="col-calc" max="5" oninput="calc(this, '6')"></td>
-                        <td><input type="number" class="col-calc" max="5" oninput="calc(this, '6')"></td>
-                        <td class="t-quiz header-orange" style="font-weight: bold;">0</td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '6')"></td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '6')"></td>
-                        <td class="t-activity header-orange" style="font-weight: bold;">0</td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '6')"></td>
-                        <td class="t-grand header-orange" style="font-weight: bold;">0</td>`;
+                        <td><input type="number" class="col-calc" max="10" value="${val(1)}" oninput="calc(this, '6')"></td>
+                        <td><input type="number" class="col-calc" max="10" value="${val(2)}" oninput="calc(this, '6')"></td>
+                        <td class="t-dialogue header-orange" style="font-weight: bold;">${valZero(3)}</td>
+                        <td><input type="number" class="col-calc" max="5" value="${val(4)}" oninput="calc(this, '6')"></td>
+                        <td><input type="number" class="col-calc" max="5" value="${val(5)}" oninput="calc(this, '6')"></td>
+                        <td><input type="number" class="col-calc" max="5" value="${val(6)}" oninput="calc(this, '6')"></td>
+                        <td><input type="number" class="col-calc" max="5" value="${val(7)}" oninput="calc(this, '6')"></td>
+                        <td class="t-quiz header-orange" style="font-weight: bold;">${valZero(8)}</td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(9)}" oninput="calc(this, '6')"></td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(10)}" oninput="calc(this, '6')"></td>
+                        <td class="t-activity header-orange" style="font-weight: bold;">${valZero(11)}</td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(12)}" oninput="calc(this, '6')"></td>
+                        <td class="t-grand header-orange" style="font-weight: bold;">${valZero(13)}</td>`;
                 } else if (grade === "9") {
                     row.innerHTML = baseHtml + `
-                        <td><input type="number" class="col-calc" max="10" oninput="calc(this, '9')"></td>
-                        <td><input type="number" class="col-calc" max="10" oninput="calc(this, '9')"></td>
-                        <td class="t-dialogue header-orange" style="font-weight: bold;">0</td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '9')"></td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '9')"></td>
-                        <td class="t-activity header-orange" style="font-weight: bold;">0</td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '9')"></td>
-                        <td><input type="number" class="col-calc" max="20" oninput="calc(this, '9')"></td>
-                        <td class="t-grand header-orange" style="font-weight: bold;">0</td>`;
+                        <td><input type="number" class="col-calc" max="10" value="${val(1)}" oninput="calc(this, '9')"></td>
+                        <td><input type="number" class="col-calc" max="10" value="${val(2)}" oninput="calc(this, '9')"></td>
+                        <td class="t-dialogue header-orange" style="font-weight: bold;">${valZero(3)}</td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(4)}" oninput="calc(this, '9')"></td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(5)}" oninput="calc(this, '9')"></td>
+                        <td class="t-activity header-orange" style="font-weight: bold;">${valZero(6)}</td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(7)}" oninput="calc(this, '9')"></td>
+                        <td><input type="number" class="col-calc" max="20" value="${val(8)}" oninput="calc(this, '9')"></td>
+                        <td class="t-grand header-orange" style="font-weight: bold;">${valZero(9)}</td>`;
                 }
                 tbody.appendChild(row);
             });
@@ -522,20 +570,33 @@
             });
 
             const payload = { grade: grade, section: section, students: studentsData };
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbx_QT7_7lZ0IODRjzg0GNxkBuEpqt5azI5d06dhOnvTKJ9GLxTnaer1Krl93nBE8KxAjg/exec'; // <-- لا تنسَ وضع الرابط الخاص بك هنا
             
-            const btn = document.querySelector('.btn-submit'); const originalText = btn.innerText;
-            btn.innerText = "جاري إرسال الدرجات..."; btn.style.backgroundColor = "#7f8c8d"; btn.disabled = true;
+            const btn = document.querySelector('.btn-submit'); 
+            const originalText = btn.innerText;
+            btn.innerText = "جاري إرسال الدرجات..."; 
+            btn.style.backgroundColor = "#7f8c8d"; 
+            btn.disabled = true;
 
-            fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+            const formData = new URLSearchParams();
+            formData.append('data', JSON.stringify(payload));
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: formData 
+            })
             .then(response => response.json())
             .then(data => {
-                if(data.result === 'success') { alert('تم حفظ البيانات بنجاح في جوجل شيت!'); } 
-                else { alert('تم الاتصال ولكن حدث خطأ: ' + data.message); }
+                if(data.result === 'success') { 
+                    alert('تم حفظ البيانات بنجاح في جوجل شيت!'); 
+                    updateView(); // تحديث فوري لاستعراض البيانات المؤكدة
+                } else { 
+                    alert('رسالة من السيرفر: ' + data.message); 
+                }
                 btn.innerText = originalText; btn.style.backgroundColor = "#27ae60"; btn.disabled = false;
             })
             .catch(error => {
-                console.error('Error!', error); alert('حدث خطأ أثناء محاولة إرسال البيانات.');
+                console.error('Error:', error); 
+                alert('حدث خطأ ولم يتم الحفظ! تأكد من اتصال الإنترنت.');
                 btn.innerText = originalText; btn.style.backgroundColor = "#27ae60"; btn.disabled = false;
             });
         }
