@@ -78,7 +78,7 @@
         .group-card { background-color: #fdfefe; border: 1px solid #bdc3c7; border-radius: 5px; padding: 10px; width: calc(50% - 15px); text-align: right; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .group-title { font-weight: bold; color: #d35400; margin-bottom: 8px; border-bottom: 1px dashed #bdc3c7; padding-bottom: 5px; font-size: 14px; }
         .group-list { margin: 0; padding-right: 20px; font-size: 12px; color: #2c3e50; }
-        .group-list li { margin-bottom: 3px; cursor: help; }
+        .group-list li { margin-bottom: 3px; } /* تم التعديل هنا ليتناسب مع الاسم الطويل */
 
         /* لوحة التعزيز */
         .gamification-wrapper { margin-bottom: 30px; }
@@ -395,8 +395,8 @@
                 
                 let html = `<div class="group-title">المجموعة ${index + 1} (${group.length} طلاب)</div><ul class="group-list">`;
                 group.forEach(s => {
-                    let short = s.split(" ").slice(0, 2).join(" ");
-                    html += `<li title="${s}">${short}</li>`;
+                    // تم التعديل هنا ليعرض الاسم بالكامل
+                    html += `<li>${s}</li>`;
                 });
                 html += `</ul>`;
                 groupDiv.innerHTML = html;
@@ -408,7 +408,7 @@
         // --- قسم التحديث والحسابات والربط الذكي ---
         // =========================================================
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzBo9pQYz6pa29GbiBCzgUJq_NFsXqCXpwboWF6AwUWrwu8btxt4Nuyfu00X0mbUV9luA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx_QT7_7lZ0IODRjzg0GNxkBuEpqt5azI5d06dhOnvTKJ9GLxTnaer1Krl93nBE8KxAjg/exec';
         let currentSheetData = {}; // لحفظ البيانات المسترجعة
 
         function changePoints(button, amount) {
