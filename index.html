@@ -44,7 +44,7 @@
         .tool-box {
             background-color: #fff; border-radius: 8px; padding: 20px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.1); border-top: 4px solid #3498db;
-            text-align: center; flex: 1; min-width: 300px; max-width: 400px;
+            text-align: center; flex: 1; min-width: 250px; max-width: 350px;
             display: flex; flex-direction: column; align-items: center;
         }
         .tool-title { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 15px; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 10px;}
@@ -78,7 +78,11 @@
         .group-card { background-color: #fdfefe; border: 1px solid #bdc3c7; border-radius: 5px; padding: 10px; width: calc(50% - 15px); text-align: right; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .group-title { font-weight: bold; color: #d35400; margin-bottom: 8px; border-bottom: 1px dashed #bdc3c7; padding-bottom: 5px; font-size: 14px; }
         .group-list { margin: 0; padding-right: 20px; font-size: 12px; color: #2c3e50; }
-        .group-list li { margin-bottom: 3px; } /* تم التعديل هنا ليتناسب مع الاسم الطويل */
+        .group-list li { margin-bottom: 3px; } 
+
+        /* زر التقارير */
+        .btn-reports { background-color: #2980b9; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: auto;}
+        .btn-reports:hover { background-color: #3498db; }
 
         /* لوحة التعزيز */
         .gamification-wrapper { margin-bottom: 30px; }
@@ -109,6 +113,34 @@
         input.col-calc::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .form-section { display: none; }
         .active-form { display: block; }
+
+        /* نافذة التقارير المنبثقة (Modal) */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 20px; border-radius: 10px;
+            width: 80%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-height: 80vh; overflow-y: auto;
+        }
+        .close-btn { color: #aaa; float: left; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover { color: #e74c3c; }
+        .report-header { text-align: center; border-bottom: 2px solid #2980b9; padding-bottom: 10px; margin-bottom: 20px; color: #2c3e50;}
+        .report-card { 
+            background: #fff; border: 1px solid #ddd; border-right: 5px solid #2980b9; 
+            padding: 15px; margin-bottom: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .report-name { font-size: 18px; font-weight: bold; color: #34495e; margin-bottom: 5px; }
+        .report-score { display: inline-block; background: #e8f4f8; padding: 5px 10px; border-radius: 4px; font-weight: bold; color: #2980b9; margin-bottom: 10px; font-size: 14px; }
+        .report-phrase { font-size: 15px; color: #555; line-height: 1.5; }
+        
+        /* ألوان التقييمات للتقارير */
+        .border-excellent { border-right-color: #27ae60; } .bg-excellent { background: #eafaf1; color: #27ae60; }
+        .border-vgood { border-right-color: #2980b9; } .bg-vgood { background: #e8f4f8; color: #2980b9; }
+        .border-good { border-right-color: #f1c40f; } .bg-good { background: #fef9e7; color: #d4ac0d; }
+        .border-acceptable { border-right-color: #e67e22; } .bg-acceptable { background: #fdf2e9; color: #e67e22; }
+        .border-weak { border-right-color: #e74c3c; } .bg-weak { background: #fdedec; color: #e74c3c; }
     </style>
 </head>
 <body>
@@ -167,6 +199,12 @@
             </div>
             <button class="btn-group" onclick="generateGroups()">تقسيم عشوائي</button>
             <div id="groupsDisplay" class="groups-display"></div>
+        </div>
+
+        <div class="tool-box" style="border-top-color: #2980b9;">
+            <div class="tool-title">📜 تقارير أولياء الأمور</div>
+            <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 15px;">إنشاء عبارات وصفية بناءً على نسبة الإنجاز للدرجات المرصودة حالياً فقط.</p>
+            <button class="btn-reports" onclick="generateParentReports()">عرض العبارات الوصفية</button>
         </div>
 
     </div>
@@ -233,6 +271,17 @@
         </table>
     </div>
 
+    <div id="reportsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeReports()">&times;</span>
+            <div class="report-header">
+                <h2 id="reportModalTitle">العبارات الوصفية للطلاب</h2>
+                <p>سجل الدرجات والوصف الأكاديمي لمشاركة أولياء الأمور</p>
+            </div>
+            <div id="reportsContainer"></div>
+        </div>
+    </div>
+
     <script>
         const studentsData = {
             "9": {
@@ -285,7 +334,6 @@
 
         function playLoudAlarm() {
             if(audioCtx.state === 'suspended') audioCtx.resume();
-            // تشغيل 6 نغمات تنبيه حادة وعالية متتالية
             for (let i = 0; i < 6; i++) {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -395,7 +443,6 @@
                 
                 let html = `<div class="group-title">المجموعة ${index + 1} (${group.length} طلاب)</div><ul class="group-list">`;
                 group.forEach(s => {
-                    // تم التعديل هنا ليعرض الاسم بالكامل
                     html += `<li>${s}</li>`;
                 });
                 html += `</ul>`;
@@ -405,11 +452,99 @@
         }
 
         // =========================================================
+        // --- قسم التقارير الوصفية الذكية (تراكمي لحظي) ---
+        // =========================================================
+        
+        function getDescriptivePhrase(percentage) {
+            if (percentage >= 90) return { phrase: "مستوى تحصيلي متميز جداً، يظهر إتقاناً عالياً لما تم دراسته وتفاعلاً رائعاً. يبعث على الفخر، نتمنى له دوام التوفيق والتميز.", cssBorder: "border-excellent", cssBg: "bg-excellent" };
+            if (percentage >= 80) return { phrase: "مستوى تحصيلي جيد جداً، جهوده واضحة ومبشرة، وبمزيد من التركيز سيصل إلى أعلى مراتب التميز فيما تبقى من المادة.", cssBorder: "border-vgood", cssBg: "bg-vgood" };
+            if (percentage >= 65) return { phrase: "مستوى تحصيلي جيد، يمتلك أساسيات المادة بشكل طيب، ولكنه يحتاج لمزيد من المتابعة المنزلية والتدريب المستمر للأنشطة القادمة.", cssBorder: "border-good", cssBg: "bg-good" };
+            if (percentage >= 50) return { phrase: "مستوى تحصيلي مقبول، يحتاج الطالب إلى مضاعفة الجهد، والتركيز أكثر أثناء الحصص القادمة للارتقاء بمستواه.", cssBorder: "border-acceptable", cssBg: "bg-acceptable" };
+            return { phrase: "مستوى تحصيلي ضعيف. يحتاج الطالب إلى تدخل ومتابعة مستمرة ومكثفة من قبل الأسرة للارتقاء بمستواه. يرجى التواصل مع المعلم.", cssBorder: "border-weak", cssBg: "bg-weak" };
+        }
+
+        function generateParentReports() {
+            const grade = document.getElementById("gradeSelect").value;
+            const section = document.getElementById("sectionSelect").value;
+            const tbody = document.getElementById("tbody" + grade);
+            const rows = tbody.querySelectorAll("tr");
+            const container = document.getElementById("reportsContainer");
+            
+            document.getElementById("reportModalTitle").innerText = `العبارات الوصفية - الصف ${grade === "6" ? "السادس" : "التاسع"} (شعبة ${section})`;
+            container.innerHTML = "";
+
+            if(rows.length === 0) {
+                container.innerHTML = "<p style='text-align:center;'>لا توجد بيانات طلاب لعرضها.</p>";
+                document.getElementById("reportsModal").style.display = "block";
+                return;
+            }
+
+            // الدرجات القصوى المحددة لكل عمود حسب الصف
+            const maxValues6 = [10, 10, 5, 5, 5, 5, 20, 20, 20];
+            const maxValues9 = [10, 10, 20, 20, 20, 20];
+            const currentMaxArray = grade === "6" ? maxValues6 : maxValues9;
+
+            rows.forEach((row, index) => {
+                let name = row.cells[1].innerText;
+                let inputs = row.querySelectorAll('.col-calc');
+                
+                let studentCurrentTotal = 0;
+                let maxPossibleTotal = 0;
+
+                // فحص كل مربع إدخال للطالب
+                inputs.forEach((input, i) => {
+                    let val = input.value.trim();
+                    if (val !== "") { // إذا قمت بإدخال درجة في هذا المربع
+                        studentCurrentTotal += parseFloat(val) || 0;
+                        maxPossibleTotal += currentMaxArray[i]; // إضافة الدرجة القصوى لهذا المربع فقط
+                    }
+                });
+
+                let card = document.createElement("div");
+                
+                // إذا لم يتم إدخال أي درجة للطالب بعد
+                if (maxPossibleTotal === 0) {
+                    card.className = `report-card border-weak`;
+                    card.innerHTML = `
+                        <div class="report-name">${index + 1}. ${name}</div>
+                        <div class="report-score" style="background:#f2f2f2; color:#555;">لم يتم رصد درجات بعد</div>
+                        <div class="report-phrase"><strong>وصف المستوى:</strong> بانتظار إدخال الدرجات لتقييم مستوى الطالب.</div>
+                    `;
+                } else {
+                    // حساب النسبة المئوية للمنجز فقط
+                    let percentage = (studentCurrentTotal / maxPossibleTotal) * 100;
+                    let evaluation = getDescriptivePhrase(percentage);
+
+                    card.className = `report-card ${evaluation.cssBorder}`;
+                    card.innerHTML = `
+                        <div class="report-name">${index + 1}. ${name}</div>
+                        <div class="report-score ${evaluation.cssBg}">الدرجة الحالية: ${studentCurrentTotal} من ${maxPossibleTotal} (معدل الإنجاز: ${percentage.toFixed(1)}%)</div>
+                        <div class="report-phrase"><strong>وصف المستوى:</strong> ${evaluation.phrase}</div>
+                    `;
+                }
+                container.appendChild(card);
+            });
+
+            document.getElementById("reportsModal").style.display = "block";
+        }
+
+        function closeReports() {
+            document.getElementById("reportsModal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            let modal = document.getElementById("reportsModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // =========================================================
         // --- قسم التحديث والحسابات والربط الذكي ---
         // =========================================================
 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyC-nLmHzOpFo7zjuoIMy4d_B-6VfmWIimvDluert5QcRqsEe9n2X658hvlYw_QmGHUEg/exec';
-        let currentSheetData = {}; // لحفظ البيانات المسترجعة
+        let currentSheetData = {}; 
 
         function changePoints(button, amount) {
             let input = button.parentElement.querySelector('.col-interaction');
@@ -433,12 +568,10 @@
             document.getElementById("form9").classList.remove("active-form");
             document.getElementById("form" + grade).classList.add("active-form");
 
-            // عرض رسالة "جاري التحميل"
             const tbody = document.getElementById("tbody" + grade);
             tbody.innerHTML = `<tr><td colspan="15" style="text-align:center; padding:20px; font-weight:bold; color:#2980b9;">جاري جلب بيانات الطلاب السابقة من جوجل شيت... ⏳</td></tr>`;
             document.getElementById("interactionPanel").innerHTML = "";
 
-            // استدعاء البيانات القديمة من جوجل شيت
             const fetchUrl = `${scriptURL}?grade=${grade}&section=${document.getElementById("sectionSelect").value}`;
             
             fetch(fetchUrl)
@@ -469,7 +602,6 @@
             const students = studentsData[grade][section] || [];
             
             students.forEach((name, index) => {
-                // جلب درجات الطالب من البيانات المسترجعة (إن وجدت)
                 let sData = currentSheetData[name] || [];
                 const val = (idx) => (sData[idx] !== undefined && sData[idx] !== 0 && sData[idx] !== "") ? sData[idx] : "";
                 const valZero = (idx) => (sData[idx] !== undefined && sData[idx] !== "") ? sData[idx] : 0;
@@ -577,7 +709,6 @@
             btn.style.backgroundColor = "#7f8c8d"; 
             btn.disabled = true;
 
-            // --- الإرسال بشكل نصي نقي لتخطي خطأ السيرفر ---
             fetch(scriptURL, { 
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -587,7 +718,7 @@
             .then(data => {
                 if(data.result === 'success') { 
                     alert('تم حفظ البيانات بنجاح في جوجل شيت!'); 
-                    updateView(); // تحديث فوري لاستعراض البيانات المؤكدة
+                    updateView(); 
                 } else { 
                     alert('رسالة من السيرفر: ' + data.message); 
                 }
