@@ -12,7 +12,6 @@
             --card-bg: #ffffff;
             --border-color: #ddd;
             --input-bg: #fff;
-            --table-header: #cce0f5;
             --category-bg: #f8f9fa;
         }
 
@@ -23,7 +22,6 @@
             --card-bg: #1e1e1e;
             --border-color: #333;
             --input-bg: #2d2d2d;
-            --table-header: #2c3e50;
             --category-bg: #252525;
         }
 
@@ -34,7 +32,8 @@
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
         }
-        h2 { text-align: center; color: var(--text-color); }
+        h2 { text-align: center; color: var(--text-color); margin-bottom: 5px; }
+        .author-name { text-align: center; font-size: 14px; color: var(--text-color); opacity: 0.7; margin-top: 0; margin-bottom: 20px;}
         
         /* حاوية الزر الثابت في الأعلى */
         .sticky-submit-container {
@@ -54,6 +53,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: background-color 0.3s;
         }
         .btn-submit:hover { background-color: #2ecc71; }
+        .btn-submit:disabled { background-color: #7f8c8d; cursor: not-allowed; }
         
         /* زر الوضع الليلي */
         .theme-toggle {
@@ -77,21 +77,49 @@
         .tool-box {
             background-color: var(--card-bg); border-radius: 8px; padding: 20px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.1); border-top: 4px solid #3498db;
-            text-align: center; flex: 1; min-width: 250px; max-width: 350px;
+            text-align: center; flex: 1; min-width: 300px; max-width: 400px;
             display: flex; flex-direction: column; align-items: center;
         }
         .tool-title { font-size: 18px; font-weight: bold; color: var(--text-color); margin-bottom: 15px; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
         
-        /* شاشة الاختيار العشوائي والمؤقت */
+        /* المؤقت */
+        .timer-display { font-size: 40px; font-weight: bold; color: #e74c3c; margin: 10px 0; font-family: monospace; }
+        .timer-controls button { padding: 8px 15px; margin: 2px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-start { background-color: #27ae60; }
+        .btn-pause { background-color: #f39c12; }
+        .btn-reset { background-color: #7f8c8d; }
+        .timer-settings { margin-top: 10px; font-size: 14px; }
+        .timer-settings input { width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
+        
+        /* شاشة الاختيار العشوائي */
         .random-box {
             width: 95%; min-height: 80px; border-radius: 8px;
             border: 4px solid #3498db; display: flex; align-items: center; justify-content: center;
             text-align: center; font-weight: bold; font-size: 16px; color: var(--text-color);
-            margin: 0 auto 15px; background-color: var(--input-bg); padding: 10px;
+            margin: 0 auto 15px; background-color: var(--input-bg); transition: background-color 0.3s;
+            padding: 10px; line-height: 1.4;
         }
-        .timer-display { font-size: 40px; font-weight: bold; color: #e74c3c; margin: 10px 0; }
-        
+        .btn-spin { background-color: #8e44ad; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
+        .btn-spin:hover { background-color: #9b59b6; }
+
+        /* مقسم المجموعات */
+        .groups-settings { margin-bottom: 15px; font-size: 15px; font-weight: bold; }
+        .groups-settings input { width: 60px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; }
+        .btn-group { background-color: #d35400; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 15px; }
+        .btn-group:hover { background-color: #e67e22; }
+        .groups-display { display: flex; flex-wrap: wrap; gap: 10px; width: 100%; justify-content: center; max-height: 200px; overflow-y: auto; padding-right: 5px; }
+        .group-card { background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 5px; padding: 10px; width: calc(50% - 15px); text-align: right; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .group-title { font-weight: bold; color: #d35400; margin-bottom: 8px; border-bottom: 1px dashed var(--border-color); padding-bottom: 5px; font-size: 14px; }
+        .group-list { margin: 0; padding-right: 20px; font-size: 12px; color: var(--text-color); }
+        .group-list li { margin-bottom: 3px; } 
+
+        /* زر التقارير */
+        .btn-reports { background-color: #2980b9; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: auto;}
+        .btn-reports:hover { background-color: #3498db; }
+
         /* لوحة التعزيز */
+        .gamification-wrapper { margin-bottom: 30px; }
+        .gamification-title { font-size: 18px; font-weight: bold; color: #d35400; margin-bottom: 10px; border-bottom: 2px solid #f39c12; padding-bottom: 5px; display: inline-block; }
         .interaction-panel {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 12px; background-color: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -100,23 +128,35 @@
             display: flex; justify-content: space-between; align-items: center;
             background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px;
         }
+        .student-card-name { font-size: 13px; font-weight: bold; color: var(--text-color); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 130px; }
+        .interaction-container { display: flex; align-items: center; gap: 5px; }
+        .btn-interact { width: 24px; height: 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; line-height: 1; }
+        .btn-plus { background-color: #2ecc71; }
+        .btn-minus { background-color: #e74c3c; }
         .col-interaction { width: 35px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 3px; font-weight: bold; background-color: #fff2cc; color: #000; }
+        .col-interaction::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
         /* جداول الدرجات */
         table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); text-align: center; margin-top: 10px; }
-        th, td { border: 1px solid var(--border-color); padding: 6px; }
-        .header-blue { background-color: var(--table-header); color: var(--text-color); }
+        th, td { border: 1px solid #000; padding: 6px; }
+        
+        .header-blue { background-color: #cce0f5; color: #000; }
+        .header-green { background-color: #e2f0d9; color: #000; }
         .header-orange { background-color: #fce4d6; color: #000; }
+        
+        /* تعديلات الجداول للوضع الليلي */
+        .dark-mode table, .dark-mode th, .dark-mode td { border-color: #444; }
+        .dark-mode .header-blue { background-color: #2c3e50; color: #fff; }
+        .dark-mode .header-green { background-color: #1e5128; color: #fff; }
         .dark-mode .header-orange { background-color: #844424; color: #fff; }
+        .dark-mode .t-dialogue, .dark-mode .t-quiz, .dark-mode .t-activity, .dark-mode .t-grand { color: #fff; }
         
         input.col-calc { width: 45px; text-align: center; border: 1px solid var(--border-color); 
             background: var(--input-bg); color: var(--text-color); border-radius: 4px; padding: 4px; font-weight: bold; }
-
+        input.col-calc::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
         .form-section { display: none; }
         .active-form { display: block; }
-        .btn-reports { background-color: #2980b9; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: auto;}
-        .btn-spin { background-color: #8e44ad; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
-        .btn-group { background-color: #d35400; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
 
         /* ========================================= */
         /* تنسيقات نافذة التقارير التحليلية الشاملة */
@@ -146,7 +186,23 @@
         }
         .detailed-report-body { padding: 15px; }
         
-        /* صندوق كل تصنيف (حوار، أنشطة، الخ) */
+        /* تنسيقات الواتساب */
+        .wa-container {
+            display: flex; gap: 10px; margin-bottom: 15px; align-items: center;
+            background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 6px; border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+        .wa-prefix { font-weight: bold; color: #25D366; direction: ltr; font-size: 16px;}
+        .wa-input {
+            padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;
+            background: var(--input-bg); color: var(--text-color); font-size: 15px; text-align: left; direction: ltr; flex: 1; max-width: 150px;
+        }
+        .btn-wa-send {
+            background: #25D366; color: white; border: none; padding: 8px 15px; border-radius: 4px; 
+            cursor: pointer; font-weight: bold; font-family: inherit; font-size: 14px;
+        }
+        .btn-wa-send:hover { background: #20b858; }
+
+        /* صندوق كل تصنيف */
         .category-box {
             background-color: var(--category-bg); border: 1px solid var(--border-color);
             border-radius: 6px; padding: 12px; margin-bottom: 12px;
@@ -178,7 +234,7 @@
 <body>
 
     <h2>نظام إدارة وتقييم الطلاب</h2>
-    <p style="text-align: center; font-size: 14px; color: var(--text-color); opacity: 0.7; margin-top: -15px; margin-bottom: 20px;">(إعداد: أ. معاذ اليعقوبي)</p>
+    <p class="author-name">(إعداد: أ. معاذ اليعقوبي)</p>
 
     <div class="sticky-submit-container">
         <button class="btn-submit" onclick="submitData()">حفظ وإرسال البيانات</button>
@@ -187,14 +243,14 @@
 
     <div class="controls">
         <div>
-            <label><strong>الصف: </strong></label>
+            <label for="gradeSelect"><strong>الصف: </strong></label>
             <select id="gradeSelect" onchange="updateView()">
                 <option value="6">الصف السادس</option>
                 <option value="9">الصف التاسع</option>
             </select>
         </div>
         <div>
-            <label><strong>الشعبة: </strong></label>
+            <label for="sectionSelect"><strong>الشعبة: </strong></label>
             <select id="sectionSelect" onchange="updateView()">
                 <option value="1">شعبة 1</option>
                 <option value="2">شعبة 2</option>
@@ -206,36 +262,45 @@
     </div>
 
     <div class="teacher-tools-wrapper">
-        <div class="tool-box">
+        
+        <div class="tool-box" style="border-top-color: #8e44ad;">
             <div class="tool-title">🎲 الاختيار العشوائي</div>
             <div id="randomBox" class="random-box">اضغط لاختيار طالب</div>
             <button class="btn-spin" onclick="spinWheel()">اختيار عشوائي</button>
         </div>
-        <div class="tool-box">
-            <div class="tool-title">⏱️ المؤقت</div>
+
+        <div class="tool-box" style="border-top-color: #27ae60;">
+            <div class="tool-title">⏱️ مؤقت الأنشطة</div>
             <div id="timerDisplay" class="timer-display">05:00</div>
-            <div>
-                <button onclick="startTimer()" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:3px;">بدء</button>
-                <button onclick="pauseTimer()" style="background:#f39c12; color:white; border:none; padding:5px 10px; border-radius:3px;">إيقاف</button>
-                <button onclick="resetTimer()" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px;">إعادة</button>
+            <div class="timer-controls">
+                <button class="btn-start" onclick="startTimer()">بدء</button>
+                <button class="btn-pause" onclick="pauseTimer()">إيقاف</button>
+                <button class="btn-reset" onclick="resetTimer()">إعادة</button>
             </div>
-            <div style="margin-top:10px;">المدة: <input type="number" id="timerInput" value="5" min="1" max="60" onchange="resetTimer()" style="width:40px;"> دق</div>
+            <div class="timer-settings">
+                المدة: <input type="number" id="timerInput" value="5" min="1" max="60" onchange="resetTimer()"> دقائق
+            </div>
         </div>
-        <div class="tool-box">
-            <div class="tool-title">👥 مقسم المجموعات</div>
-            <div style="margin-bottom:10px;">عدد المجموعات: <input type="number" id="groupCount" value="4" min="2" max="10" style="width:40px;"></div>
+
+        <div class="tool-box" style="border-top-color: #d35400;">
+            <div class="tool-title">👥 مقسم المجموعات الذكي</div>
+            <div class="groups-settings">
+                عدد المجموعات: <input type="number" id="groupCount" value="4" min="2" max="10">
+            </div>
             <button class="btn-group" onclick="generateGroups()">تقسيم عشوائي</button>
-            <div id="groupsDisplay" style="margin-top:10px; width:100%; max-height:150px; overflow-y:auto; font-size:12px;"></div>
+            <div id="groupsDisplay" class="groups-display"></div>
         </div>
+
         <div class="tool-box" style="border-top-color: #2980b9;">
             <div class="tool-title">📜 تقارير الأداء التحليلية</div>
-            <p style="font-size: 13px; opacity:0.8; margin-bottom:10px;">إنشاء تقرير مفصل لكل طالب يشمل تحليل الحوار، الأنشطة، والاختبارات.</p>
-            <button class="btn-reports" onclick="generateDetailedReports()">عرض التقارير</button>
+            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">إنشاء تقرير مفصل لكل طالب يشمل إمكانية إرسال التقرير لولي الأمر عبر الواتساب.</p>
+            <button class="btn-reports" onclick="generateDetailedReports()">عرض التقارير وإرسالها</button>
         </div>
+
     </div>
 
     <div class="gamification-wrapper">
-        <div class="gamification-title">🌟 لوحة التعزيز</div>
+        <div class="gamification-title">🌟 لوحة التعزيز والمشاركة الصفية</div>
         <div id="interactionPanel" class="interaction-panel"></div>
     </div>
 
@@ -244,20 +309,25 @@
             <thead>
                 <tr>
                     <th rowspan="2" class="header-blue">م</th>
-                    <th rowspan="2" class="header-blue">إسم الطالب</th>
+                    <th rowspan="2" class="header-blue" style="width: 250px;">إسم الطالب</th>
                     <th colspan="2" class="header-blue">الحوار</th>
-                    <th rowspan="2" class="header-orange">م<br>20</th>
+                    <th rowspan="2" class="header-orange">المجموع<br>20</th>
                     <th colspan="4" class="header-blue">الأسئلة القصيرة</th>
-                    <th rowspan="2" class="header-orange">م<br>20</th>
-                    <th colspan="2" class="header-blue">الأنشطة</th>
-                    <th rowspan="2" class="header-orange">م<br>40</th>
-                    <th rowspan="2" class="header-blue">مشروع<br>20</th>
-                    <th rowspan="2" class="header-orange">الكلية<br>100</th>
+                    <th rowspan="2" class="header-orange">المجموع<br>20</th>
+                    <th colspan="2" class="header-blue">الأنشطة العملية</th>
+                    <th rowspan="2" class="header-orange">المجموع<br>40</th>
+                    <th rowspan="2" class="header-blue">المشروع<br>20</th>
+                    <th rowspan="2" class="header-orange">الدرجة الكلية<br>100</th>
                 </tr>
                 <tr>
-                    <th class="header-blue">10</th><th class="header-blue">10</th>
-                    <th class="header-blue">5</th><th class="header-blue">5</th><th class="header-blue">5</th><th class="header-blue">5</th>
-                    <th class="header-blue">20</th><th class="header-blue">20</th>
+                    <th class="header-green">10</th>
+                    <th class="header-green">10</th>
+                    <th class="header-green">5</th>
+                    <th class="header-green">5</th>
+                    <th class="header-green">5</th>
+                    <th class="header-green">5</th>
+                    <th class="header-green">20</th>
+                    <th class="header-green">20</th>
                 </tr>
             </thead>
             <tbody id="tbody6"></tbody>
@@ -269,19 +339,22 @@
             <thead>
                 <tr>
                     <th rowspan="2" class="header-blue">م</th>
-                    <th rowspan="2" class="header-blue">إسم الطالب</th>
+                    <th rowspan="2" class="header-blue" style="width: 250px;">إسم الطالب</th>
                     <th colspan="2" class="header-blue">الحوار</th>
-                    <th rowspan="2" class="header-orange">م<br>20</th>
-                    <th colspan="2" class="header-blue">الأنشطة</th>
-                    <th rowspan="2" class="header-orange">م<br>40</th>
-                    <th class="header-blue">اختبار</th>
-                    <th class="header-blue">مشروع</th>
-                    <th rowspan="2" class="header-orange">الكلية<br>100</th>
+                    <th rowspan="2" class="header-orange">المجموع<br>20</th>
+                    <th colspan="2" class="header-blue">الأنشطة العملية</th>
+                    <th rowspan="2" class="header-orange">المجموع<br>40</th>
+                    <th class="header-blue">الاختبار القصير</th>
+                    <th class="header-blue">المشروع</th>
+                    <th rowspan="2" class="header-orange">الدرجة الكلية<br>100</th>
                 </tr>
                 <tr>
-                    <th class="header-blue">10</th><th class="header-blue">10</th>
-                    <th class="header-blue">20</th><th class="header-blue">20</th>
-                    <th class="header-blue">20</th><th class="header-blue">20</th>
+                    <th class="header-green">10</th>
+                    <th class="header-green">10</th>
+                    <th class="header-green">20</th>
+                    <th class="header-green">20</th>
+                    <th class="header-green">20</th>
+                    <th class="header-green">20</th>
                 </tr>
             </thead>
             <tbody id="tbody9"></tbody>
@@ -293,9 +366,9 @@
             <span class="close-btn" onclick="closeReports()">&times;</span>
             <div class="report-header">
                 <h2 id="reportModalTitle">تقارير الأداء الأكاديمي</h2>
-                <p>تحليل تفصيلي لمستويات الطلاب حسب كل معيار تقييم</p>
+                <p style="margin:0;">تحليل تفصيلي لمستويات الطلاب وإرسال الإشعارات عبر واتساب</p>
             </div>
-            <input type="text" id="reportSearch" class="report-search-input" placeholder="🔍 ابحث عن اسم الطالب لطباعة تقريره..." onkeyup="filterReports()">
+            <input type="text" id="reportSearch" class="report-search-input" placeholder="🔍 ابحث عن اسم الطالب..." onkeyup="filterReports()">
             <div id="reportsContainer"></div>
         </div>
     </div>
@@ -440,15 +513,14 @@
             list.forEach((st, i) => res[i % num].push(st));
             disp.innerHTML = "";
             res.forEach((gp, i) => {
-                if(gp.length > 0) disp.innerHTML += `<div style="margin-bottom:5px; border-bottom:1px dashed #777;"><strong>مج ${i+1}:</strong> ${gp.join(' - ')}</div>`;
+                if(gp.length > 0) disp.innerHTML += `<div class="group-card"><div class="group-title">المجموعة ${i+1}</div><ul class="group-list">${gp.map(st=>`<li>${st}</li>`).join('')}</ul></div>`;
             });
         }
 
         // =========================================================
-        // --- التقارير التحليلية المفصلة الذكية ---
+        // --- التقارير التحليلية المفصلة وإرسال واتساب ---
         // =========================================================
         
-        // دالة مخصصة لجلب عبارات وصفية دقيقة حسب نوع التقييم
         function getCategoryPhrase(categoryType, percentage) {
             if (categoryType === "dialogue") {
                 if (percentage >= 90) return { phrase: "متميز جداً في التعبير عن أفكاره، يشارك بفاعلية ويثري الحوار الصفي بانتظام.", cssClass: "border-excellent" };
@@ -478,15 +550,13 @@
                 if (percentage >= 50) return { phrase: "المشروع غير مكتمل أو يفتقر للكثير من المعايير، يحتاج للاهتمام بجودة التسليمات.", cssClass: "border-acceptable" };
                 return { phrase: "لم يتم تقديم المشروع أو أن الجهد المبذول فيه ضعيف جداً ولا يرقى للمستوى المطلوب.", cssClass: "border-weak" };
             }
-            // التقييم العام (في حالة الحاجة إليه)
-            if (percentage >= 90) return { phrase: "مستوى عام متميز.", cssClass: "border-excellent" };
+            if (percentage >= 90) return { phrase: "مستوى عام متميز ومبشر.", cssClass: "border-excellent" };
             if (percentage >= 80) return { phrase: "مستوى عام جيد جداً.", cssClass: "border-vgood" };
             if (percentage >= 65) return { phrase: "مستوى عام جيد.", cssClass: "border-good" };
             if (percentage >= 50) return { phrase: "مستوى عام مقبول.", cssClass: "border-acceptable" };
-            return { phrase: "مستوى عام ضعيف.", cssClass: "border-weak" };
+            return { phrase: "مستوى عام ضعيف، نرجو المتابعة.", cssClass: "border-weak" };
         }
 
-        // دالة لحساب درجة معيار معين
         function calcCategory(inputs, indices, maxValues) {
             let current = 0; let possible = 0;
             indices.forEach((idx, i) => {
@@ -499,7 +569,6 @@
             return { current, possible };
         }
 
-        // دالة لرسم مربع التقرير الخاص بكل معيار
         function renderCategoryBox(title, categoryType, resultObj) {
             if (resultObj.possible === 0) {
                 return `
@@ -522,6 +591,46 @@
                     <div class="cat-phrase">${evalData.phrase}</div>
                 </div>`;
             }
+        }
+
+        // دالة إنشاء وإرسال رسالة واتساب
+        function sendWhatsApp(btn, studentName) {
+            let card = btn.closest('.detailed-report-card');
+            let phoneInput = card.querySelector('.wa-input').value.trim();
+            
+            if (!/^\d{8}$/.test(phoneInput)) {
+                alert('عذراً، يرجى إدخال رقم هاتف صحيح مكون من 8 أرقام (سلطنة عمان).');
+                return;
+            }
+
+            let msg = `*تقرير الأداء الأكاديمي لمادة تقنية المعلومات*\n`;
+            msg += `👤 *الطالب:* ${studentName}\n`;
+            msg += `───────────────\n\n`;
+
+            let categories = card.querySelectorAll('.category-box');
+            categories.forEach(cat => {
+                if (!cat.classList.contains('border-none')) { 
+                    let title = cat.querySelector('.cat-title').innerText;
+                    let score = cat.querySelector('.cat-score').innerText;
+                    let phrase = cat.querySelector('.cat-phrase').innerText;
+                    msg += `*${title}* [${score}]\n💬 ${phrase}\n\n`;
+                }
+            });
+
+            let summary = card.querySelector('.total-summary-score');
+            if (summary) {
+                msg += `───────────────\n`;
+                msg += `📊 *${summary.innerText}*\n`;
+                let summaryPhrase = card.querySelector('.total-summary div:nth-child(2)').innerText;
+                msg += `📌 ${summaryPhrase}\n`;
+            }
+
+            msg += `\n(إعداد: أ. معاذ اليعقوبي)`;
+
+            // الرابط النهائي لإرسال الواتساب
+            let finalNumber = "968" + phoneInput;
+            let waUrl = `https://wa.me/${finalNumber}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
         }
 
         function generateDetailedReports() {
@@ -551,12 +660,18 @@
                         <span>${index + 1}. ${name}</span>
                         <span style="font-size:12px; font-weight:normal; background:rgba(0,0,0,0.2); padding:3px 8px; border-radius:4px;">تحديث لحظي</span>
                     </div>
-                    <div class="detailed-report-body">`;
+                    <div class="detailed-report-body">
+                        
+                        <div class="wa-container">
+                            <span style="font-size:22px;">📱</span>
+                            <span class="wa-prefix">+968</span>
+                            <input type="tel" class="wa-input" placeholder="رقم الهاتف..." maxlength="8">
+                            <button class="btn-wa-send" onclick="sendWhatsApp(this, '${name}')">إرسال التقرير</button>
+                        </div>`;
 
                 let totalCur = 0; let totalPos = 0;
 
                 if (g === "6") {
-                    // الصف السادس: حوار، أسئلة، أنشطة، مشروع
                     let diag = calcCategory(inputs, [0, 1], [10, 10]);
                     let quiz = calcCategory(inputs, [2, 3, 4, 5], [5, 5, 5, 5]);
                     let act = calcCategory(inputs, [6, 7], [20, 20]);
@@ -571,7 +686,6 @@
                     reportHTML += renderCategoryBox("🚀 المشروع", "project", proj);
 
                 } else if (g === "9") {
-                    // الصف التاسع: حوار، أنشطة، اختبار، مشروع
                     let diag = calcCategory(inputs, [0, 1], [10, 10]);
                     let act = calcCategory(inputs, [2, 3], [20, 20]);
                     let test = calcCategory(inputs, [4], [20]);
@@ -586,7 +700,6 @@
                     reportHTML += renderCategoryBox("🚀 المشروع", "project", proj);
                 }
 
-                // إضافة ملخص النسبة الكلية الحالي
                 if (totalPos > 0) {
                     let overallPct = (totalCur / totalPos) * 100;
                     let overallPhrase = getCategoryPhrase("overall", overallPct);
@@ -599,7 +712,7 @@
                     reportHTML += `<div class="total-summary"><div style="color:#777;">الطالب بانتظار التقييم لبدء حساب نسبة الإنجاز الكلية.</div></div>`;
                 }
 
-                reportHTML += `</div></div>`; // إغلاق البطاقة
+                reportHTML += `</div></div>`;
                 container.innerHTML += reportHTML;
             });
 
@@ -629,12 +742,16 @@
             const s = document.getElementById("sectionSelect").value;
             document.getElementById("sec5").style.display = (g === "9") ? "none" : "block";
             if (g === "9" && s === "5") document.getElementById("sectionSelect").value = "1";
-            document.getElementById("form6").classList.toggle("active-form", g === "6");
-            document.getElementById("form9").classList.toggle("active-form", g === "9");
+            document.getElementById("form6").classList.remove("active-form");
+            document.getElementById("form9").classList.remove("active-form");
+            document.getElementById("form" + g).classList.add("active-form");
             
             const tbody = document.getElementById("tbody" + g);
-            tbody.innerHTML = `<tr><td colspan="15">جاري التحميل من قاعدة البيانات... ⏳</td></tr>`;
-            
+            tbody.innerHTML = `<tr><td colspan="15" style="text-align:center; padding:20px; font-weight:bold; color:#2980b9;">جاري جلب بيانات الطلاب السابقة من جوجل شيت... ⏳</td></tr>`;
+            document.getElementById("interactionPanel").innerHTML = "";
+            document.getElementById("randomBox").innerText = "اضغط لاختيار طالب";
+            document.getElementById("groupsDisplay").innerHTML = "";
+
             fetch(`${scriptURL}?grade=${g}&section=${document.getElementById("sectionSelect").value}`)
             .then(r => r.json()).then(d => {
                 currentSheetData = (d.result === 'success') ? d.data : {};
@@ -650,39 +767,42 @@
             
             students.forEach((name, i) => {
                 let d = currentSheetData[name] || [];
-                const val = (idx) => (d[idx] !== undefined && d[idx] !== 0) ? d[idx] : "";
-                const valZero = (idx) => (d[idx] || 0);
+                const val = (idx) => (d[idx] !== undefined && d[idx] !== 0 && d[idx] !== "") ? d[idx] : "";
+                const valZero = (idx) => (d[idx] !== undefined && d[idx] !== "") ? d[idx] : 0;
+
+                let interactIdx = (g === "6") ? 14 : 10;
+                let interactionPts = valZero(interactIdx);
 
                 panel.innerHTML += `<div class="student-card"><span class="student-card-name" title="${name}">${i+1}. ${name}</span>
                     <div class="interaction-container"><button class="btn-interact btn-plus" onclick="changePoints(this,1)">+</button>
-                    <input type="number" id="interact-${i}" class="col-interaction" value="${valZero(g==='6'?14:10)}">
+                    <input type="number" id="interact-${i}" class="col-interaction" value="${interactionPts}">
                     <button class="btn-interact btn-minus" onclick="changePoints(this,-1)">-</button></div></div>`;
 
-                let row = `<td>${i+1}</td><td style="text-align:right;">${name}</td>`;
+                let row = `<td>${i+1}</td><td style="text-align:right; padding-right:10px;">${name}</td>`;
                 if (g === "6") {
-                    row += `<td><input type="number" class="col-calc" value="${val(1)}" oninput="calc(this,'6')"></td>
-                            <td><input type="number" class="col-calc" value="${val(2)}" oninput="calc(this,'6')"></td>
-                            <td class="t-dialogue header-orange">${valZero(3)}</td>
-                            <td><input type="number" class="col-calc" value="${val(4)}" oninput="calc(this,'6')"></td>
-                            <td><input type="number" class="col-calc" value="${val(5)}" oninput="calc(this,'6')"></td>
-                            <td><input type="number" class="col-calc" value="${val(6)}" oninput="calc(this,'6')"></td>
-                            <td><input type="number" class="col-calc" value="${val(7)}" oninput="calc(this,'6')"></td>
-                            <td class="t-quiz header-orange">${valZero(8)}</td>
-                            <td><input type="number" class="col-calc" value="${val(9)}" oninput="calc(this,'6')"></td>
-                            <td><input type="number" class="col-calc" value="${val(10)}" oninput="calc(this,'6')"></td>
-                            <td class="t-activity header-orange">${valZero(11)}</td>
-                            <td><input type="number" class="col-calc" value="${val(12)}" oninput="calc(this,'6')"></td>
-                            <td class="t-grand header-orange">${valZero(13)}</td>`;
+                    row += `<td><input type="number" class="col-calc" max="10" value="${val(1)}" oninput="calc(this,'6')"></td>
+                            <td><input type="number" class="col-calc" max="10" value="${val(2)}" oninput="calc(this,'6')"></td>
+                            <td class="t-dialogue header-orange" style="font-weight:bold;">${valZero(3)}</td>
+                            <td><input type="number" class="col-calc" max="5" value="${val(4)}" oninput="calc(this,'6')"></td>
+                            <td><input type="number" class="col-calc" max="5" value="${val(5)}" oninput="calc(this,'6')"></td>
+                            <td><input type="number" class="col-calc" max="5" value="${val(6)}" oninput="calc(this,'6')"></td>
+                            <td><input type="number" class="col-calc" max="5" value="${val(7)}" oninput="calc(this,'6')"></td>
+                            <td class="t-quiz header-orange" style="font-weight:bold;">${valZero(8)}</td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(9)}" oninput="calc(this,'6')"></td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(10)}" oninput="calc(this,'6')"></td>
+                            <td class="t-activity header-orange" style="font-weight:bold;">${valZero(11)}</td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(12)}" oninput="calc(this,'6')"></td>
+                            <td class="t-grand header-orange" style="font-weight:bold;">${valZero(13)}</td>`;
                 } else {
-                    row += `<td><input type="number" class="col-calc" value="${val(1)}" oninput="calc(this,'9')"></td>
-                            <td><input type="number" class="col-calc" value="${val(2)}" oninput="calc(this,'9')"></td>
-                            <td class="t-dialogue header-orange">${valZero(3)}</td>
-                            <td><input type="number" class="col-calc" value="${val(4)}" oninput="calc(this,'9')"></td>
-                            <td><input type="number" class="col-calc" value="${val(5)}" oninput="calc(this,'9')"></td>
-                            <td class="t-activity header-orange">${valZero(6)}</td>
-                            <td><input type="number" class="col-calc" value="${val(7)}" oninput="calc(this,'9')"></td>
-                            <td><input type="number" class="col-calc" value="${val(8)}" oninput="calc(this,'9')"></td>
-                            <td class="t-grand header-orange">${valZero(9)}</td>`;
+                    row += `<td><input type="number" class="col-calc" max="10" value="${val(1)}" oninput="calc(this,'9')"></td>
+                            <td><input type="number" class="col-calc" max="10" value="${val(2)}" oninput="calc(this,'9')"></td>
+                            <td class="t-dialogue header-orange" style="font-weight:bold;">${valZero(3)}</td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(4)}" oninput="calc(this,'9')"></td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(5)}" oninput="calc(this,'9')"></td>
+                            <td class="t-activity header-orange" style="font-weight:bold;">${valZero(6)}</td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(7)}" oninput="calc(this,'9')"></td>
+                            <td><input type="number" class="col-calc" max="20" value="${val(8)}" oninput="calc(this,'9')"></td>
+                            <td class="t-grand header-orange" style="font-weight:bold;">${valZero(9)}</td>`;
                 }
                 let tr = document.createElement("tr"); tr.innerHTML = row; tbody.appendChild(tr);
             });
@@ -708,14 +828,18 @@
             let list = [];
             rows.forEach((row, i) => {
                 let v = row.querySelectorAll(".col-calc"); let name = row.cells[1].innerText;
-                let interact = document.getElementById(`interact-${i}`).value;
-                if(g==="6") list.push({name:name, interaction:interact, d1:v[0].value, d2:v[1].value, tDiag:row.querySelector('.t-dialogue').innerText, q1:v[2].value, q2:v[3].value, q3:v[4].value, q4:v[5].value, tQuiz:row.querySelector('.t-quiz').innerText, a1:v[6].value, a2:v[7].value, tAct:row.querySelector('.t-activity').innerText, proj:v[8].value, total:row.querySelector('.t-grand').innerText});
-                else list.push({name:name, interaction:interact, d1:v[0].value, d2:v[1].value, tDiag:row.querySelector('.t-dialogue').innerText, a1:v[2].value, a2:v[3].value, tAct:row.querySelector('.t-activity').innerText, test:v[4].value, proj:v[5].value, total:row.querySelector('.t-grand').innerText});
+                let interact = document.getElementById(`interact-${i}`).value || 0;
+                if(g==="6") list.push({name:name, interaction:interact, d1:v[0].value||0, d2:v[1].value||0, tDiag:row.querySelector('.t-dialogue').innerText, q1:v[2].value||0, q2:v[3].value||0, q3:v[4].value||0, q4:v[5].value||0, tQuiz:row.querySelector('.t-quiz').innerText, a1:v[6].value||0, a2:v[7].value||0, tAct:row.querySelector('.t-activity').innerText, proj:v[8].value||0, total:row.querySelector('.t-grand').innerText});
+                else list.push({name:name, interaction:interact, d1:v[0].value||0, d2:v[1].value||0, tDiag:row.querySelector('.t-dialogue').innerText, a1:v[2].value||0, a2:v[3].value||0, tAct:row.querySelector('.t-activity').innerText, test:v[4].value||0, proj:v[5].value||0, total:row.querySelector('.t-grand').innerText});
             });
-            const btn = document.querySelector('.btn-submit'); btn.innerText = "جاري الحفظ..."; btn.disabled = true;
+            const btn = document.querySelector('.btn-submit'); const oldTxt = btn.innerText;
+            btn.innerText = "جاري الحفظ..."; btn.disabled = true; btn.style.backgroundColor = "#7f8c8d";
             fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({grade:g, section:document.getElementById("sectionSelect").value, students:list}) })
-            .then(r => r.json()).then(d => { alert('تم الحفظ بنجاح!'); updateView(); btn.innerText = "حفظ وإرسال البيانات"; btn.disabled = false; })
-            .catch(() => { alert('حدث خطأ بالاتصال، تأكد من الإنترنت!'); btn.innerText = "حفظ وإرسال البيانات"; btn.disabled = false; });
+            .then(r => r.json()).then(d => { 
+                if(d.result === 'success') { alert('تم الحفظ بنجاح!'); updateView(); } else alert('رسالة من السيرفر: ' + d.message);
+                btn.innerText = oldTxt; btn.disabled = false; btn.style.backgroundColor = "#27ae60"; 
+            })
+            .catch(() => { alert('حدث خطأ بالاتصال، تأكد من الإنترنت!'); btn.innerText = oldTxt; btn.disabled = false; btn.style.backgroundColor = "#27ae60"; });
         }
     </script>
 </body>
