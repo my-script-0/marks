@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة رصد الدرجات الشاملة</title>
+    <title>رصد وتحليل الدرجات - تقنية المعلومات</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
         /* المتغيرات الأساسية للألوان */
         :root {
@@ -45,15 +48,25 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .btn-submit {
-            width: 250px; padding: 12px;
+            width: 200px; padding: 12px;
             background-color: #27ae60; color: white; border: none; border-radius: 5px;
-            font-size: 18px; font-weight: bold; cursor: pointer;
+            font-size: 16px; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: background-color 0.3s;
         }
         .btn-submit:hover { background-color: #2ecc71; }
         .btn-submit:disabled { background-color: #7f8c8d; cursor: not-allowed; }
+
+        /* زر الإكسل */
+        .btn-export {
+            padding: 12px 20px;
+            background-color: #1d6f42; color: white; border: none; border-radius: 5px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: background-color 0.3s;
+        }
+        .btn-export:hover { background-color: #145230; }
         
         /* زر الوضع الليلي */
         .theme-toggle {
@@ -188,17 +201,17 @@
         
         /* تنسيقات الواتساب */
         .wa-container {
-            display: flex; gap: 10px; margin-bottom: 15px; align-items: center;
+            display: flex; gap: 10px; margin-bottom: 15px; align-items: center; flex-wrap: wrap;
             background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 6px; border: 1px solid rgba(37, 211, 102, 0.3);
         }
         .wa-prefix { font-weight: bold; color: #25D366; direction: ltr; font-size: 16px;}
         .wa-input {
             padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;
-            background: var(--input-bg); color: var(--text-color); font-size: 15px; text-align: left; direction: ltr; flex: 1; max-width: 150px;
+            background: var(--input-bg); color: var(--text-color); font-size: 15px; text-align: left; direction: ltr; flex: 1; min-width: 120px; max-width: 150px;
         }
         .btn-wa-send {
             background: #25D366; color: white; border: none; padding: 8px 15px; border-radius: 4px; 
-            cursor: pointer; font-weight: bold; font-family: inherit; font-size: 14px;
+            cursor: pointer; font-weight: bold; font-family: inherit; font-size: 14px; flex-shrink: 0;
         }
         .btn-wa-send:hover { background: #20b858; }
 
@@ -238,6 +251,7 @@
 
     <div class="sticky-submit-container">
         <button class="btn-submit" onclick="submitData()">حفظ وإرسال البيانات</button>
+        <button class="btn-export" onclick="exportToExcel()">📊 تصدير إكسل</button>
         <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn" title="تغيير المظهر">🌙</button>
     </div>
 
@@ -391,7 +405,7 @@
             }
         };
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby_zrJoBJPoPh4mc_0JyB8rZX5LUr-GQbCIzB5y1VvBfjYr_hNX41-Z_kt5B9lpJTh-aQ/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyC-nLmHzOpFo7zjuoIMy4d_B-6VfmWIimvDluert5QcRqsEe9n2X658hvlYw_QmGHUEg/exec';
         let currentSheetData = {};
 
         // --- إدارة الوضع الليلي ---
@@ -515,6 +529,88 @@
             res.forEach((gp, i) => {
                 if(gp.length > 0) disp.innerHTML += `<div class="group-card"><div class="group-title">المجموعة ${i+1}</div><ul class="group-list">${gp.map(st=>`<li>${st}</li>`).join('')}</ul></div>`;
             });
+        }
+
+        // =========================================================
+        // --- تصدير البيانات إلى Excel ---
+        // =========================================================
+        function exportToExcel() {
+            const grade = document.getElementById("gradeSelect").value;
+            const section = document.getElementById("sectionSelect").value;
+            const tbody = document.getElementById("tbody" + grade);
+            const rows = tbody.querySelectorAll("tr");
+
+            if (rows.length === 0 || !rows[0].querySelector('.col-calc')) {
+                alert("لا توجد بيانات درجات للتصدير. الرجاء الانتظار حتى يتم تحميل البيانات.");
+                return;
+            }
+
+            let data = [];
+            
+            // تجهيز عناوين الأعمدة بناءً على الصف
+            if (grade === "6") {
+                data.push(["م", "إسم الطالب", "الحوار 1 (10)", "الحوار 2 (10)", "مجموع الحوار (20)", "سؤال 1 (5)", "سؤال 2 (5)", "سؤال 3 (5)", "سؤال 4 (5)", "مجموع الأسئلة (20)", "نشاط 1 (20)", "نشاط 2 (20)", "مجموع الأنشطة (40)", "المشروع (20)", "الدرجة الكلية (100)", "نقاط التعزيز والمشاركة"]);
+            } else {
+                data.push(["م", "إسم الطالب", "الحوار 1 (10)", "الحوار 2 (10)", "مجموع الحوار (20)", "نشاط 1 (20)", "نشاط 2 (20)", "مجموع الأنشطة (40)", "الاختبار (20)", "المشروع (20)", "الدرجة الكلية (100)", "نقاط التعزيز والمشاركة"]);
+            }
+
+            // سحب البيانات من الجدول
+            rows.forEach((row, index) => {
+                let rowData = [];
+                rowData.push(index + 1); // مسلسل
+                rowData.push(row.cells[1].innerText); // اسم الطالب
+                
+                let inputs = row.querySelectorAll('.col-calc');
+                let interactInput = document.getElementById(`interact-${index}`);
+                let interactVal = interactInput ? interactInput.value : 0;
+
+                if (grade === "6") {
+                    rowData.push(inputs[0].value || 0); 
+                    rowData.push(inputs[1].value || 0); 
+                    rowData.push(row.querySelector('.t-dialogue').innerText); 
+                    
+                    rowData.push(inputs[2].value || 0); 
+                    rowData.push(inputs[3].value || 0); 
+                    rowData.push(inputs[4].value || 0); 
+                    rowData.push(inputs[5].value || 0); 
+                    rowData.push(row.querySelector('.t-quiz').innerText); 
+                    
+                    rowData.push(inputs[6].value || 0); 
+                    rowData.push(inputs[7].value || 0); 
+                    rowData.push(row.querySelector('.t-activity').innerText); 
+                    
+                    rowData.push(inputs[8].value || 0); 
+                    rowData.push(row.querySelector('.t-grand').innerText); 
+                    rowData.push(interactVal); 
+                } else {
+                    rowData.push(inputs[0].value || 0); 
+                    rowData.push(inputs[1].value || 0); 
+                    rowData.push(row.querySelector('.t-dialogue').innerText); 
+                    
+                    rowData.push(inputs[2].value || 0); 
+                    rowData.push(inputs[3].value || 0); 
+                    rowData.push(row.querySelector('.t-activity').innerText); 
+                    
+                    rowData.push(inputs[4].value || 0); 
+                    rowData.push(inputs[5].value || 0); 
+                    rowData.push(row.querySelector('.t-grand').innerText); 
+                    rowData.push(interactVal); 
+                }
+                data.push(rowData);
+            });
+
+            // إنشاء ملف الإكسل
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            
+            // جعل اتجاه الشيت من اليمين لليسار (اللغة العربية)
+            if(!ws['!views']) ws['!views'] = [];
+            ws['!views'].push({rightToLeft: true});
+
+            XLSX.utils.book_append_sheet(wb, ws, `درجات شعبة ${section}`);
+            
+            // تحميل الملف
+            XLSX.writeFile(wb, `درجات_الصف_${grade}_شعبة_${section}.xlsx`);
         }
 
         // =========================================================
