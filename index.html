@@ -415,10 +415,10 @@
             body.classList.toggle("dark-mode");
             
             if (body.classList.contains("dark-mode")) {
-                btn.innerText = "☀️";
+                btn.innerText = "light";
                 localStorage.setItem("theme", "dark");
             } else {
-                btn.innerText = "🌙";
+                btn.innerText = "dark";
                 localStorage.setItem("theme", "light");
             }
         }
