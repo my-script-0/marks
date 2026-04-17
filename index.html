@@ -7,6 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root { 
@@ -162,7 +163,7 @@
         
         .report-img-footer { background-color: #f8f9fa; padding: 15px 20px; border-top: 3px solid #16a085; }
         .report-img-total { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
-        .report-img-summary { font-size: 13px; color: #7f8c8d; }
+        .report-img-summary { font-size: 14px; font-weight: bold; color: #27ae60; background: #eafaf1; padding: 8px; border-radius: 5px; border: 1px solid #a3e4d7; display: inline-block; margin-top:5px;}
 
         #offline-banner { display:none; background:#e74c3c; color:white; text-align:center; padding:5px; font-weight:bold; position:fixed; top:0; left:0; width:100%; z-index:99999; }
         .risk-alert { font-size: 11px; background-color: #ffcccc; color: #cc0000; padding: 2px 5px; border-radius: 4px; display: none; animation: blinker 1.5s linear infinite; }
@@ -195,7 +196,7 @@
     </div>
 
     <div class="header-container">
-        <h2>المنصة الرقمية للتقييم الأكاديمي <span style="font-size:14px; color:#27ae60;">(الإصدار 2.1)</span></h2>
+        <h2>المنصة الرقمية للتقييم الأكاديمي <span style="font-size:14px; color:#27ae60;">(الإصدار 2.2)</span></h2>
         <p class="author-name">إعداد: أ. معاذ اليعقوبي</p>
         <div class="controls">
             <select id="gradeSelect" onchange="updateView()">
@@ -406,10 +407,9 @@
             const list = studentsData[g][s] || [];
             
             list.forEach((name, i) => {
-                // دالة val تجلب فقط القيم الحقيقية أو تترك الخانة فارغة، ولا تضع الصفر من تلقاء نفسها أبداً
                 let d = currentSheetData[name] || []; 
                 const val = (idx) => (d[idx] !== undefined && d[idx] !== "" && d[idx] !== null ? d[idx] : ""); 
-                const valZero = (idx) => (d[idx] || 0); // تستخدم فقط لمربعات التعزيز والمخالفات
+                const valZero = (idx) => (d[idx] || 0);
                 let intIdx = (g === '6') ? 14 : 10; let violIdx = (g === '6') ? 15 : 11;
 
                 let shortName = name.split(' ').slice(0, 3).join(' ');
@@ -435,7 +435,6 @@
                 rGrid.appendChild(rCard);
 
                 let row = `<td>${i+1}</td><td style="text-align:right;"><span id="name-${i}">${name}</span><br><span id="risk-${i}" class="risk-alert">⚠️ تراجع بالمستوى</span></td>`;
-                // في الأعمدة الإجمالية (.t-dialogue, .t-grand وغيرها) لن نضع دالة valZero بل سنتركها تُحسب أو تبقى فارغة عبر دالة calc
                 if (g === "6") {
                     row += `<td><input type="number" class="col-calc" value="${val(1)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(2)}" oninput="calc(this,'6')"></td> <td class="t-dialogue header-orange"></td> <td><input type="number" class="col-calc" value="${val(4)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(5)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(6)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(7)}" oninput="calc(this,'6')"></td> <td class="t-quiz header-orange"></td> <td><input type="number" class="col-calc" value="${val(9)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(10)}" oninput="calc(this,'6')"></td> <td class="t-activity header-orange"></td> <td><input type="number" class="col-calc" value="${val(12)}" oninput="calc(this,'6')"></td> <td class="t-grand header-orange"></td>`;
                 } else {
@@ -446,12 +445,11 @@
             setTimeout(() => { tbody.querySelectorAll('.col-calc').forEach(inp => calc(inp, g)); }, 500);
         }
 
-        // --- دالة calc المحدثة لتفهم متى تترك الخانة فارغة ومتى تضع مجموعاً ---
         function calc(inp, g) {
             if(!inp) return; let tr = inp.closest('tr'); if(!tr) return;
             let inputs = Array.from(tr.querySelectorAll('.col-calc'));
-            let raw = inputs.map(i => i.value.trim()); // قراءة المحتوى كـ نص (للتفريق بين الفراغ والصفر)
-            let vals = raw.map(v => parseFloat(v) || 0); // تحويل القيم للأرقام لغرض الجمع (الفراغ يصبح صفر مؤقتاً)
+            let raw = inputs.map(i => i.value.trim()); 
+            let vals = raw.map(v => parseFloat(v) || 0); 
             let inputsFilled = raw.filter(v => v !== "").length;
             let possibleTotal = 0;
 
@@ -677,46 +675,67 @@
                     totalPos = 100; 
                 } else {
                     if (g === "6") {
-                        let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
-                        let evalQuiz = raw[2] !== "" || raw[3] !== "" || raw[4] !== "" || raw[5] !== ""; let quiz = vals[2] + vals[3] + vals[4] + vals[5];
-                        let evalAct = raw[6] !== "" || raw[7] !== ""; let act = vals[6] + vals[7];
-                        let evalProj = raw[8] !== ""; let proj = vals[8];
+                        // حساب الحد الأقصى الديناميكي لكل معيار بناءً على الخانات المعبأة فقط
+                        let maxDiag = (raw[0] !== "" ? 10 : 0) + (raw[1] !== "" ? 10 : 0);
+                        let maxQuiz = (raw[2] !== "" ? 5 : 0) + (raw[3] !== "" ? 5 : 0) + (raw[4] !== "" ? 5 : 0) + (raw[5] !== "" ? 5 : 0);
+                        let maxAct = (raw[6] !== "" ? 20 : 0) + (raw[7] !== "" ? 20 : 0);
+                        let maxProj = (raw[8] !== "" ? 20 : 0);
 
-                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
-                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
-                        detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, 20, evalQuiz);
-                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20, evalProj);
+                        let diag = vals[0] + vals[1];
+                        let quiz = vals[2] + vals[3] + vals[4] + vals[5];
+                        let act = vals[6] + vals[7];
+                        let proj = vals[8];
 
-                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n`;
-                        waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n`;
-                        waDetails += `❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, 20, evalQuiz)}\n`;
-                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
+                        let evalDiag = maxDiag > 0;
+                        let evalQuiz = maxQuiz > 0;
+                        let evalAct = maxAct > 0;
+                        let evalProj = maxProj > 0;
 
-                        if(evalDiag) { totalCur += diag; totalPos += 20; }
-                        if(evalQuiz) { totalCur += quiz; totalPos += 20; }
-                        if(evalAct) { totalCur += act; totalPos += 40; }
-                        if(evalProj) { totalCur += proj; totalPos += 20; }
+                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, maxDiag, evalDiag);
+                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, maxAct, evalAct);
+                        detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, maxQuiz, evalQuiz);
+                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, maxProj, evalProj);
+
+                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, maxDiag, evalDiag)}\n`;
+                        waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, maxAct, evalAct)}\n`;
+                        waDetails += `❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, maxQuiz, evalQuiz)}\n`;
+                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, maxProj, evalProj)}\n`;
+
+                        if(evalDiag) { totalCur += diag; totalPos += maxDiag; }
+                        if(evalQuiz) { totalCur += quiz; totalPos += maxQuiz; }
+                        if(evalAct) { totalCur += act; totalPos += maxAct; }
+                        if(evalProj) { totalCur += proj; totalPos += maxProj; }
 
                     } else {
-                        let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
-                        let evalAct = raw[2] !== "" || raw[3] !== ""; let act = vals[2] + vals[3];
-                        let evalTest = raw[4] !== ""; let test = vals[4];
-                        let evalProj = raw[5] !== ""; let proj = vals[5];
+                        let maxDiag = (raw[0] !== "" ? 10 : 0) + (raw[1] !== "" ? 10 : 0);
+                        let maxAct = (raw[2] !== "" ? 20 : 0) + (raw[3] !== "" ? 20 : 0);
+                        let maxTest = (raw[4] !== "" ? 20 : 0);
+                        let maxProj = (raw[5] !== "" ? 20 : 0);
 
-                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
-                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
-                        detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, 20, evalTest);
-                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20, evalProj);
+                        let diag = vals[0] + vals[1];
+                        let act = vals[2] + vals[3];
+                        let test = vals[4];
+                        let proj = vals[5];
 
-                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n`;
-                        waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n`;
-                        waDetails += `📝 الاختبار: ${getWaTextDesc("الاختبار", test, 20, evalTest)}\n`;
-                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
+                        let evalDiag = maxDiag > 0;
+                        let evalAct = maxAct > 0;
+                        let evalTest = maxTest > 0;
+                        let evalProj = maxProj > 0;
 
-                        if(evalDiag) { totalCur += diag; totalPos += 20; }
-                        if(evalAct) { totalCur += act; totalPos += 40; }
-                        if(evalTest) { totalCur += test; totalPos += 20; }
-                        if(evalProj) { totalCur += proj; totalPos += 20; }
+                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, maxDiag, evalDiag);
+                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, maxAct, evalAct);
+                        detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, maxTest, evalTest);
+                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, maxProj, evalProj);
+
+                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, maxDiag, evalDiag)}\n`;
+                        waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, maxAct, evalAct)}\n`;
+                        waDetails += `📝 الاختبار: ${getWaTextDesc("الاختبار", test, maxTest, evalTest)}\n`;
+                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, maxProj, evalProj)}\n`;
+
+                        if(evalDiag) { totalCur += diag; totalPos += maxDiag; }
+                        if(evalAct) { totalCur += act; totalPos += maxAct; }
+                        if(evalTest) { totalCur += test; totalPos += maxTest; }
+                        if(evalProj) { totalCur += proj; totalPos += maxProj; }
                     }
                 }
 
@@ -733,7 +752,7 @@
                     <div class="report-img-header">${i+1}. ${name}</div>
                     
                     <div class="report-img-actionbar">
-                        <button class="wa-send-btn" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol})">إرسال التقرير 📱</button>
+                        <button class="wa-send-btn" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol}, '${summaryTxt}')">إرسال التقرير 📱</button>
                         <input type="tel" class="wa-input" placeholder="8 أرقام..." maxlength="8" dir="ltr">
                         <button class="cert-btn" style="margin-right:auto;" onclick="generateCertificate('${name}')">🎓 طباعة شهادة التفوق</button>
                     </div>
@@ -744,7 +763,7 @@
 
                     <div class="report-img-footer">
                         <div class="report-img-total">مجموع الدرجات المرصودة حتى الآن: ${totalCur} من ${totalPos}</div>
-                        <div class="report-img-summary">الخلاصة: ${summaryTxt}</div>
+                        <div class="report-img-summary">المستوى العام: ${summaryTxt}</div>
                     </div>
                 </div>`;
             });
@@ -753,14 +772,17 @@
 
         function filterReports() { let filter = document.getElementById("reportSearch").value.toLowerCase(); document.querySelectorAll(".report-card-item").forEach(card => card.style.display = card.innerText.toLowerCase().includes(filter) ? "" : "none"); }
 
-        function sendWA(btn, name, totalCur, totalPos, waDetails, int, viol) { 
+        function sendWA(btn, name, totalCur, totalPos, waDetails, int, viol, summaryTxt) { 
             let num = btn.parentElement.querySelector('.wa-input').value; 
             if(num.length !== 8) return alert('يرجى إدخال 8 أرقام لإرسال الواتساب بشكل صحيح.'); 
-            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل التفصيلي للمهام المنجزة:*\n${waDetails}\n*مجموع الدرجات المرصودة:* ${totalCur} من ${totalPos}\n\n*سجل الانضباط:* (نقاط التميز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
+            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل التفصيلي للمهام المنجزة:*\n${waDetails}\n*مجموع الدرجات المرصودة:* ${totalCur} من ${totalPos}\n*المستوى العام:* ${summaryTxt}\n\n*سجل الانضباط:* (نقاط التميز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
-        function generateCertificate(studentName) {
+        async function generateCertificate(studentName) {
+            // انتظار تحميل الخط الأميري لضمان رسمه على الشهادة بشكل صحيح
+            await document.fonts.load("bold 55px Amiri");
+
             const canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 700; const ctx = canvas.getContext('2d');
             ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 15; ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40); ctx.lineWidth = 4; ctx.strokeRect(45, 45, canvas.width - 90, canvas.height - 90);
@@ -768,15 +790,17 @@
             const drawCorner = (x, y, size, dirX, dirY) => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + size * dirX, y); ctx.lineTo(x, y + size * dirY); ctx.fill(); };
             drawCorner(45, 45, 40, 1, 1); drawCorner(canvas.width - 45, 45, 40, -1, 1); drawCorner(45, canvas.height - 45, 40, 1, -1); drawCorner(canvas.width - 45, canvas.height - 45, 40, -1, -1);
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
-            ctx.font = 'bold 55px Tahoma, Arial'; ctx.fillStyle = '#2c3e50'; ctx.fillText('شَهَادَةُ شُكْرٍ وَتَقْدِير', canvas.width / 2, 160);
-            ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
+            
+            // استخدام خط أميري الفخم
+            ctx.font = 'bold 60px "Amiri", serif'; ctx.fillStyle = '#2c3e50'; ctx.fillText('شَهَادَةُ شُكْرٍ وَتَقْدِير', canvas.width / 2, 160);
+            ctx.font = '30px "Amiri", serif'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
             ctx.fillStyle = '#fdfbf2'; ctx.fillRect(canvas.width/2 - 300, 310, 600, 90); ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(canvas.width/2 - 300, 310, 600, 90);
             
-            ctx.font = 'bold 30px Tahoma, Arial'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
+            ctx.font = 'bold 36px "Amiri", serif'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
             
-            ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
-            ctx.font = 'bold 22px Tahoma, Arial'; ctx.fillText('معلم المادة', 250, 600); ctx.fillText('أ. معاذ اليعقوبي', 250, 640);
-            ctx.font = '18px Tahoma, Arial'; ctx.fillStyle = '#95a5a6'; ctx.fillText('المنصة الرقمية للتقييم الأكاديمي', canvas.width - 250, 620);
+            ctx.font = '30px "Amiri", serif'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
+            ctx.font = 'bold 24px "Amiri", serif'; ctx.fillText('معلم المادة', 250, 600); ctx.fillText('أ. معاذ اليعقوبي', 250, 640);
+            ctx.font = '20px "Amiri", serif'; ctx.fillStyle = '#95a5a6'; ctx.fillText('المنصة الرقمية للتقييم الأكاديمي', canvas.width - 250, 620);
             
             const link = document.createElement('a'); link.download = `شهادة_تميز_${studentName.split(' ')[0]}.png`; link.href = canvas.toDataURL('image/png'); link.click();
             playSound(700, 'sine', 0.5, 0.2);
