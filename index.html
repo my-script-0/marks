@@ -126,8 +126,8 @@
         .seating-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; padding: 10px; }
         .desk-card { background: var(--input-bg); border: 2px solid #3498db; border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor:pointer;}
         .detailed-report-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
-        .detailed-report-name { background-color: #34495e; color: white; padding: 10px; font-weight: bold; }
-        .wa-btn-mini, .cert-btn-mini { border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:13px; color:#fff;}
+        .detailed-report-name { background-color: #34495e; color: white; padding: 10px; font-weight: bold; font-size:16px;}
+        .wa-btn-mini, .cert-btn-mini { border:none; padding:8px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:13px; color:#fff;}
         .wa-btn-mini { background:#25D366; } .cert-btn-mini { background:#d4af37; margin-right:5px;}
         
         #offline-banner { display:none; background:#e74c3c; color:white; text-align:center; padding:5px; font-weight:bold; position:fixed; top:0; left:0; width:100%; z-index:99999; }
@@ -280,7 +280,6 @@
     </div>
 
     <script>
-        // --- داتا الطلاب الكاملة كما أدخلتها ---
         const studentsData = { 
             "9": { 
                 "1": ["أحمد بن محمد بن خميس ضحي الغافري", "أنس بن سالم بن مسلم سالم المعمري", "المؤيد بن سباع بن خلفان سعيد الغافري", "المنذر بن سعيد بن علي سالم الشهومي", "تركي بن سعيد بن مطر علي الحاتمي", "تركي بن سلطان بن عبدالله سيف الغافري", "تميم بن خالد بن سيف حمد التميمي", "تيمور بن سعيد بن سليـّم خميس المقرشي", "جاسم بن عبدالله بن حميد راشد العبري", "جراح بن سعيد بن سالم سعيد الغافري", "حميد بن سعيد بن حميد سعيد الغافري", "خالد الوليد عمر يعقوب", "راشد بن جمعه بن عبدالله خميس الغافري", "سامي بن أحمد بن سرور عبدالله المقبالي", "سعود بن راشد بن ظاهر ظاوي الغافري", "سعود بن سعيد بن خلفان سعيد الغافري", "سعيد بن خالد بن سعيد حمد السعيدي", "سلطان بن سعيد بن صياح مبارك الغافري", "سلطان بن محمود بن عيد محبوب الغافري", "سيف بن عبدالله بن سيف سليمان الحاتمي", "عبد الملك بن سعيد بن مانع عامر الغافري", "عمار بن بخيت بن علي بخيت الغافري", "عمر بن سالم بن حميد مرهون الشكيلي", "غيث بن أيوب بن سيف سلطان الغافري", "فلا ح بن ناصر بن سالم أحمد الغافري", "كهلان بن قحطان بن زاهر ناصر الغريبي", "لؤي بن أنور بن حمد راشد الشكيلي", "محمد بن أحمد بن طالب سيف الغافري", "محمد بن عبدالله بن مبارك سعيد الناصري", "محمد بن عمر بن سالم أحمد الغافري", "نهيان بن علي بن خميس سيف الغافري", "نواف بن محمد بن مطر علي الحاتمي", "هشام بن راشد بن مسعود راشد الناصري", "وسام بن عبدالله بن حمد عبيد الغافري", "يوسف بن أحمد بن حمد عبيد الغافري"], 
@@ -476,43 +475,110 @@
             document.getElementById('honorTickerText').innerHTML = text; wrap.style.display = 'flex'; playSound(600, 'sine', 0.8, 0.2);
         }
 
+        // --- دالة العبارات الوصفية الكاملة والتربوية لكل معيار ---
+        function getCategoryFullDesc(title, cur, max) {
+            let pct = (cur / max) * 100;
+            let desc = ""; 
+            let color = "";
+            if (pct >= 90) { 
+                desc = "أداء ممتاز ومستوى يبعث على الفخر، استمر في هذا التألق والإبداع والمشاركة الفعالة."; 
+                color = "#27ae60"; 
+            } else if (pct >= 75) { 
+                desc = "أداء جيد جداً ومبشر، مع قليل من التركيز الإضافي والمراجعة ستصل إلى القمة بسهولة."; 
+                color = "#2980b9"; 
+            } else if (pct >= 50) { 
+                desc = "مستوى متوسط، أنت تمتلك قدرات أفضل وتحتاج لمضاعفة الجهد والمشاركة بشكل أوسع في الحصص القادمة."; 
+                color = "#f39c12"; 
+            } else { 
+                desc = "مستوى يحتاج إلى متابعة حثيثة واهتمام أكبر بالمهام المطلوبة، نرجو التعاون لرفع مستوى الطالب وتدارك التأخر."; 
+                color = "#e74c3c"; 
+            }
+            return `<div style="margin-bottom:10px; background:var(--bg-color); padding:10px; border-radius:6px; border-right:4px solid ${color};">
+                        <div style="font-size:14px; margin-bottom:5px;"><b>${title}:</b> ${cur}/${max}</div>
+                        <div style="font-size:13px; color:var(--text-color); opacity:0.9;">💬 ${desc}</div>
+                    </div>`;
+        }
+        
+        // --- دالة إرسال الواتساب للحصول على نفس العبارة الكاملة ---
+        function getWaFullDesc(cur, max) {
+            let pct = (cur / max) * 100;
+            if (pct >= 90) return "أداء ممتاز ومستوى يبعث على الفخر، استمر في هذا التألق.";
+            if (pct >= 75) return "أداء جيد جداً ومبشر، مع قليل من التركيز ستصل للقمة.";
+            if (pct >= 50) return "مستوى متوسط، تمتلك قدرات أفضل وتحتاج لمضاعفة الجهد.";
+            return "مستوى يحتاج إلى متابعة حثيثة واهتمام أكبر بالمهام المطلوبة.";
+        }
+
+        // --- دالة التقارير التفصيلية المكتملة ---
         function generateDetailedReports() {
-            const g = document.getElementById("gradeSelect").value; const tbody = document.getElementById("tbody" + g);
-            const container = document.getElementById("reportsContainer"); container.innerHTML = "";
-            const maxVal = g === "6" ? [10, 10, 5, 5, 5, 5, 20, 20, 20] : [10, 10, 20, 20, 20, 20];
+            const g = document.getElementById("gradeSelect").value; 
+            const tbody = document.getElementById("tbody" + g);
+            const container = document.getElementById("reportsContainer"); 
+            container.innerHTML = "";
             
             tbody.querySelectorAll("tr").forEach((row, i) => {
                 let name = document.getElementById(`name-${i}`).innerText;
                 let int = parseInt(document.getElementById(`int-${i}`).value) || 0; 
                 let viol = parseInt(document.getElementById(`viol-${i}`).value) || 0;
-                let cur = 0, pos = 0; 
-                row.querySelectorAll('.col-calc').forEach((inp, idx) => { 
-                    if(inp.value){ cur+=parseFloat(inp.value); pos+=maxVal[idx]; } 
-                });
                 
-                let pct = pos > 0 ? (cur/pos)*100 : 0;
-                let desc = "";
-                if(pos === 0) desc = "بانتظار التقييم للمهام القادمة.";
-                else if(pct >= 90) desc = "أداء ممتاز ومستوى يبعث على الفخر، استمر في هذا التألق!";
-                else if(pct >= 80) desc = "أداء جيد جداً، أنت في الطريق الصحيح نحو القمة.";
-                else if(pct >= 65) desc = "أداء جيد، ولكن ننتظر منك مجهوداً أكبر فأنت قادر على ذلك.";
-                else desc = "مستوى يحتاج إلى متابعة واهتمام أكبر، نحن هنا لمساعدتك للتطور.";
+                let inputs = row.querySelectorAll('.col-calc');
+                let vals = Array.from(inputs).map(inp => parseFloat(inp.value) || 0);
+                let hasData = Array.from(inputs).some(inp => inp.value !== "");
+
+                let detailsHTML = "";
+                let waDetails = "";
+                let totalCur = 0; 
+                let totalPos = 100;
+
+                if (!hasData) {
+                    detailsHTML = "<div style='color:#7f8c8d; font-style:italic; padding:10px;'>لم يتم إدخال درجات لهذا الطالب بعد.</div>";
+                    waDetails = "لم يتم رصد درجات بعد.";
+                } else {
+                    if (g === "6") {
+                        let diag = vals[0] + vals[1];
+                        let quiz = vals[2] + vals[3] + vals[4] + vals[5];
+                        let act = vals[6] + vals[7];
+                        let proj = vals[8];
+                        totalCur = diag + quiz + act + proj;
+
+                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20);
+                        detailsHTML += getCategoryFullDesc("📝 تقييم الأسئلة القصيرة", quiz, 20);
+                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40);
+                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20);
+
+                        waDetails += `🗣️ الحوار (${diag}/20):\n💬 ${getWaFullDesc(diag, 20)}\n\n📝 الأسئلة (${quiz}/20):\n💬 ${getWaFullDesc(quiz, 20)}\n\n📚 الأنشطة (${act}/40):\n💬 ${getWaFullDesc(act, 40)}\n\n🚀 المشروع (${proj}/20):\n💬 ${getWaFullDesc(proj, 20)}\n\n`;
+                    } else {
+                        let diag = vals[0] + vals[1];
+                        let act = vals[2] + vals[3];
+                        let test = vals[4];
+                        let proj = vals[5];
+                        totalCur = diag + act + test + proj;
+
+                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20);
+                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40);
+                        detailsHTML += getCategoryFullDesc("📝 تقييم الاختبار", test, 20);
+                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20);
+
+                        waDetails += `🗣️ الحوار (${diag}/20):\n💬 ${getWaFullDesc(diag, 20)}\n\n📚 الأنشطة (${act}/40):\n💬 ${getWaFullDesc(act, 40)}\n\n📝 الاختبار (${test}/20):\n💬 ${getWaFullDesc(test, 20)}\n\n🚀 المشروع (${proj}/20):\n💬 ${getWaFullDesc(proj, 20)}\n\n`;
+                    }
+                }
+
+                let pct = (totalCur / totalPos) * 100;
 
                 container.innerHTML += `
                 <div class="detailed-report-card report-card-item">
                     <div class="detailed-report-name">${name}</div>
                     <div style="padding:15px;">
-                        <div style="margin-bottom:10px;">
-                            <input type="tel" class="wa-input" placeholder="8 أرقام" maxlength="8">
-                            <button class="wa-btn-mini" onclick="sendWA(this, '${name}', ${cur}, ${pos}, ${int}, ${viol}, '${desc}')">📱 واتساب</button> 
-                            <button class="cert-btn-mini" onclick="generateCertificate('${name}')">🎓 إصدار شهادة</button>
+                        <div style="margin-bottom:15px; display:flex; gap:10px; align-items:center;">
+                            <input type="tel" class="wa-input" placeholder="8 أرقام للواتساب" maxlength="8">
+                            <button class="wa-btn-mini" onclick="sendWA(this, '${name}', ${totalCur}, \`${waDetails}\`, ${int}, ${viol})">📱 إرسال واتساب للولي الأمر</button> 
+                            <button class="cert-btn-mini" onclick="generateCertificate('${name}')">🎓 إصدار شهادة التفوق</button>
                         </div>
-                        <div class="category-box ${pct>=80?'border-excellent':'border-weak'}">
-                            <b>الأداء الأكاديمي:</b> أنجز ${cur} من ${pos} بمعدل (${pct.toFixed(1)}%)<br>
-                            <span style="color:#2980b9; font-weight:bold; margin-top:5px; display:inline-block;">💡 التحليل الوصفي:</span> ${desc}
+                        <div class="category-box ${pct>=80 ? 'border-excellent' : 'border-weak'}">
+                            <div style="margin-bottom:12px; font-size:15px; color:#2980b9; border-bottom:1px solid #ccc; padding-bottom:5px;"><b>التقرير الأكاديمي الشامل (المجموع: ${totalCur}/100):</b></div>
+                            ${detailsHTML}
                         </div>
-                        <div class="category-box ${viol==0?'border-excellent':'border-weak'}">
-                            <b>سجل الانضباط:</b> نقاط تعزيز: ${int} | عدد المخالفات: ${viol}
+                        <div class="category-box ${viol==0 ? 'border-excellent' : 'border-weak'}">
+                            <b>سجل الانضباط والمواظبة:</b> لقد حصد الطالب (${int}) نقاط تعزيز إيجابية 🌟، وسجل (${viol}) مخالفات صفية ⚠️.
                         </div>
                     </div>
                 </div>`;
@@ -522,10 +588,10 @@
 
         function filterReports() { let filter = document.getElementById("reportSearch").value.toLowerCase(); document.querySelectorAll(".report-card-item").forEach(card => card.style.display = card.innerText.toLowerCase().includes(filter) ? "" : "none"); }
 
-        function sendWA(btn, name, cur, pos, int, viol, desc) { 
+        function sendWA(btn, name, totalCur, waDetails, int, viol) { 
             let num = btn.parentElement.querySelector('.wa-input').value; 
-            if(num.length !== 8) return alert('أدخل 8 أرقام'); 
-            let msg = `*تقرير الطالب:* ${name}\n*الإنجاز الأكاديمي:* ${cur}/${pos}\n*التعزيز:* ${int} 🌟\n*المخالفات:* ${viol} ⚠️\n*الملاحظة:* ${desc}\n\n(إعداد: أ. معاذ اليعقوبي)`; 
+            if(num.length !== 8) return alert('يرجى إدخال 8 أرقام لإرسال الواتساب بشكل صحيح.'); 
+            let msg = `*التقرير الأكاديمي التفصيلي للطالب:* ${name}\n\n*التحليل الوصفي للدرجات:*\n${waDetails}*المجموع الكلي للطالب:* ${totalCur}/100\n\n*سجل الانضباط والتحفيز:*\nالتعزيز الإيجابي: ${int} 🌟\nالمخالفات المسجلة: ${viol} ⚠️\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
