@@ -347,7 +347,7 @@
             const list = studentsData[g][s] || [];
             
             list.forEach((name, i) => {
-                let d = currentSheetData[name] || []; const val = (idx) => (d[idx] || ""); const valZero = (idx) => (d[idx] || 0);
+                let d = currentSheetData[name] || []; const val = (idx) => (d[idx] !== undefined ? d[idx] : ""); const valZero = (idx) => (d[idx] || 0);
                 let intIdx = (g === '6') ? 14 : 10; let violIdx = (g === '6') ? 15 : 11;
 
                 let interactionCol = `
@@ -375,21 +375,26 @@
 
         function calc(inp, g) {
             if(!inp) return; let tr = inp.closest('tr'); if(!tr) return;
-            let v = Array.from(tr.querySelectorAll('.col-calc')).map(i => parseFloat(i.value) || 0);
-            let inputsFilled = Array.from(tr.querySelectorAll('.col-calc')).filter(el => el.value !== "").length;
+            let inputs = Array.from(tr.querySelectorAll('.col-calc'));
+            let vals = inputs.map(i => parseFloat(i.value) || 0);
+            let inputsFilled = inputs.filter(el => el.value !== "").length;
             let grandTotal = 0; let possibleTotal = 0;
 
             if (g === "6") {
-                tr.querySelector('.t-dialogue').innerText = v[0]+v[1]; tr.querySelector('.t-quiz').innerText = v[2]+v[3]+v[4]+v[5];
-                tr.querySelector('.t-activity').innerText = v[6]+v[7]; grandTotal = (v[0]+v[1])+(v[2]+v[3]+v[4]+v[5])+(v[6]+v[7])+v[8];
+                tr.querySelector('.t-dialogue').innerText = vals[0]+vals[1]; 
+                tr.querySelector('.t-quiz').innerText = vals[2]+vals[3]+vals[4]+vals[5];
+                tr.querySelector('.t-activity').innerText = vals[6]+vals[7]; 
+                grandTotal = (vals[0]+vals[1])+(vals[2]+vals[3]+vals[4]+vals[5])+(vals[6]+vals[7])+vals[8];
                 tr.querySelector('.t-grand').innerText = grandTotal;
                 let max6 = [10, 10, 5, 5, 5, 5, 20, 20, 20];
-                Array.from(tr.querySelectorAll('.col-calc')).forEach((input, index) => { if(input.value !== "") possibleTotal += max6[index]; });
+                inputs.forEach((input, index) => { if(input.value !== "") possibleTotal += max6[index]; });
             } else {
-                tr.querySelector('.t-dialogue').innerText = v[0]+v[1]; tr.querySelector('.t-activity').innerText = v[2]+v[3];
-                grandTotal = (v[0]+v[1])+(v[2]+v[3])+v[4]+v[5]; tr.querySelector('.t-grand').innerText = grandTotal;
+                tr.querySelector('.t-dialogue').innerText = vals[0]+vals[1]; 
+                tr.querySelector('.t-activity').innerText = vals[2]+vals[3];
+                grandTotal = (vals[0]+vals[1])+(vals[2]+vals[3])+vals[4]+vals[5]; 
+                tr.querySelector('.t-grand').innerText = grandTotal;
                 let max9 = [10, 10, 20, 20, 20, 20];
-                Array.from(tr.querySelectorAll('.col-calc')).forEach((input, index) => { if(input.value !== "") possibleTotal += max9[index]; });
+                inputs.forEach((input, index) => { if(input.value !== "") possibleTotal += max9[index]; });
             }
 
             let rowIndex = Array.from(tr.parentNode.children).indexOf(tr);
@@ -475,22 +480,26 @@
             document.getElementById('honorTickerText').innerHTML = text; wrap.style.display = 'flex'; playSound(600, 'sine', 0.8, 0.2);
         }
 
-        // --- دالة العبارات الوصفية الكاملة والتربوية لكل معيار ---
-        function getCategoryFullDesc(title, cur, max) {
+        // --- دالة العبارات الوصفية الرسمية وبصيغة الغائب مع التأكد من وجود تقييم ---
+        function getCategoryFullDesc(title, cur, max, isEvaluated) {
+            if (!isEvaluated) {
+                return `<div style="margin-bottom:10px; background:var(--bg-color); padding:10px; border-radius:6px; border-right:4px solid #95a5a6;">
+                            <div style="font-size:14px; margin-bottom:5px;"><b>${title}:</b> <span style="color:#7f8c8d;">لم يتم رصد درجة لهذا المعيار حتى الآن.</span></div>
+                        </div>`;
+            }
             let pct = (cur / max) * 100;
-            let desc = ""; 
-            let color = "";
+            let desc = ""; let color = "";
             if (pct >= 90) { 
-                desc = "أداء ممتاز ومستوى يبعث على الفخر، استمر في هذا التألق والإبداع والمشاركة الفعالة."; 
+                desc = "أداء ممتاز ومستوى يبعث على الفخر، يُظهر الطالب تفوقاً واضحاً وإبداعاً في هذا المعيار."; 
                 color = "#27ae60"; 
             } else if (pct >= 75) { 
-                desc = "أداء جيد جداً ومبشر، مع قليل من التركيز الإضافي والمراجعة ستصل إلى القمة بسهولة."; 
+                desc = "أداء جيد جداً ومبشر، مع قليل من التركيز الإضافي والمراجعة سيحقق الطالب العلامة الكاملة بإذن الله."; 
                 color = "#2980b9"; 
             } else if (pct >= 50) { 
-                desc = "مستوى متوسط، أنت تمتلك قدرات أفضل وتحتاج لمضاعفة الجهد والمشاركة بشكل أوسع في الحصص القادمة."; 
+                desc = "مستوى متوسط، يمتلك الطالب قدرات أفضل ويحتاج إلى مضاعفة الجهد والمشاركة بشكل أوسع."; 
                 color = "#f39c12"; 
             } else { 
-                desc = "مستوى يحتاج إلى متابعة حثيثة واهتمام أكبر بالمهام المطلوبة، نرجو التعاون لرفع مستوى الطالب وتدارك التأخر."; 
+                desc = "مستوى يحتاج إلى متابعة حثيثة من قبل الأسرة واهتمام أكبر بالمهام المطلوبة لتدارك التأخر ورفع التحصيل."; 
                 color = "#e74c3c"; 
             }
             return `<div style="margin-bottom:10px; background:var(--bg-color); padding:10px; border-radius:6px; border-right:4px solid ${color};">
@@ -499,16 +508,16 @@
                     </div>`;
         }
         
-        // --- دالة إرسال الواتساب للحصول على نفس العبارة الكاملة ---
-        function getWaFullDesc(cur, max) {
+        // --- دالة إرسال الواتساب للعبارات الرسمية ---
+        function getWaFullDesc(cur, max, isEvaluated) {
+            if (!isEvaluated) return "لم يتم التقييم في هذا المعيار بعد.";
             let pct = (cur / max) * 100;
-            if (pct >= 90) return "أداء ممتاز ومستوى يبعث على الفخر، استمر في هذا التألق.";
-            if (pct >= 75) return "أداء جيد جداً ومبشر، مع قليل من التركيز ستصل للقمة.";
-            if (pct >= 50) return "مستوى متوسط، تمتلك قدرات أفضل وتحتاج لمضاعفة الجهد.";
-            return "مستوى يحتاج إلى متابعة حثيثة واهتمام أكبر بالمهام المطلوبة.";
+            if (pct >= 90) return "أداء ممتاز ومستوى يبعث على الفخر، يُظهر الطالب تفوقاً واضحاً وإبداعاً في هذا المعيار.";
+            if (pct >= 75) return "أداء جيد جداً ومبشر، مع قليل من التركيز والمراجعة سيحقق العلامة الكاملة.";
+            if (pct >= 50) return "مستوى متوسط، يمتلك قدرات أفضل ويحتاج إلى مضاعفة الجهد والمشاركة.";
+            return "مستوى يحتاج إلى متابعة حثيثة من الأسرة واهتمام أكبر بالمهام لتدارك التأخر.";
         }
 
-        // --- دالة التقارير التفصيلية المكتملة ---
         function generateDetailedReports() {
             const g = document.getElementById("gradeSelect").value; 
             const tbody = document.getElementById("tbody" + g);
@@ -521,44 +530,63 @@
                 let viol = parseInt(document.getElementById(`viol-${i}`).value) || 0;
                 
                 let inputs = row.querySelectorAll('.col-calc');
-                let vals = Array.from(inputs).map(inp => parseFloat(inp.value) || 0);
-                let hasData = Array.from(inputs).some(inp => inp.value !== "");
+                let raw = Array.from(inputs).map(inp => inp.value);
+                let vals = raw.map(v => parseFloat(v) || 0);
 
-                let detailsHTML = "";
-                let waDetails = "";
-                let totalCur = 0; 
-                let totalPos = 100;
+                let hasData = raw.some(v => v !== "");
+                let detailsHTML = ""; let waDetails = ""; let totalCur = 0; let totalPos = 0;
 
                 if (!hasData) {
-                    detailsHTML = "<div style='color:#7f8c8d; font-style:italic; padding:10px;'>لم يتم إدخال درجات لهذا الطالب بعد.</div>";
-                    waDetails = "لم يتم رصد درجات بعد.";
+                    detailsHTML = "<div style='color:#7f8c8d; font-style:italic; padding:10px;'>لم يتم إدخال أي درجات لهذا الطالب حتى الآن.</div>";
+                    waDetails = "لا توجد درجات مرصودة حالياً.";
+                    totalPos = 100; // لتجنب القسمة على صفر
                 } else {
                     if (g === "6") {
+                        let evalDiag = raw[0] !== "" || raw[1] !== "";
                         let diag = vals[0] + vals[1];
+
+                        let evalQuiz = raw[2] !== "" || raw[3] !== "" || raw[4] !== "" || raw[5] !== "";
                         let quiz = vals[2] + vals[3] + vals[4] + vals[5];
+
+                        let evalAct = raw[6] !== "" || raw[7] !== "";
                         let act = vals[6] + vals[7];
+
+                        let evalProj = raw[8] !== "";
                         let proj = vals[8];
+
                         totalCur = diag + quiz + act + proj;
+                        totalPos = (evalDiag ? 20 : 0) + (evalQuiz ? 20 : 0) + (evalAct ? 40 : 0) + (evalProj ? 20 : 0);
+                        if(totalPos === 0) totalPos = 100;
 
-                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20);
-                        detailsHTML += getCategoryFullDesc("📝 تقييم الأسئلة القصيرة", quiz, 20);
-                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40);
-                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20);
+                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20, evalDiag);
+                        detailsHTML += getCategoryFullDesc("📝 تقييم الأسئلة القصيرة", quiz, 20, evalQuiz);
+                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40, evalAct);
+                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20, evalProj);
 
-                        waDetails += `🗣️ الحوار (${diag}/20):\n💬 ${getWaFullDesc(diag, 20)}\n\n📝 الأسئلة (${quiz}/20):\n💬 ${getWaFullDesc(quiz, 20)}\n\n📚 الأنشطة (${act}/40):\n💬 ${getWaFullDesc(act, 40)}\n\n🚀 المشروع (${proj}/20):\n💬 ${getWaFullDesc(proj, 20)}\n\n`;
+                        waDetails += `🗣️ الحوار (${evalDiag ? diag+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(diag, 20, evalDiag)}\n\n📝 الأسئلة (${evalQuiz ? quiz+'/20' : 'لم تُقيّم'}):\n💬 ${getWaFullDesc(quiz, 20, evalQuiz)}\n\n📚 الأنشطة (${evalAct ? act+'/40' : 'لم تُقيّم'}):\n💬 ${getWaFullDesc(act, 40, evalAct)}\n\n🚀 المشروع (${evalProj ? proj+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(proj, 20, evalProj)}\n\n`;
                     } else {
+                        let evalDiag = raw[0] !== "" || raw[1] !== "";
                         let diag = vals[0] + vals[1];
+
+                        let evalAct = raw[2] !== "" || raw[3] !== "";
                         let act = vals[2] + vals[3];
+
+                        let evalTest = raw[4] !== "";
                         let test = vals[4];
+
+                        let evalProj = raw[5] !== "";
                         let proj = vals[5];
+
                         totalCur = diag + act + test + proj;
+                        totalPos = (evalDiag ? 20 : 0) + (evalAct ? 40 : 0) + (evalTest ? 20 : 0) + (evalProj ? 20 : 0);
+                        if(totalPos === 0) totalPos = 100;
 
-                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20);
-                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40);
-                        detailsHTML += getCategoryFullDesc("📝 تقييم الاختبار", test, 20);
-                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20);
+                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20, evalDiag);
+                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40, evalAct);
+                        detailsHTML += getCategoryFullDesc("📝 تقييم الاختبار", test, 20, evalTest);
+                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20, evalProj);
 
-                        waDetails += `🗣️ الحوار (${diag}/20):\n💬 ${getWaFullDesc(diag, 20)}\n\n📚 الأنشطة (${act}/40):\n💬 ${getWaFullDesc(act, 40)}\n\n📝 الاختبار (${test}/20):\n💬 ${getWaFullDesc(test, 20)}\n\n🚀 المشروع (${proj}/20):\n💬 ${getWaFullDesc(proj, 20)}\n\n`;
+                        waDetails += `🗣️ الحوار (${evalDiag ? diag+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(diag, 20, evalDiag)}\n\n📚 الأنشطة (${evalAct ? act+'/40' : 'لم تُقيّم'}):\n💬 ${getWaFullDesc(act, 40, evalAct)}\n\n📝 الاختبار (${evalTest ? test+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(test, 20, evalTest)}\n\n🚀 المشروع (${evalProj ? proj+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(proj, 20, evalProj)}\n\n`;
                     }
                 }
 
@@ -570,15 +598,15 @@
                     <div style="padding:15px;">
                         <div style="margin-bottom:15px; display:flex; gap:10px; align-items:center;">
                             <input type="tel" class="wa-input" placeholder="8 أرقام للواتساب" maxlength="8">
-                            <button class="wa-btn-mini" onclick="sendWA(this, '${name}', ${totalCur}, \`${waDetails}\`, ${int}, ${viol})">📱 إرسال واتساب للولي الأمر</button> 
+                            <button class="wa-btn-mini" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol})">📱 إرسال واتساب للولي الأمر</button> 
                             <button class="cert-btn-mini" onclick="generateCertificate('${name}')">🎓 إصدار شهادة التفوق</button>
                         </div>
-                        <div class="category-box ${pct>=80 ? 'border-excellent' : 'border-weak'}">
-                            <div style="margin-bottom:12px; font-size:15px; color:#2980b9; border-bottom:1px solid #ccc; padding-bottom:5px;"><b>التقرير الأكاديمي الشامل (المجموع: ${totalCur}/100):</b></div>
+                        <div class="category-box ${!hasData ? '' : (pct>=80 ? 'border-excellent' : 'border-weak')}">
+                            <div style="margin-bottom:12px; font-size:15px; color:#2980b9; border-bottom:1px solid #ccc; padding-bottom:5px;"><b>التقرير الأكاديمي (الدرجات المحتسبة حالياً: ${totalCur} من ${totalPos}):</b></div>
                             ${detailsHTML}
                         </div>
                         <div class="category-box ${viol==0 ? 'border-excellent' : 'border-weak'}">
-                            <b>سجل الانضباط والمواظبة:</b> لقد حصد الطالب (${int}) نقاط تعزيز إيجابية 🌟، وسجل (${viol}) مخالفات صفية ⚠️.
+                            <b>سجل الانضباط والمواظبة:</b> لقد حصد الطالب (${int}) نقاط تعزيز إيجابية 🌟، وسُجلت عليه (${viol}) مخالفات صفية ⚠️.
                         </div>
                     </div>
                 </div>`;
@@ -588,10 +616,10 @@
 
         function filterReports() { let filter = document.getElementById("reportSearch").value.toLowerCase(); document.querySelectorAll(".report-card-item").forEach(card => card.style.display = card.innerText.toLowerCase().includes(filter) ? "" : "none"); }
 
-        function sendWA(btn, name, totalCur, waDetails, int, viol) { 
+        function sendWA(btn, name, totalCur, totalPos, waDetails, int, viol) { 
             let num = btn.parentElement.querySelector('.wa-input').value; 
             if(num.length !== 8) return alert('يرجى إدخال 8 أرقام لإرسال الواتساب بشكل صحيح.'); 
-            let msg = `*التقرير الأكاديمي التفصيلي للطالب:* ${name}\n\n*التحليل الوصفي للدرجات:*\n${waDetails}*المجموع الكلي للطالب:* ${totalCur}/100\n\n*سجل الانضباط والتحفيز:*\nالتعزيز الإيجابي: ${int} 🌟\nالمخالفات المسجلة: ${viol} ⚠️\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
+            let msg = `*التقرير الأكاديمي التفصيلي للطالب:* ${name}\n\n*التحليل الوصفي للدرجات:*\n${waDetails}*المجموع المحتسب حالياً للطالب:* ${totalCur} من ${totalPos}\n\n*سجل الانضباط والتحفيز:*\nالتعزيز الإيجابي: ${int} 🌟\nالمخالفات المسجلة: ${viol} ⚠️\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
@@ -606,7 +634,10 @@
             ctx.font = 'bold 55px Tahoma, Arial'; ctx.fillStyle = '#2c3e50'; ctx.fillText('شَهَادَةُ شُكْرٍ وَتَقْدِير', canvas.width / 2, 160);
             ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
             ctx.fillStyle = '#fdfbf2'; ctx.fillRect(canvas.width/2 - 300, 310, 600, 90); ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(canvas.width/2 - 300, 310, 600, 90);
-            ctx.font = 'bold 45px Tahoma, Arial'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
+            
+            // تصغير حجم خط اسم الطالب هنا (من 45px إلى 34px) ليستوعب الأسماء الطويلة
+            ctx.font = 'bold 34px Tahoma, Arial'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
+            
             ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
             ctx.font = 'bold 22px Tahoma, Arial'; ctx.fillText('معلم المادة', 250, 600); ctx.fillText('أ. معاذ اليعقوبي', 250, 640);
             ctx.font = '18px Tahoma, Arial'; ctx.fillStyle = '#95a5a6'; ctx.fillText('المنصة الرقمية للتقييم الأكاديمي', canvas.width - 250, 620);
