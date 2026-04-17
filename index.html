@@ -173,6 +173,7 @@
         .report-img-item:last-child { border-bottom: none; }
         .report-img-item-title { font-size: 15px; font-weight: bold; color: #2c3e50; display:flex; align-items:center; gap:5px;}
         .report-grade-badge { background: #eaf2f8; padding: 4px 12px; border-radius: 20px; font-weight: bold; color: #2980b9; font-size: 14px; border: 1px solid #dcdde1; font-family: monospace;}
+        .report-grade-badge.empty { background: #f2f3f4; color: #7f8c8d; border: 1px solid #bdc3c7;}
         .report-img-item-desc { font-size: 14px; color: #34495e; line-height: 1.5; padding-right: 25px;}
         
         .report-img-footer { background-color: #f8f9fa; padding: 15px 20px; border-top: 3px solid #16a085; }
@@ -489,9 +490,8 @@
             } else { riskAlert.style.display = 'none'; }
         }
 
-        // --- نظام المؤقت المحدث ---
         let timerInterval; 
-        let defaultTime = 300; // 5 دقائق افتراضياً
+        let defaultTime = 300; 
         let timeRemaining = 300;
         
         function updateTimerDisplay() { 
@@ -591,7 +591,21 @@
             document.getElementById('honorTickerText').innerHTML = text; wrap.style.display = 'flex'; playSound(600, 'sine', 0.8, 0.2);
         }
 
-        function getCriterionImgHTML(icon, title, cur, max) {
+        // الدالة الجديدة للتمييز بين المعيار المقيم (ولو بصفر) وبين الخانة الفارغة
+        function getCriterionImgHTML(icon, title, cur, max, isEvaluated) {
+            // إذا كان المعلم لم يقيم هذا المعيار بعد (الخانة فارغة)
+            if (!isEvaluated) {
+                return `
+                <div class="report-img-item">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <div class="report-img-item-title" style="color:#7f8c8d;">${icon} ${title}</div>
+                        <div class="report-grade-badge empty">لم يتم التقييم</div>
+                    </div>
+                    <div class="report-img-item-desc" style="color:#95a5a6;">لم يتم التقييم بعد.</div>
+                </div>`;
+            }
+
+            // إذا كان المعلم قد قيم المعيار (الوصف يعتمد على نسبة درجة المعيار نفسه)
             let pct = (cur / max) * 100;
             let desc = ""; let color = "#34495e";
             
@@ -627,7 +641,9 @@
             </div>`;
         }
 
-        function getWaTextDesc(title, cur, max) {
+        // نفس المنطق يطبق على رسالة الواتساب
+        function getWaTextDesc(title, cur, max, isEvaluated) {
+            if (!isEvaluated) return `لم يتم التقييم بعد.`;
             let pct = (cur / max) * 100;
             if(pct>=90) return `(${cur}/${max}) ممتاز جداً، يُظهر تفوقاً ملحوظاً.`;
             if(pct>=75) return `(${cur}/${max}) جيد جداً، مع بعض الملاحظات البسيطة.`;
@@ -659,18 +675,28 @@
                     totalPos = 100; // افتراضي للقسمة
                 } else {
                     if (g === "6") {
+                        // التحقق هل المعلم كتب أي شيء في الخانة أم تركها فارغة تماماً ""
                         let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
                         let evalQuiz = raw[2] !== "" || raw[3] !== "" || raw[4] !== "" || raw[5] !== ""; let quiz = vals[2] + vals[3] + vals[4] + vals[5];
                         let evalAct = raw[6] !== "" || raw[7] !== ""; let act = vals[6] + vals[7];
                         let evalProj = raw[8] !== ""; let proj = vals[8];
 
-                        totalCur = diag + quiz + act + proj;
-                        totalPos = (evalDiag ? 20 : 0) + (evalQuiz ? 20 : 0) + (evalAct ? 40 : 0) + (evalProj ? 20 : 0);
+                        // إرسال البيانات لدالة الطباعة (مع تمرير حالة التقييم isEvaluated)
+                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
+                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
+                        detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, 20, evalQuiz);
+                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20, evalProj);
 
-                        if (evalDiag) { detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20); waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20)}\n`; }
-                        if (evalAct) { detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40); waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40)}\n`; }
-                        if (evalQuiz) { detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, 20); waDetails += `❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, 20)}\n`; }
-                        if (evalProj) { detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20); waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20)}\n`; }
+                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n`;
+                        waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n`;
+                        waDetails += `❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, 20, evalQuiz)}\n`;
+                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
+
+                        // المجموع يأخذ فقط من المعايير التي تم تقييمها فعلياً لتكون النسبة عادلة
+                        if(evalDiag) { totalCur += diag; totalPos += 20; }
+                        if(evalQuiz) { totalCur += quiz; totalPos += 20; }
+                        if(evalAct) { totalCur += act; totalPos += 40; }
+                        if(evalProj) { totalCur += proj; totalPos += 20; }
 
                     } else {
                         let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
@@ -678,13 +704,20 @@
                         let evalTest = raw[4] !== ""; let test = vals[4];
                         let evalProj = raw[5] !== ""; let proj = vals[5];
 
-                        totalCur = diag + act + test + proj;
-                        totalPos = (evalDiag ? 20 : 0) + (evalAct ? 40 : 0) + (evalTest ? 20 : 0) + (evalProj ? 20 : 0);
+                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
+                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
+                        detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, 20, evalTest);
+                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20, evalProj);
 
-                        if (evalDiag) { detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20); waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20)}\n`; }
-                        if (evalAct) { detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40); waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40)}\n`; }
-                        if (evalTest) { detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, 20); waDetails += `📝 الاختبار: ${getWaTextDesc("الاختبار", test, 20)}\n`; }
-                        if (evalProj) { detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20); waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20)}\n`; }
+                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n`;
+                        waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n`;
+                        waDetails += `📝 الاختبار: ${getWaTextDesc("الاختبار", test, 20, evalTest)}\n`;
+                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
+
+                        if(evalDiag) { totalCur += diag; totalPos += 20; }
+                        if(evalAct) { totalCur += act; totalPos += 40; }
+                        if(evalTest) { totalCur += test; totalPos += 20; }
+                        if(evalProj) { totalCur += proj; totalPos += 20; }
                     }
                 }
 
@@ -711,7 +744,7 @@
                     </div>
 
                     <div class="report-img-footer">
-                        <div class="report-img-total">الإنجاز الكلي للدرجات المرصودة: ${totalCur} من ${totalPos}</div>
+                        <div class="report-img-total">مجموع الدرجات المرصودة حتى الآن: ${totalCur} من ${totalPos}</div>
                         <div class="report-img-summary">الخلاصة: ${summaryTxt}</div>
                     </div>
                 </div>`;
@@ -724,7 +757,7 @@
         function sendWA(btn, name, totalCur, totalPos, waDetails, int, viol) { 
             let num = btn.parentElement.querySelector('.wa-input').value; 
             if(num.length !== 8) return alert('يرجى إدخال 8 أرقام لإرسال الواتساب بشكل صحيح.'); 
-            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل التفصيلي للمهام المنجزة:*\n${waDetails}\n*الإنجاز الكلي الحالي:* ${totalCur} من ${totalPos}\n\n*سجل الانضباط:* (نقاط التميز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
+            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل التفصيلي للمهام المنجزة:*\n${waDetails}\n*مجموع الدرجات المرصودة:* ${totalCur} من ${totalPos}\n\n*سجل الانضباط:* (نقاط التميز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
