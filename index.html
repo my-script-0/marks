@@ -89,6 +89,18 @@
         .btn-submit { padding: 10px 25px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .theme-toggle { padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer; background-color: var(--input-bg); color: var(--text-color); font-size: 18px; border: 1px solid var(--border-color);}
 
+        /* لوحة التعزيزات والتفاعل */
+        .reinforcement-section { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; display: block;}
+        .reinforcement-header { font-size: 18px; font-weight: bold; color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px; display:flex; align-items:center; gap:10px;}
+        .reinforcement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding: 5px;}
+        .reinf-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        .reinf-name { font-size: 13px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color:var(--text-color);}
+        .reinf-controls { display: flex; justify-content: center; gap: 5px; align-items:center; }
+        .r-btn { width: 25px; height: 25px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; line-height: 1;}
+        .r-plus { background: #27ae60; } .r-minus { background: #e74c3c; }
+        .r-inp { width: 30px; text-align: center; border: 1px solid #ccc; background: #fff2cc; border-radius: 4px; font-weight: bold; font-size: 13px; padding: 2px;}
+        .r-inp.viol { background: #fadbd8; }
+
         .table-container { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); overflow-x: auto;}
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
         th, td { border: 1px solid var(--border-color); padding: 6px; }
@@ -100,15 +112,11 @@
         input.col-calc { width: 45px; text-align: center; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-weight: bold; padding:4px; border-radius:4px;}
         .form-section { display: none; } .active-form { display: block; }
 
-        .mini-btn { width:22px; height:22px; border:none; border-radius:3px; cursor:pointer; font-weight:bold; color:white; font-size:12px; line-height:1;}
-        .mini-plus { background: #27ae60; } .mini-minus { background: #e74c3c; } .mini-viol { background: #f39c12; }
-        .mini-inp { width: 25px; text-align: center; border: 1px solid #ccc; background:#fff2cc; font-size:12px; font-weight:bold; color:#000; border-radius:3px;}
-        .viol-inp { background:#fadbd8; }
-
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); justify-content:center; align-items:center; }
         .modal-content { background-color: var(--card-bg); color: var(--text-color); padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative;}
-        .modal-large { max-width: 900px; }
-        .close-btn { position:absolute; left:15px; top:15px; color: #e74c3c; font-size: 28px; font-weight: bold; cursor: pointer; line-height:1;}
+        .modal-large { max-width: 900px; padding: 0; overflow:hidden;}
+        .modal-large-body { padding:20px; max-height: 75vh; overflow-y:auto; }
+        .close-btn { position:absolute; left:15px; top:15px; color: #e74c3c; font-size: 28px; font-weight: bold; cursor: pointer; line-height:1; z-index:10;}
         .modal-header { text-align:center; border-bottom:2px solid #3498db; margin-bottom:15px; padding-bottom:10px; }
         .modal-header h3 { margin:0; }
 
@@ -125,11 +133,26 @@
 
         .seating-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; padding: 10px; }
         .desk-card { background: var(--input-bg); border: 2px solid #3498db; border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor:pointer;}
-        .detailed-report-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
-        .detailed-report-name { background-color: #34495e; color: white; padding: 10px; font-weight: bold; font-size:16px;}
-        .wa-btn-mini, .cert-btn-mini { border:none; padding:8px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:13px; color:#fff;}
-        .wa-btn-mini { background:#25D366; } .cert-btn-mini { background:#d4af37; margin-right:5px;}
         
+        /* تصميم التقرير المطابق للصورة */
+        .report-img-card { background: var(--input-bg); border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #dcdde1; }
+        .report-img-header { background-color: #2980b9; color: white; padding: 12px 20px; font-size: 16px; font-weight: bold; }
+        .report-img-actionbar { background-color: #eaf2f8; padding: 10px 20px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; border-bottom: 1px solid #dcdde1; }
+        .report-img-actionbar button { background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .report-img-actionbar .cert-btn { background-color: #d4af37; }
+        .report-img-actionbar input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-align: left; width: 150px; direction: ltr;}
+        .report-img-actionbar span { font-weight: bold; color: #2c3e50; font-family: monospace; font-size: 15px;}
+        
+        .report-img-body { padding: 15px 20px; }
+        .report-img-item { border-bottom: 1px solid #eee; padding: 12px 0; }
+        .report-img-item:last-child { border-bottom: none; }
+        .report-img-item-title { font-size: 15px; font-weight: bold; color: #c0392b; margin-bottom: 5px; display:flex; align-items:center; gap:5px;}
+        .report-img-item-desc { font-size: 14px; color: #34495e; line-height: 1.5; padding-right: 25px;}
+        
+        .report-img-footer { background-color: #f8f9fa; padding: 15px 20px; border-top: 3px solid #16a085; }
+        .report-img-total { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .report-img-summary { font-size: 13px; color: #7f8c8d; }
+
         #offline-banner { display:none; background:#e74c3c; color:white; text-align:center; padding:5px; font-weight:bold; position:fixed; top:0; left:0; width:100%; z-index:99999; }
         .risk-alert { font-size: 11px; background-color: #ffcccc; color: #cc0000; padding: 2px 5px; border-radius: 4px; display: none; animation: blinker 1.5s linear infinite; }
         @keyframes blinker { 50% { opacity: 0.5; } }
@@ -172,13 +195,18 @@
         </div>
     </div>
 
+    <div class="reinforcement-section">
+        <div class="reinforcement-header">🌟 لوحة التعزيزات والمخالفات التفاعلية</div>
+        <div class="reinforcement-grid" id="reinforcementGrid">
+            </div>
+    </div>
+
     <div id="form6" class="form-section active-form">
         <div class="table-container">
             <table id="gradesTable6">
                 <thead>
                     <tr>
-                        <th rowspan="2" class="header-blue">م</th><th rowspan="2" class="header-blue" style="width:180px;">إسم الطالب</th>
-                        <th rowspan="2" class="header-orange" style="width:90px;">التفاعل</th>
+                        <th rowspan="2" class="header-blue" style="width:30px;">م</th><th rowspan="2" class="header-blue" style="width:200px;">إسم الطالب</th>
                         <th colspan="2" class="header-blue">الحوار</th><th rowspan="2" class="header-orange">مجموع</th>
                         <th colspan="4" class="header-blue">الأسئلة القصيرة</th><th rowspan="2" class="header-orange">مجموع</th>
                         <th colspan="2" class="header-blue">الأنشطة</th><th rowspan="2" class="header-orange">مجموع</th>
@@ -196,8 +224,7 @@
             <table id="gradesTable9">
                 <thead>
                     <tr>
-                        <th rowspan="2" class="header-blue">م</th><th rowspan="2" class="header-blue" style="width:180px;">إسم الطالب</th>
-                        <th rowspan="2" class="header-orange" style="width:90px;">التفاعل</th>
+                        <th rowspan="2" class="header-blue" style="width:30px;">م</th><th rowspan="2" class="header-blue" style="width:200px;">إسم الطالب</th>
                         <th colspan="2" class="header-blue">الحوار</th><th rowspan="2" class="header-orange">مجموع</th>
                         <th colspan="2" class="header-blue">الأنشطة</th><th rowspan="2" class="header-orange">مجموع</th>
                         <th class="header-blue">اختبار</th><th class="header-blue">مشروع</th><th rowspan="2" class="header-orange">الكلية</th>
@@ -263,19 +290,24 @@
 
     <div id="seatingModal" class="modal">
         <div class="modal-content modal-large">
-            <span class="close-btn" onclick="closeModal('seatingModal')">&times;</span>
-            <div class="modal-header"><h3 style="color:#16a085;">🗺️ خريطة المقاعد التفاعلية</h3></div>
-            <p style="text-align:center; font-size:13px; color:#7f8c8d; margin-top:-10px;">انقر على الطاولة للإضافة السريعة</p>
-            <div id="seatingGridContainer" class="seating-grid"></div>
+            <span class="close-btn" onclick="closeModal('seatingModal')" style="z-index:99;">&times;</span>
+            <div class="modal-header" style="margin-top:20px;"><h3 style="color:#16a085;">🗺️ خريطة المقاعد التفاعلية</h3></div>
+            <p style="text-align:center; font-size:13px; color:#7f8c8d; margin-top:-10px;">انقر على الطاولة للإضافة السريعة للتعزيز أو المخالفة</p>
+            <div class="modal-large-body">
+                <div id="seatingGridContainer" class="seating-grid"></div>
+            </div>
         </div>
     </div>
 
     <div id="reportsModal" class="modal">
         <div class="modal-content modal-large">
-            <span class="close-btn" onclick="closeModal('reportsModal')">&times;</span>
-            <div class="modal-header"><h3 style="color:#34495e;">📜 تقارير الأداء والشهادات</h3></div>
-            <input type="text" id="reportSearch" style="width:100%; box-sizing:border-box; padding:10px; margin-bottom:15px; border-radius:5px; border:1px solid #ccc;" placeholder="🔍 ابحث عن اسم الطالب..." onkeyup="filterReports()">
-            <div id="reportsContainer"></div>
+            <span class="close-btn" onclick="closeModal('reportsModal')" style="background:#fff; border-radius:50%; width:30px; height:30px; text-align:center; line-height:28px;">&times;</span>
+            <div style="background:#f8f9fa; padding:15px; border-bottom:1px solid #ccc; position:sticky; top:0; z-index:5;">
+                <h3 style="color:#34495e; margin:0 0 10px 0; text-align:center;">📜 تقارير الأداء التفصيلية</h3>
+                <input type="text" id="reportSearch" style="width:100%; box-sizing:border-box; padding:10px; border-radius:5px; border:1px solid #ccc;" placeholder="🔍 ابحث عن اسم الطالب هنا..." onkeyup="filterReports()">
+            </div>
+            <div class="modal-large-body" id="reportsContainer" style="background:#eaeded;">
+                </div>
         </div>
     </div>
 
@@ -334,34 +366,43 @@
             
             const tbody = document.getElementById("tbody" + g); 
             tbody.innerHTML = `<tr><td colspan="15">جاري جلب البيانات... ⏳</td></tr>`;
+            const rGrid = document.getElementById("reinforcementGrid");
+            rGrid.innerHTML = `<div style="text-align:center; width:100%; grid-column: 1 / -1;">جاري جلب بيانات التعزيز... ⏳</div>`;
             
             fetch(`${scriptURL}?grade=${g}&section=${document.getElementById("sectionSelect").value}`)
-            .then(r => r.json()).then(d => { currentSheetData = (d.result === 'success') ? d.data : {}; renderTable(g, document.getElementById("sectionSelect").value); })
-            .catch(() => { currentSheetData = {}; renderTable(g, document.getElementById("sectionSelect").value); });
+            .then(r => r.json()).then(d => { currentSheetData = (d.result === 'success') ? d.data : {}; renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); })
+            .catch(() => { currentSheetData = {}; renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); });
         }
 
-        function changeVal(id, amt) { const el = document.getElementById(id); if(el) { el.value = Math.max(0, (parseInt(el.value) || 0) + amt); calc(el, document.getElementById("gradeSelect").value); } }
+        function changeReinfVal(id, amt) { 
+            const el = document.getElementById(id); 
+            if(el) el.value = Math.max(0, (parseInt(el.value) || 0) + amt); 
+        }
 
-        function renderTable(g, s) {
+        function renderTableAndReinforcements(g, s) {
             const tbody = document.getElementById("tbody" + g); tbody.innerHTML = "";
+            const rGrid = document.getElementById("reinforcementGrid"); rGrid.innerHTML = "";
             const list = studentsData[g][s] || [];
             
             list.forEach((name, i) => {
                 let d = currentSheetData[name] || []; const val = (idx) => (d[idx] !== undefined ? d[idx] : ""); const valZero = (idx) => (d[idx] || 0);
                 let intIdx = (g === '6') ? 14 : 10; let violIdx = (g === '6') ? 15 : 11;
 
-                let interactionCol = `
-                    <div style="display:flex; justify-content:center; gap:2px; margin-bottom:2px;">
-                        <button class="mini-btn mini-plus" onclick="changeVal('int-${i}', 1)" title="تعزيز">+</button>
-                        <input type="text" id="int-${i}" class="mini-inp" value="${valZero(intIdx)}" readonly>
-                    </div>
-                    <div style="display:flex; justify-content:center; gap:2px;">
-                        <button class="mini-btn mini-viol" onclick="changeVal('viol-${i}', 1)" title="مخالفة">!</button>
-                        <input type="text" id="viol-${i}" class="mini-inp viol-inp" value="${valZero(violIdx)}" readonly>
-                    </div>
-                `;
+                // 1. توليد بطاقة الطالب في لوحة التعزيزات العلوية
+                let shortName = name.split(' ').slice(0, 3).join(' ');
+                let rCard = document.createElement("div"); rCard.className = "reinf-card";
+                rCard.innerHTML = `
+                    <div class="reinf-name" title="${name}">${shortName}</div>
+                    <div class="reinf-controls">
+                        <button class="r-btn r-plus" onclick="changeReinfVal('int-${i}', 1)" title="إضافة تعزيز">+</button>
+                        <input type="text" id="int-${i}" class="r-inp" value="${valZero(intIdx)}" readonly>
+                        <button class="r-btn r-minus" onclick="changeReinfVal('viol-${i}', 1)" title="إضافة مخالفة">!</button>
+                        <input type="text" id="viol-${i}" class="r-inp viol" value="${valZero(violIdx)}" readonly>
+                    </div>`;
+                rGrid.appendChild(rCard);
 
-                let row = `<td>${i+1}</td><td style="text-align:right;"><span id="name-${i}">${name}</span><br><span id="risk-${i}" class="risk-alert">⚠️ تراجع بالمستوى</span></td><td>${interactionCol}</td>`;
+                // 2. توليد صف الطالب في جدول الدرجات الرئيسي (بدون أعمدة التفاعل)
+                let row = `<td>${i+1}</td><td style="text-align:right;"><span id="name-${i}">${name}</span><br><span id="risk-${i}" class="risk-alert">⚠️ تراجع بالمستوى</span></td>`;
                 
                 if (g === "6") {
                     row += `<td><input type="number" class="col-calc" value="${val(1)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(2)}" oninput="calc(this,'6')"></td> <td class="t-dialogue header-orange">${valZero(3)}</td> <td><input type="number" class="col-calc" value="${val(4)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(5)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(6)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(7)}" oninput="calc(this,'6')"></td> <td class="t-quiz header-orange">${valZero(8)}</td> <td><input type="number" class="col-calc" value="${val(9)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(10)}" oninput="calc(this,'6')"></td> <td class="t-activity header-orange">${valZero(11)}</td> <td><input type="number" class="col-calc" value="${val(12)}" oninput="calc(this,'6')"></td> <td class="t-grand header-orange">${valZero(13)}</td>`;
@@ -461,7 +502,7 @@
             students.forEach((name, i) => {
                 let shortName = name.split(' ').slice(0, 2).join(' ');
                 let intVal = document.getElementById(`int-${i}`).value; let violVal = document.getElementById(`viol-${i}`).value;
-                grid.innerHTML += `<div class="desk-card" onclick="flashDesk(this)"><div style="font-weight:bold; font-size:12px; margin-bottom:5px;">${shortName}</div><div style="font-size:11px; background:#eee; color:#000; padding:2px; border-radius:3px; margin-bottom:5px;">🌟 ${intVal} | ⚠️ ${violVal}</div><button style="background:#27ae60; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeVal('int-${i}', 1); openSeatingChart(); playSound(800,'triangle',0.1,0.1);">+ تميز</button> <button style="background:#e74c3c; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeVal('viol-${i}', 1); openSeatingChart(); playSound(200,'triangle',0.1,0.1);">+ مخالفة</button></div>`;
+                grid.innerHTML += `<div class="desk-card" onclick="flashDesk(this)"><div style="font-weight:bold; font-size:12px; margin-bottom:5px;">${shortName}</div><div style="font-size:11px; background:#eee; color:#000; padding:2px; border-radius:3px; margin-bottom:5px;">🌟 ${intVal} | ⚠️ ${violVal}</div><button style="background:#27ae60; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeReinfVal('int-${i}', 1); openSeatingChart(); playSound(800,'triangle',0.1,0.1);">+ تميز</button> <button style="background:#e74c3c; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeReinfVal('viol-${i}', 1); openSeatingChart(); playSound(200,'triangle',0.1,0.1);">+ مخالفة</button></div>`;
             });
             openModal('seatingModal');
         }
@@ -480,44 +521,57 @@
             document.getElementById('honorTickerText').innerHTML = text; wrap.style.display = 'flex'; playSound(600, 'sine', 0.8, 0.2);
         }
 
-        // --- دالة العبارات الوصفية الرسمية وبصيغة الغائب مع التأكد من وجود تقييم ---
-        function getCategoryFullDesc(title, cur, max, isEvaluated) {
+        // دالة مساعدة لتوليد العبارة الرسمية بصيغة الغائب أو حالة "لم يتم التقييم" (تصميم الصورة)
+        function getCriterionImgHTML(icon, title, cur, max, isEvaluated) {
             if (!isEvaluated) {
-                return `<div style="margin-bottom:10px; background:var(--bg-color); padding:10px; border-radius:6px; border-right:4px solid #95a5a6;">
-                            <div style="font-size:14px; margin-bottom:5px;"><b>${title}:</b> <span style="color:#7f8c8d;">لم يتم رصد درجة لهذا المعيار حتى الآن.</span></div>
-                        </div>`;
+                return `
+                <div class="report-img-item">
+                    <div class="report-img-item-title" style="color:#e74c3c;">${icon} ${title}</div>
+                    <div class="report-img-item-desc" style="color:#7f8c8d;">لم يتم التقييم (بانتظار رصد درجات هذا الجانب لتقييم مستوى الطالب).</div>
+                </div>`;
             }
             let pct = (cur / max) * 100;
-            let desc = ""; let color = "";
-            if (pct >= 90) { 
-                desc = "أداء ممتاز ومستوى يبعث على الفخر، يُظهر الطالب تفوقاً واضحاً وإبداعاً في هذا المعيار."; 
-                color = "#27ae60"; 
-            } else if (pct >= 75) { 
-                desc = "أداء جيد جداً ومبشر، مع قليل من التركيز الإضافي والمراجعة سيحقق الطالب العلامة الكاملة بإذن الله."; 
-                color = "#2980b9"; 
-            } else if (pct >= 50) { 
-                desc = "مستوى متوسط، يمتلك الطالب قدرات أفضل ويحتاج إلى مضاعفة الجهد والمشاركة بشكل أوسع."; 
-                color = "#f39c12"; 
-            } else { 
-                desc = "مستوى يحتاج إلى متابعة حثيثة من قبل الأسرة واهتمام أكبر بالمهام المطلوبة لتدارك التأخر ورفع التحصيل."; 
-                color = "#e74c3c"; 
+            let desc = ""; let color = "#34495e";
+            
+            if(title.includes('الحوار')) {
+                if(pct>=90) desc = "يُظهر الطالب تميزاً ملحوظاً في التعبير عن أفكاره، ويشارك بفاعلية تثري الحوار الصفي بانتظام.";
+                else if(pct>=75) desc = "يشارك الطالب بشكل جيد في الحوار الصفي، مع الحاجة إلى الثقة الأكبر في طرح أفكاره.";
+                else if(pct>=50) desc = "مشاركة الطالب محدودة في الحوار الصفي، ويحتاج إلى تشجيع مستمر للتعبير عن رأيه.";
+                else desc = "ضعف ملحوظ في المشاركة والحوار، يُرجى التعاون لتحفيز الطالب على التفاعل المستمر.";
+            } else if(title.includes('الأنشطة')) {
+                if(pct>=90) desc = "يُنجز الطالب المهارات العملية والأنشطة بدقة واحترافية عالية تفوق التوقعات.";
+                else if(pct>=75) desc = "أداء الطالب في الأنشطة العملية جيد جداً، مع بعض الملاحظات البسيطة في التنفيذ.";
+                else if(pct>=50) desc = "ينجز الطالب الأنشطة بمستوى مقبول، ويحتاج إلى تركيز أكبر لرفع جودة مخرجاته.";
+                else desc = "يواجه الطالب صعوبة في إنجاز الأنشطة العملية، يحتاج إلى تدريب إضافي ومتابعة.";
+            } else if(title.includes('الأسئلة') || title.includes('الاختبار')) {
+                if(pct>=90) desc = "مستواه في الاختبارات ممتاز جداً، مما يعكس استيعاباً كاملاً للمفاهيم المدروسة.";
+                else if(pct>=75) desc = "مستواه في الاختبارات جيد جداً، مع وقوعه في بعض الأخطاء البسيطة التي يمكن تداركها.";
+                else if(pct>=50) desc = "درجاته في الاختبارات متوسطة، وننصح بمراجعة الدروس بشكل دوري لتحسين الأداء.";
+                else desc = "نتائجه في الاختبارات متدنية، يتطلب الأمر خطة علاجية فورية للوقوف على أسباب الضعف.";
+            } else if(title.includes('المشروع')) {
+                if(pct>=90) desc = "قدّم الطالب مشروعاً عملياً متكاملاً يعكس قدرة عالية على الابتكار وتطبيق المهارات.";
+                else if(pct>=75) desc = "مشروع الطالب منفذ بشكل جيد ومطابق للمواصفات الأساسية المطلوبة.";
+                else if(pct>=50) desc = "أنجز الطالب المشروع بالحد الأدنى من المتطلبات، ويحتاج لمزيد من الإبداع في أعماله القادمة.";
+                else desc = "لم يُنجز الطالب المشروع بالشكل المطلوب، مما أثر سلباً على تقييمه العام.";
             }
-            return `<div style="margin-bottom:10px; background:var(--bg-color); padding:10px; border-radius:6px; border-right:4px solid ${color};">
-                        <div style="font-size:14px; margin-bottom:5px;"><b>${title}:</b> ${cur}/${max}</div>
-                        <div style="font-size:13px; color:var(--text-color); opacity:0.9;">💬 ${desc}</div>
-                    </div>`;
-        }
-        
-        // --- دالة إرسال الواتساب للعبارات الرسمية ---
-        function getWaFullDesc(cur, max, isEvaluated) {
-            if (!isEvaluated) return "لم يتم التقييم في هذا المعيار بعد.";
-            let pct = (cur / max) * 100;
-            if (pct >= 90) return "أداء ممتاز ومستوى يبعث على الفخر، يُظهر الطالب تفوقاً واضحاً وإبداعاً في هذا المعيار.";
-            if (pct >= 75) return "أداء جيد جداً ومبشر، مع قليل من التركيز والمراجعة سيحقق العلامة الكاملة.";
-            if (pct >= 50) return "مستوى متوسط، يمتلك قدرات أفضل ويحتاج إلى مضاعفة الجهد والمشاركة.";
-            return "مستوى يحتاج إلى متابعة حثيثة من الأسرة واهتمام أكبر بالمهام لتدارك التأخر.";
+
+            return `
+            <div class="report-img-item">
+                <div class="report-img-item-title">${icon} ${title}</div>
+                <div class="report-img-item-desc" style="color:${color};">${desc}</div>
+            </div>`;
         }
 
+        function getWaTextDesc(title, cur, max, isEvaluated) {
+             if (!isEvaluated) return "لم يتم التقييم.";
+            let pct = (cur / max) * 100;
+            if(pct>=90) return "ممتاز جداً، يُظهر تفوقاً ملحوظاً.";
+            if(pct>=75) return "جيد جداً، مع بعض الملاحظات البسيطة.";
+            if(pct>=50) return "متوسط، ويحتاج لتركيز ومجهود مضاعف.";
+            return "مستوى ضعيف، ويتطلب المتابعة الفورية.";
+        }
+
+        // دالة توليد التقارير المتوافقة مع تصميم الصورة
         function generateDetailedReports() {
             const g = document.getElementById("gradeSelect").value; 
             const tbody = document.getElementById("tbody" + g);
@@ -537,77 +591,71 @@
                 let detailsHTML = ""; let waDetails = ""; let totalCur = 0; let totalPos = 0;
 
                 if (!hasData) {
-                    detailsHTML = "<div style='color:#7f8c8d; font-style:italic; padding:10px;'>لم يتم إدخال أي درجات لهذا الطالب حتى الآن.</div>";
+                    detailsHTML = "<div class='report-img-item-desc' style='padding:20px; text-align:center;'>لم يتم إدخال أي درجات لهذا الطالب حتى الآن.</div>";
                     waDetails = "لا توجد درجات مرصودة حالياً.";
-                    totalPos = 100; // لتجنب القسمة على صفر
+                    totalPos = 100;
                 } else {
                     if (g === "6") {
-                        let evalDiag = raw[0] !== "" || raw[1] !== "";
-                        let diag = vals[0] + vals[1];
-
-                        let evalQuiz = raw[2] !== "" || raw[3] !== "" || raw[4] !== "" || raw[5] !== "";
-                        let quiz = vals[2] + vals[3] + vals[4] + vals[5];
-
-                        let evalAct = raw[6] !== "" || raw[7] !== "";
-                        let act = vals[6] + vals[7];
-
-                        let evalProj = raw[8] !== "";
-                        let proj = vals[8];
+                        let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
+                        let evalQuiz = raw[2] !== "" || raw[3] !== "" || raw[4] !== "" || raw[5] !== ""; let quiz = vals[2] + vals[3] + vals[4] + vals[5];
+                        let evalAct = raw[6] !== "" || raw[7] !== ""; let act = vals[6] + vals[7];
+                        let evalProj = raw[8] !== ""; let proj = vals[8];
 
                         totalCur = diag + quiz + act + proj;
                         totalPos = (evalDiag ? 20 : 0) + (evalQuiz ? 20 : 0) + (evalAct ? 40 : 0) + (evalProj ? 20 : 0);
                         if(totalPos === 0) totalPos = 100;
 
-                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20, evalDiag);
-                        detailsHTML += getCategoryFullDesc("📝 تقييم الأسئلة القصيرة", quiz, 20, evalQuiz);
-                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40, evalAct);
-                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20, evalProj);
+                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
+                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
+                        detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, 20, evalQuiz);
+                        detailsHTML += getCriterionImgHTML("🚀", "المشروع", proj, 20, evalProj);
 
-                        waDetails += `🗣️ الحوار (${evalDiag ? diag+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(diag, 20, evalDiag)}\n\n📝 الأسئلة (${evalQuiz ? quiz+'/20' : 'لم تُقيّم'}):\n💬 ${getWaFullDesc(quiz, 20, evalQuiz)}\n\n📚 الأنشطة (${evalAct ? act+'/40' : 'لم تُقيّم'}):\n💬 ${getWaFullDesc(act, 40, evalAct)}\n\n🚀 المشروع (${evalProj ? proj+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(proj, 20, evalProj)}\n\n`;
+                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, 20, evalQuiz)}\n🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
                     } else {
-                        let evalDiag = raw[0] !== "" || raw[1] !== "";
-                        let diag = vals[0] + vals[1];
-
-                        let evalAct = raw[2] !== "" || raw[3] !== "";
-                        let act = vals[2] + vals[3];
-
-                        let evalTest = raw[4] !== "";
-                        let test = vals[4];
-
-                        let evalProj = raw[5] !== "";
-                        let proj = vals[5];
+                        let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
+                        let evalAct = raw[2] !== "" || raw[3] !== ""; let act = vals[2] + vals[3];
+                        let evalTest = raw[4] !== ""; let test = vals[4];
+                        let evalProj = raw[5] !== ""; let proj = vals[5];
 
                         totalCur = diag + act + test + proj;
                         totalPos = (evalDiag ? 20 : 0) + (evalAct ? 40 : 0) + (evalTest ? 20 : 0) + (evalProj ? 20 : 0);
                         if(totalPos === 0) totalPos = 100;
 
-                        detailsHTML += getCategoryFullDesc("🗣️ تقييم الحوار والمشاركة", diag, 20, evalDiag);
-                        detailsHTML += getCategoryFullDesc("📚 تقييم الأنشطة والتطبيق", act, 40, evalAct);
-                        detailsHTML += getCategoryFullDesc("📝 تقييم الاختبار", test, 20, evalTest);
-                        detailsHTML += getCategoryFullDesc("🚀 تقييم المشروع العملي", proj, 20, evalProj);
+                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
+                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
+                        detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, 20, evalTest);
+                        detailsHTML += getCriterionImgHTML("🚀", "المشروع", proj, 20, evalProj);
 
-                        waDetails += `🗣️ الحوار (${evalDiag ? diag+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(diag, 20, evalDiag)}\n\n📚 الأنشطة (${evalAct ? act+'/40' : 'لم تُقيّم'}):\n💬 ${getWaFullDesc(act, 40, evalAct)}\n\n📝 الاختبار (${evalTest ? test+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(test, 20, evalTest)}\n\n🚀 المشروع (${evalProj ? proj+'/20' : 'لم يُقيّم'}):\n💬 ${getWaFullDesc(proj, 20, evalProj)}\n\n`;
+                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n📝 الاختبار: ${getWaTextDesc("الاختبار", test, 20, evalTest)}\n🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
                     }
                 }
 
                 let pct = (totalCur / totalPos) * 100;
+                let summaryTxt = "";
+                if(!hasData) summaryTxt = "الطالب بانتظار التقييم للمهام القادمة.";
+                else if(pct >= 90) summaryTxt = "مستوى عام ممتاز ومبشر، نتمنى له الاستمرار.";
+                else if(pct >= 75) summaryTxt = "مستوى جيد جداً، ونطمح للأفضل في القادم.";
+                else if(pct >= 50) summaryTxt = "مستوى متوسط، يرجى المتابعة لتحسين الأداء.";
+                else summaryTxt = "مستوى منخفض، يتطلب تعاوناً عاجلاً للوقوف على مستواه.";
 
                 container.innerHTML += `
-                <div class="detailed-report-card report-card-item">
-                    <div class="detailed-report-name">${name}</div>
-                    <div style="padding:15px;">
-                        <div style="margin-bottom:15px; display:flex; gap:10px; align-items:center;">
-                            <input type="tel" class="wa-input" placeholder="8 أرقام للواتساب" maxlength="8">
-                            <button class="wa-btn-mini" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol})">📱 إرسال واتساب للولي الأمر</button> 
-                            <button class="cert-btn-mini" onclick="generateCertificate('${name}')">🎓 إصدار شهادة التفوق</button>
-                        </div>
-                        <div class="category-box ${!hasData ? '' : (pct>=80 ? 'border-excellent' : 'border-weak')}">
-                            <div style="margin-bottom:12px; font-size:15px; color:#2980b9; border-bottom:1px solid #ccc; padding-bottom:5px;"><b>التقرير الأكاديمي (الدرجات المحتسبة حالياً: ${totalCur} من ${totalPos}):</b></div>
-                            ${detailsHTML}
-                        </div>
-                        <div class="category-box ${viol==0 ? 'border-excellent' : 'border-weak'}">
-                            <b>سجل الانضباط والمواظبة:</b> لقد حصد الطالب (${int}) نقاط تعزيز إيجابية 🌟، وسُجلت عليه (${viol}) مخالفات صفية ⚠️.
-                        </div>
+                <div class="report-img-card report-card-item">
+                    <div class="report-img-header">${i+1}. ${name}</div>
+                    
+                    <div class="report-img-actionbar">
+                        <button class="wa-send-btn" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol})">إرسال التقرير</button>
+                        <input type="tel" class="wa-input" placeholder="...رقم الهاتف" maxlength="8" dir="ltr">
+                        <span>+968 📱</span>
+                        <button class="cert-btn" style="margin-right:auto;" onclick="generateCertificate('${name}')">🎓 طباعة شهادة</button>
+                    </div>
+
+                    <div class="report-img-body">
+                        ${detailsHTML}
+                    </div>
+
+                    <div class="report-img-footer">
+                        <div class="report-img-total">الإنجاز الكلي الحالي: ${totalCur} من ${totalPos} (${hasData ? pct.toFixed(1) : 0}%)</div>
+                        <div class="report-img-summary">الخلاصة: ${summaryTxt}</div>
                     </div>
                 </div>`;
             });
@@ -619,7 +667,7 @@
         function sendWA(btn, name, totalCur, totalPos, waDetails, int, viol) { 
             let num = btn.parentElement.querySelector('.wa-input').value; 
             if(num.length !== 8) return alert('يرجى إدخال 8 أرقام لإرسال الواتساب بشكل صحيح.'); 
-            let msg = `*التقرير الأكاديمي التفصيلي للطالب:* ${name}\n\n*التحليل الوصفي للدرجات:*\n${waDetails}*المجموع المحتسب حالياً للطالب:* ${totalCur} من ${totalPos}\n\n*سجل الانضباط والتحفيز:*\nالتعزيز الإيجابي: ${int} 🌟\nالمخالفات المسجلة: ${viol} ⚠️\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
+            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل:*\n${waDetails}\n*الإنجاز الكلي:* ${totalCur} من ${totalPos}\n*سجل الانضباط:* (التعزيز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
@@ -635,7 +683,7 @@
             ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
             ctx.fillStyle = '#fdfbf2'; ctx.fillRect(canvas.width/2 - 300, 310, 600, 90); ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(canvas.width/2 - 300, 310, 600, 90);
             
-            // تصغير حجم خط اسم الطالب هنا (من 45px إلى 34px) ليستوعب الأسماء الطويلة
+            // تصغير حجم خط اسم الطالب لاستيعاب الأسماء الرباعية الطويلة
             ctx.font = 'bold 34px Tahoma, Arial'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
             
             ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
