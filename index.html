@@ -176,6 +176,8 @@
     </style>
 </head>
 <body>
+    <div style="font-family: 'Amiri', serif; position: absolute; visibility: hidden; width: 0; height: 0; pointer-events: none;">تحميل خط الشهادة</div>
+
     <div class="glass-overlay"></div>
     <div id="offline-banner">⚠️ أنت غير متصل بالإنترنت حالياً. التغييرات ستحفظ محلياً وتُرسل لاحقاً.</div>
     <div id="honorTickerWrap" class="honor-ticker-wrap" onclick="this.style.display='none'"><div class="honor-ticker-container"><div id="honorTickerText" class="honor-ticker"></div></div></div>
@@ -196,7 +198,7 @@
     </div>
 
     <div class="header-container">
-        <h2>المنصة الرقمية للتقييم الأكاديمي <span style="font-size:14px; color:#27ae60;">(الإصدار 2.2)</span></h2>
+        <h2>المنصة الرقمية للتقييم الأكاديمي <span style="font-size:14px; color:#27ae60;">(الإصدار 2.3)</span></h2>
         <p class="author-name">إعداد: أ. معاذ اليعقوبي</p>
         <div class="controls">
             <select id="gradeSelect" onchange="updateView()">
@@ -675,7 +677,6 @@
                     totalPos = 100; 
                 } else {
                     if (g === "6") {
-                        // حساب الحد الأقصى الديناميكي لكل معيار بناءً على الخانات المعبأة فقط
                         let maxDiag = (raw[0] !== "" ? 10 : 0) + (raw[1] !== "" ? 10 : 0);
                         let maxQuiz = (raw[2] !== "" ? 5 : 0) + (raw[3] !== "" ? 5 : 0) + (raw[4] !== "" ? 5 : 0) + (raw[5] !== "" ? 5 : 0);
                         let maxAct = (raw[6] !== "" ? 20 : 0) + (raw[7] !== "" ? 20 : 0);
@@ -780,8 +781,8 @@
         }
 
         async function generateCertificate(studentName) {
-            // انتظار تحميل الخط الأميري لضمان رسمه على الشهادة بشكل صحيح
-            await document.fonts.load("bold 55px Amiri");
+            // انتظار جاهزية جميع الخطوط في الموقع قبل الرسم
+            await document.fonts.ready;
 
             const canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 700; const ctx = canvas.getContext('2d');
             ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -791,16 +792,18 @@
             drawCorner(45, 45, 40, 1, 1); drawCorner(canvas.width - 45, 45, 40, -1, 1); drawCorner(45, canvas.height - 45, 40, 1, -1); drawCorner(canvas.width - 45, canvas.height - 45, 40, -1, -1);
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
             
-            // استخدام خط أميري الفخم
-            ctx.font = 'bold 60px "Amiri", serif'; ctx.fillStyle = '#2c3e50'; ctx.fillText('شَهَادَةُ شُكْرٍ وَتَقْدِير', canvas.width / 2, 160);
-            ctx.font = '30px "Amiri", serif'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
+            // تطبيق خط أميري بأحجام متناسقة
+            ctx.font = 'bold 50px "Amiri", serif'; ctx.fillStyle = '#2c3e50'; ctx.fillText('شَهَادَةُ شُكْرٍ وَتَقْدِير', canvas.width / 2, 160);
+            ctx.font = '28px "Amiri", serif'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
+            
             ctx.fillStyle = '#fdfbf2'; ctx.fillRect(canvas.width/2 - 300, 310, 600, 90); ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(canvas.width/2 - 300, 310, 600, 90);
             
-            ctx.font = 'bold 36px "Amiri", serif'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
+            // تصغير خط اسم الطالب ليتسع بشكل أنيق
+            ctx.font = 'bold 28px "Amiri", serif'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
             
-            ctx.font = '30px "Amiri", serif'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
-            ctx.font = 'bold 24px "Amiri", serif'; ctx.fillText('معلم المادة', 250, 600); ctx.fillText('أ. معاذ اليعقوبي', 250, 640);
-            ctx.font = '20px "Amiri", serif'; ctx.fillStyle = '#95a5a6'; ctx.fillText('المنصة الرقمية للتقييم الأكاديمي', canvas.width - 250, 620);
+            ctx.font = '26px "Amiri", serif'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
+            ctx.font = 'bold 22px "Amiri", serif'; ctx.fillText('معلم المادة', 250, 600); ctx.fillText('أ. معاذ اليعقوبي', 250, 640);
+            ctx.font = '18px "Amiri", serif'; ctx.fillStyle = '#95a5a6'; ctx.fillText('المنصة الرقمية للتقييم الأكاديمي', canvas.width - 250, 620);
             
             const link = document.createElement('a'); link.download = `شهادة_تميز_${studentName.split(' ')[0]}.png`; link.href = canvas.toDataURL('image/png'); link.click();
             playSound(700, 'sine', 0.5, 0.2);
