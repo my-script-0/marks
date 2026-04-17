@@ -80,26 +80,51 @@
         .bg-reports { background: #34495e; }
         .bg-honor { background: #f1c40f; color:#000; }
 
+        /* زر الحفظ العائم */
+        .btn-floating-save {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn-floating-save:hover {
+            transform: scale(1.05);
+            background-color: #219653;
+        }
+
         .header-container { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid var(--border-color);}
         h2 { text-align: center; color: var(--text-color); margin: 0 0 5px 0; }
         .author-name { text-align: center; font-size: 14px; color: var(--text-color); opacity: 0.7; margin: 0;}
         
         .controls { display: flex; justify-content: center; align-items:center; gap: 20px; margin-top: 15px; flex-wrap: wrap;}
         select { padding: 8px 15px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-size:15px; font-weight:bold;}
-        .btn-submit { padding: 10px 25px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .theme-toggle { padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer; background-color: var(--input-bg); color: var(--text-color); font-size: 18px; border: 1px solid var(--border-color);}
 
-        /* لوحة التعزيزات والتفاعل */
+        /* لوحة التعزيزات المطورة */
         .reinforcement-section { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; display: block;}
         .reinforcement-header { font-size: 18px; font-weight: bold; color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px; display:flex; align-items:center; gap:10px;}
-        .reinforcement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding: 5px;}
-        .reinf-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
-        .reinf-name { font-size: 13px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color:var(--text-color);}
-        .reinf-controls { display: flex; justify-content: center; gap: 5px; align-items:center; }
-        .r-btn { width: 25px; height: 25px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; line-height: 1;}
-        .r-plus { background: #27ae60; } .r-minus { background: #e74c3c; }
-        .r-inp { width: 30px; text-align: center; border: 1px solid #ccc; background: #fff2cc; border-radius: 4px; font-weight: bold; font-size: 13px; padding: 2px;}
-        .r-inp.viol { background: #fadbd8; }
+        .reinforcement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding: 5px;}
+        .reinf-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        .reinf-name { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color:var(--text-color); border-bottom: 1px dashed #ccc; padding-bottom: 5px;}
+        .reinf-row { display: flex; justify-content: space-between; align-items: center; background: var(--category-bg); padding: 4px 8px; border-radius: 4px;}
+        .reinf-row-title { font-size: 11px; font-weight: bold; color: var(--text-color);}
+        .reinf-btn-group { display: flex; gap: 4px; align-items: center; }
+        .r-btn { width: 24px; height: 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; line-height: 1; display:flex; justify-content:center; align-items:center;}
+        .r-inp { width: 30px; text-align: center; border: 1px solid #ccc; background: #fff; border-radius: 4px; font-weight: bold; font-size: 13px; padding: 2px; color:#000;}
+        .r-inp.viol { background: #fff; color:#e74c3c; }
 
         .table-container { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); overflow-x: auto;}
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
@@ -134,7 +159,7 @@
         .seating-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; padding: 10px; }
         .desk-card { background: var(--input-bg); border: 2px solid #3498db; border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor:pointer;}
         
-        /* تصميم التقرير المطابق للصورة */
+        /* تصميم التقرير الديناميكي */
         .report-img-card { background: var(--input-bg); border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #dcdde1; }
         .report-img-header { background-color: #2980b9; color: white; padding: 12px 20px; font-size: 16px; font-weight: bold; }
         .report-img-actionbar { background-color: #eaf2f8; padding: 10px 20px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; border-bottom: 1px solid #dcdde1; }
@@ -144,9 +169,10 @@
         .report-img-actionbar span { font-weight: bold; color: #2c3e50; font-family: monospace; font-size: 15px;}
         
         .report-img-body { padding: 15px 20px; }
-        .report-img-item { border-bottom: 1px solid #eee; padding: 12px 0; }
+        .report-img-item { border-bottom: 1px solid #eee; padding: 15px 0; display:flex; flex-direction:column; gap:8px;}
         .report-img-item:last-child { border-bottom: none; }
-        .report-img-item-title { font-size: 15px; font-weight: bold; color: #c0392b; margin-bottom: 5px; display:flex; align-items:center; gap:5px;}
+        .report-img-item-title { font-size: 15px; font-weight: bold; color: #2c3e50; display:flex; align-items:center; gap:5px;}
+        .report-grade-badge { background: #eaf2f8; padding: 4px 12px; border-radius: 20px; font-weight: bold; color: #2980b9; font-size: 14px; border: 1px solid #dcdde1; font-family: monospace;}
         .report-img-item-desc { font-size: 14px; color: #34495e; line-height: 1.5; padding-right: 25px;}
         
         .report-img-footer { background-color: #f8f9fa; padding: 15px 20px; border-top: 3px solid #16a085; }
@@ -167,6 +193,10 @@
     <div class="glass-overlay"></div>
     <div id="offline-banner">⚠️ أنت غير متصل بالإنترنت حالياً. التغييرات ستحفظ محلياً وتُرسل لاحقاً.</div>
     <div id="honorTickerWrap" class="honor-ticker-wrap" onclick="this.style.display='none'"><div class="honor-ticker-container"><div id="honorTickerText" class="honor-ticker"></div></div></div>
+
+    <button class="btn-floating-save" id="btnFloatSave" onclick="submitData()">
+        💾 حفظ ومزامنة البيانات
+    </button>
 
     <div class="sidebar-tools">
         <button class="side-icon bg-export" data-title="تصدير إكسل" onclick="exportToExcel()">📊</button>
@@ -190,8 +220,7 @@
             <select id="sectionSelect" onchange="updateView()">
                 <option value="1">شعبة 1</option><option value="2">شعبة 2</option><option value="3">شعبة 3</option><option value="4">شعبة 4</option><option value="5" id="sec5">شعبة 5</option>
             </select>
-            <button class="btn-submit" onclick="submitData()">💾 حفظ البيانات</button>
-            <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn">🌙</button>
+            <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn">🌙 تغيير المظهر</button>
         </div>
     </div>
 
@@ -249,6 +278,13 @@
         <div class="modal-content" style="text-align:center;">
             <span class="close-btn" onclick="closeModal('modalTimer')">&times;</span>
             <div class="modal-header"><h3 style="color:#e67e22;">⏱️ مؤقت الأنشطة</h3></div>
+            
+            <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                <label style="font-weight:bold; color:var(--text-color);">الوقت بالدقائق:</label>
+                <input type="number" id="timerMinutesInput" value="5" min="1" max="120" style="width: 60px; padding: 5px; text-align: center; border-radius: 5px; border: 1px solid var(--border-color); font-size: 16px; background:var(--input-bg); color:var(--text-color);">
+                <button onclick="setCustomTimer()" style="background:#3498db; color:white; border:none; padding:6px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">ضبط</button>
+            </div>
+
             <div id="timerDisplay" class="timer-display">05:00</div>
             <div style="display:flex; justify-content:center; gap:10px;">
                 <button onclick="startTimer()" style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold; cursor:pointer;">بدء</button> 
@@ -292,7 +328,7 @@
         <div class="modal-content modal-large">
             <span class="close-btn" onclick="closeModal('seatingModal')" style="z-index:99;">&times;</span>
             <div class="modal-header" style="margin-top:20px;"><h3 style="color:#16a085;">🗺️ خريطة المقاعد التفاعلية</h3></div>
-            <p style="text-align:center; font-size:13px; color:#7f8c8d; margin-top:-10px;">انقر على الطاولة للإضافة السريعة للتعزيز أو المخالفة</p>
+            <p style="text-align:center; font-size:13px; color:#7f8c8d; margin-top:-10px;">انقر على الطاولة للإضافة السريعة</p>
             <div class="modal-large-body">
                 <div id="seatingGridContainer" class="seating-grid"></div>
             </div>
@@ -376,7 +412,7 @@
 
         function changeReinfVal(id, amt) { 
             const el = document.getElementById(id); 
-            if(el) el.value = Math.max(0, (parseInt(el.value) || 0) + amt); 
+            if(el) { el.value = Math.max(0, (parseInt(el.value) || 0) + amt); }
         }
 
         function renderTableAndReinforcements(g, s) {
@@ -385,25 +421,32 @@
             const list = studentsData[g][s] || [];
             
             list.forEach((name, i) => {
-                let d = currentSheetData[name] || []; const val = (idx) => (d[idx] !== undefined ? d[idx] : ""); const valZero = (idx) => (d[idx] || 0);
+                let d = currentSheetData[name] || []; const val = (idx) => (d[idx] !== undefined && d[idx] !== "" ? d[idx] : ""); const valZero = (idx) => (d[idx] || 0);
                 let intIdx = (g === '6') ? 14 : 10; let violIdx = (g === '6') ? 15 : 11;
 
-                // 1. توليد بطاقة الطالب في لوحة التعزيزات العلوية
                 let shortName = name.split(' ').slice(0, 3).join(' ');
                 let rCard = document.createElement("div"); rCard.className = "reinf-card";
                 rCard.innerHTML = `
-                    <div class="reinf-name" title="${name}">${shortName}</div>
-                    <div class="reinf-controls">
-                        <button class="r-btn r-plus" onclick="changeReinfVal('int-${i}', 1)" title="إضافة تعزيز">+</button>
-                        <input type="text" id="int-${i}" class="r-inp" value="${valZero(intIdx)}" readonly>
-                        <button class="r-btn r-minus" onclick="changeReinfVal('viol-${i}', 1)" title="إضافة مخالفة">!</button>
-                        <input type="text" id="viol-${i}" class="r-inp viol" value="${valZero(violIdx)}" readonly>
+                    <div class="reinf-name" title="${name}">${i+1}. ${shortName}</div>
+                    <div class="reinf-row">
+                        <span class="reinf-row-title">🌟 تميز</span>
+                        <div class="reinf-btn-group">
+                            <button class="r-btn" style="background:#27ae60" onclick="changeReinfVal('int-${i}', 1)">+</button>
+                            <input type="text" id="int-${i}" class="r-inp" value="${valZero(intIdx)}" readonly>
+                            <button class="r-btn" style="background:#95a5a6" onclick="changeReinfVal('int-${i}', -1)">-</button>
+                        </div>
+                    </div>
+                    <div class="reinf-row">
+                        <span class="reinf-row-title">⚠️ مخالفة</span>
+                        <div class="reinf-btn-group">
+                            <button class="r-btn" style="background:#e74c3c" onclick="changeReinfVal('viol-${i}', 1)">+</button>
+                            <input type="text" id="viol-${i}" class="r-inp viol" value="${valZero(violIdx)}" readonly>
+                            <button class="r-btn" style="background:#95a5a6" onclick="changeReinfVal('viol-${i}', -1)">-</button>
+                        </div>
                     </div>`;
                 rGrid.appendChild(rCard);
 
-                // 2. توليد صف الطالب في جدول الدرجات الرئيسي (بدون أعمدة التفاعل)
                 let row = `<td>${i+1}</td><td style="text-align:right;"><span id="name-${i}">${name}</span><br><span id="risk-${i}" class="risk-alert">⚠️ تراجع بالمستوى</span></td>`;
-                
                 if (g === "6") {
                     row += `<td><input type="number" class="col-calc" value="${val(1)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(2)}" oninput="calc(this,'6')"></td> <td class="t-dialogue header-orange">${valZero(3)}</td> <td><input type="number" class="col-calc" value="${val(4)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(5)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(6)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(7)}" oninput="calc(this,'6')"></td> <td class="t-quiz header-orange">${valZero(8)}</td> <td><input type="number" class="col-calc" value="${val(9)}" oninput="calc(this,'6')"></td> <td><input type="number" class="col-calc" value="${val(10)}" oninput="calc(this,'6')"></td> <td class="t-activity header-orange">${valZero(11)}</td> <td><input type="number" class="col-calc" value="${val(12)}" oninput="calc(this,'6')"></td> <td class="t-grand header-orange">${valZero(13)}</td>`;
                 } else {
@@ -446,10 +489,37 @@
             } else { riskAlert.style.display = 'none'; }
         }
 
-        let timerInterval; let timeRemaining = 300;
-        function updateTimerDisplay() { let m = Math.floor(timeRemaining/60); let s = timeRemaining%60; document.getElementById("timerDisplay").innerText = (m<10?"0":"")+m+":"+(s<10?"0":"")+s; }
-        function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(() => { if(timeRemaining>0){timeRemaining--; updateTimerDisplay();} else{clearInterval(timerInterval); playSound(200,'square',1,0.5); alert("انتهى الوقت!");} }, 1000); }
-        function pauseTimer() { clearInterval(timerInterval); } function resetTimer() { clearInterval(timerInterval); timeRemaining=300; updateTimerDisplay(); }
+        // --- نظام المؤقت المحدث ---
+        let timerInterval; 
+        let defaultTime = 300; // 5 دقائق افتراضياً
+        let timeRemaining = 300;
+        
+        function updateTimerDisplay() { 
+            let m = Math.floor(timeRemaining/60); 
+            let s = timeRemaining%60; 
+            document.getElementById("timerDisplay").innerText = (m<10?"0":"")+m+":"+(s<10?"0":"")+s; 
+        }
+        
+        function setCustomTimer() {
+            let mins = parseInt(document.getElementById("timerMinutesInput").value) || 5;
+            defaultTime = mins * 60;
+            timeRemaining = defaultTime;
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+        }
+
+        function startTimer() { 
+            clearInterval(timerInterval); 
+            timerInterval = setInterval(() => { 
+                if(timeRemaining>0){
+                    timeRemaining--; updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval); playSound(200,'square',1,0.5); alert("انتهى الوقت!");
+                } 
+            }, 1000); 
+        }
+        function pauseTimer() { clearInterval(timerInterval); } 
+        function resetTimer() { clearInterval(timerInterval); timeRemaining=defaultTime; updateTimerDisplay(); }
 
         function spinWheel() {
             const g = document.getElementById("gradeSelect").value; const s = document.getElementById("sectionSelect").value;
@@ -502,7 +572,7 @@
             students.forEach((name, i) => {
                 let shortName = name.split(' ').slice(0, 2).join(' ');
                 let intVal = document.getElementById(`int-${i}`).value; let violVal = document.getElementById(`viol-${i}`).value;
-                grid.innerHTML += `<div class="desk-card" onclick="flashDesk(this)"><div style="font-weight:bold; font-size:12px; margin-bottom:5px;">${shortName}</div><div style="font-size:11px; background:#eee; color:#000; padding:2px; border-radius:3px; margin-bottom:5px;">🌟 ${intVal} | ⚠️ ${violVal}</div><button style="background:#27ae60; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeReinfVal('int-${i}', 1); openSeatingChart(); playSound(800,'triangle',0.1,0.1);">+ تميز</button> <button style="background:#e74c3c; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeReinfVal('viol-${i}', 1); openSeatingChart(); playSound(200,'triangle',0.1,0.1);">+ مخالفة</button></div>`;
+                grid.innerHTML += `<div class="desk-card" onclick="flashDesk(this)"><div style="font-weight:bold; font-size:12px; margin-bottom:5px;">${i+1}. ${shortName}</div><div style="font-size:11px; background:#eee; color:#000; padding:2px; border-radius:3px; margin-bottom:5px;">🌟 ${intVal} | ⚠️ ${violVal}</div><button style="background:#27ae60; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeReinfVal('int-${i}', 1); openSeatingChart(); playSound(800,'triangle',0.1,0.1);">+ تميز</button> <button style="background:#e74c3c; color:#fff; border:none; padding:3px 6px; border-radius:3px; font-size:11px; cursor:pointer;" onclick="event.stopPropagation(); changeReinfVal('viol-${i}', 1); openSeatingChart(); playSound(200,'triangle',0.1,0.1);">+ مخالفة</button></div>`;
             });
             openModal('seatingModal');
         }
@@ -521,15 +591,7 @@
             document.getElementById('honorTickerText').innerHTML = text; wrap.style.display = 'flex'; playSound(600, 'sine', 0.8, 0.2);
         }
 
-        // دالة مساعدة لتوليد العبارة الرسمية بصيغة الغائب أو حالة "لم يتم التقييم" (تصميم الصورة)
-        function getCriterionImgHTML(icon, title, cur, max, isEvaluated) {
-            if (!isEvaluated) {
-                return `
-                <div class="report-img-item">
-                    <div class="report-img-item-title" style="color:#e74c3c;">${icon} ${title}</div>
-                    <div class="report-img-item-desc" style="color:#7f8c8d;">لم يتم التقييم (بانتظار رصد درجات هذا الجانب لتقييم مستوى الطالب).</div>
-                </div>`;
-            }
+        function getCriterionImgHTML(icon, title, cur, max) {
             let pct = (cur / max) * 100;
             let desc = ""; let color = "#34495e";
             
@@ -557,21 +619,22 @@
 
             return `
             <div class="report-img-item">
-                <div class="report-img-item-title">${icon} ${title}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <div class="report-img-item-title">${icon} ${title}</div>
+                    <div class="report-grade-badge">الدرجة: ${cur} / ${max}</div>
+                </div>
                 <div class="report-img-item-desc" style="color:${color};">${desc}</div>
             </div>`;
         }
 
-        function getWaTextDesc(title, cur, max, isEvaluated) {
-             if (!isEvaluated) return "لم يتم التقييم.";
+        function getWaTextDesc(title, cur, max) {
             let pct = (cur / max) * 100;
-            if(pct>=90) return "ممتاز جداً، يُظهر تفوقاً ملحوظاً.";
-            if(pct>=75) return "جيد جداً، مع بعض الملاحظات البسيطة.";
-            if(pct>=50) return "متوسط، ويحتاج لتركيز ومجهود مضاعف.";
-            return "مستوى ضعيف، ويتطلب المتابعة الفورية.";
+            if(pct>=90) return `(${cur}/${max}) ممتاز جداً، يُظهر تفوقاً ملحوظاً.`;
+            if(pct>=75) return `(${cur}/${max}) جيد جداً، مع بعض الملاحظات البسيطة.`;
+            if(pct>=50) return `(${cur}/${max}) متوسط، ويحتاج لتركيز ومجهود مضاعف.`;
+            return `(${cur}/${max}) مستوى ضعيف، ويتطلب المتابعة الفورية.`;
         }
 
-        // دالة توليد التقارير المتوافقة مع تصميم الصورة
         function generateDetailedReports() {
             const g = document.getElementById("gradeSelect").value; 
             const tbody = document.getElementById("tbody" + g);
@@ -584,16 +647,16 @@
                 let viol = parseInt(document.getElementById(`viol-${i}`).value) || 0;
                 
                 let inputs = row.querySelectorAll('.col-calc');
-                let raw = Array.from(inputs).map(inp => inp.value);
+                let raw = Array.from(inputs).map(inp => inp.value.trim()); 
                 let vals = raw.map(v => parseFloat(v) || 0);
 
-                let hasData = raw.some(v => v !== "");
+                let hasData = raw.some(v => v !== ""); 
                 let detailsHTML = ""; let waDetails = ""; let totalCur = 0; let totalPos = 0;
 
                 if (!hasData) {
-                    detailsHTML = "<div class='report-img-item-desc' style='padding:20px; text-align:center;'>لم يتم إدخال أي درجات لهذا الطالب حتى الآن.</div>";
-                    waDetails = "لا توجد درجات مرصودة حالياً.";
-                    totalPos = 100;
+                    detailsHTML = "<div class='report-img-item-desc' style='padding:20px; text-align:center; color:#e74c3c; font-weight:bold;'>الطالب بانتظار بدء التقييم (لا توجد درجات مرصودة حالياً).</div>";
+                    waDetails = "لا توجد درجات مرصودة حالياً للطالب.\n";
+                    totalPos = 100; // افتراضي للقسمة
                 } else {
                     if (g === "6") {
                         let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
@@ -603,14 +666,12 @@
 
                         totalCur = diag + quiz + act + proj;
                         totalPos = (evalDiag ? 20 : 0) + (evalQuiz ? 20 : 0) + (evalAct ? 40 : 0) + (evalProj ? 20 : 0);
-                        if(totalPos === 0) totalPos = 100;
 
-                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
-                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
-                        detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, 20, evalQuiz);
-                        detailsHTML += getCriterionImgHTML("🚀", "المشروع", proj, 20, evalProj);
+                        if (evalDiag) { detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20); waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20)}\n`; }
+                        if (evalAct) { detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40); waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40)}\n`; }
+                        if (evalQuiz) { detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, 20); waDetails += `❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, 20)}\n`; }
+                        if (evalProj) { detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20); waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20)}\n`; }
 
-                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, 20, evalQuiz)}\n🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
                     } else {
                         let evalDiag = raw[0] !== "" || raw[1] !== ""; let diag = vals[0] + vals[1];
                         let evalAct = raw[2] !== "" || raw[3] !== ""; let act = vals[2] + vals[3];
@@ -619,18 +680,15 @@
 
                         totalCur = diag + act + test + proj;
                         totalPos = (evalDiag ? 20 : 0) + (evalAct ? 40 : 0) + (evalTest ? 20 : 0) + (evalProj ? 20 : 0);
-                        if(totalPos === 0) totalPos = 100;
 
-                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20, evalDiag);
-                        detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40, evalAct);
-                        detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, 20, evalTest);
-                        detailsHTML += getCriterionImgHTML("🚀", "المشروع", proj, 20, evalProj);
-
-                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20, evalDiag)}\n📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40, evalAct)}\n📝 الاختبار: ${getWaTextDesc("الاختبار", test, 20, evalTest)}\n🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20, evalProj)}\n`;
+                        if (evalDiag) { detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, 20); waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, 20)}\n`; }
+                        if (evalAct) { detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, 40); waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, 40)}\n`; }
+                        if (evalTest) { detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, 20); waDetails += `📝 الاختبار: ${getWaTextDesc("الاختبار", test, 20)}\n`; }
+                        if (evalProj) { detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, 20); waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, 20)}\n`; }
                     }
                 }
 
-                let pct = (totalCur / totalPos) * 100;
+                let pct = totalPos > 0 ? (totalCur / totalPos) * 100 : 0;
                 let summaryTxt = "";
                 if(!hasData) summaryTxt = "الطالب بانتظار التقييم للمهام القادمة.";
                 else if(pct >= 90) summaryTxt = "مستوى عام ممتاز ومبشر، نتمنى له الاستمرار.";
@@ -643,10 +701,9 @@
                     <div class="report-img-header">${i+1}. ${name}</div>
                     
                     <div class="report-img-actionbar">
-                        <button class="wa-send-btn" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol})">إرسال التقرير</button>
-                        <input type="tel" class="wa-input" placeholder="...رقم الهاتف" maxlength="8" dir="ltr">
-                        <span>+968 📱</span>
-                        <button class="cert-btn" style="margin-right:auto;" onclick="generateCertificate('${name}')">🎓 طباعة شهادة</button>
+                        <button class="wa-send-btn" onclick="sendWA(this, '${name}', ${totalCur}, ${totalPos}, \`${waDetails}\`, ${int}, ${viol})">إرسال التقرير 📱</button>
+                        <input type="tel" class="wa-input" placeholder="8 أرقام..." maxlength="8" dir="ltr">
+                        <button class="cert-btn" style="margin-right:auto;" onclick="generateCertificate('${name}')">🎓 طباعة شهادة التفوق</button>
                     </div>
 
                     <div class="report-img-body">
@@ -654,7 +711,7 @@
                     </div>
 
                     <div class="report-img-footer">
-                        <div class="report-img-total">الإنجاز الكلي الحالي: ${totalCur} من ${totalPos} (${hasData ? pct.toFixed(1) : 0}%)</div>
+                        <div class="report-img-total">الإنجاز الكلي للدرجات المرصودة: ${totalCur} من ${totalPos}</div>
                         <div class="report-img-summary">الخلاصة: ${summaryTxt}</div>
                     </div>
                 </div>`;
@@ -667,7 +724,7 @@
         function sendWA(btn, name, totalCur, totalPos, waDetails, int, viol) { 
             let num = btn.parentElement.querySelector('.wa-input').value; 
             if(num.length !== 8) return alert('يرجى إدخال 8 أرقام لإرسال الواتساب بشكل صحيح.'); 
-            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل:*\n${waDetails}\n*الإنجاز الكلي:* ${totalCur} من ${totalPos}\n*سجل الانضباط:* (التعزيز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
+            let msg = `*التقرير الأكاديمي للطالب:* ${name}\n\n*التحليل التفصيلي للمهام المنجزة:*\n${waDetails}\n*الإنجاز الكلي الحالي:* ${totalCur} من ${totalPos}\n\n*سجل الانضباط:* (نقاط التميز: ${int}) | (المخالفات: ${viol})\n\n(إعداد المعلم: أ. معاذ اليعقوبي)`; 
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
@@ -683,8 +740,7 @@
             ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#7f8c8d'; ctx.fillText('بكل فخر واعتزاز، يسرنا أن نمنح هذه الشهادة للطالب المتميز:', canvas.width / 2, 260);
             ctx.fillStyle = '#fdfbf2'; ctx.fillRect(canvas.width/2 - 300, 310, 600, 90); ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(canvas.width/2 - 300, 310, 600, 90);
             
-            // تصغير حجم خط اسم الطالب لاستيعاب الأسماء الرباعية الطويلة
-            ctx.font = 'bold 34px Tahoma, Arial'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
+            ctx.font = 'bold 30px Tahoma, Arial'; ctx.fillStyle = '#d35400'; ctx.fillText(studentName, canvas.width / 2, 355);
             
             ctx.font = '28px Tahoma, Arial'; ctx.fillStyle = '#2c3e50'; ctx.fillText('نظير تفوقه الرائع وجهوده المتميزة في مادة تقنية المعلومات.', canvas.width / 2, 470); ctx.fillText('متمنين له المزيد من التألق والنجاح في مسيرته العلمية.', canvas.width / 2, 520);
             ctx.font = 'bold 22px Tahoma, Arial'; ctx.fillText('معلم المادة', 250, 600); ctx.fillText('أ. معاذ اليعقوبي', 250, 640);
@@ -704,9 +760,19 @@
             });
             const payload = {grade:g, section:document.getElementById("sectionSelect").value, students:list};
             if (!navigator.onLine) { let offlineData = JSON.parse(localStorage.getItem('offlineSync') || '[]'); offlineData.push(payload); localStorage.setItem('offlineSync', JSON.stringify(offlineData)); alert('🌐 أنت غير متصل بالإنترنت! تم حفظ البيانات بأمان في هاتفك، وسيتم إرسالها تلقائياً عند عودة الاتصال.'); return; }
-            const btn = document.querySelector('.btn-submit'); btn.innerText="جاري الحفظ..."; btn.disabled=true;
+            
+            const btn = document.getElementById('btnFloatSave'); 
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ جاري الحفظ..."; btn.disabled=true;
+            
             fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
-            .then(r => r.json()).then(d => {alert('تم الحفظ بنجاح في جوجل شيت!'); btn.innerText="💾 حفظ البيانات"; btn.disabled=false;}).catch(()=>{alert('حدث خطأ أثناء الحفظ!'); btn.innerText="💾 حفظ البيانات"; btn.disabled=false;});
+            .then(r => r.json()).then(d => {
+                alert('تم الحفظ بنجاح في جوجل شيت!'); 
+                btn.innerHTML = originalText; btn.disabled=false;
+            }).catch(()=>{
+                alert('حدث خطأ أثناء الحفظ!'); 
+                btn.innerHTML = originalText; btn.disabled=false;
+            });
         }
 
         function syncOfflineData() { 
