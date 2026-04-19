@@ -81,7 +81,6 @@
         .bg-reports { background: #34495e; }
         .bg-honor { background: #f1c40f; color:#000; }
 
-        /* زر الحفظ العائم */
         .btn-floating-save {
             position: fixed; bottom: 30px; left: 30px; background-color: #27ae60; color: white;
             border: none; border-radius: 50px; padding: 12px 25px; font-size: 16px; font-weight: bold;
@@ -98,7 +97,6 @@
         select { padding: 8px 15px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-size:15px; font-weight:bold;}
         .theme-toggle { padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer; background-color: var(--input-bg); color: var(--text-color); font-size: 18px; border: 1px solid var(--border-color);}
 
-        /* لوحة التعزيزات المطورة */
         .reinforcement-section { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; display: block;}
         .reinforcement-header { font-size: 18px; font-weight: bold; color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px; display:flex; align-items:center; gap:10px;}
         .reinforcement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding: 5px;}
@@ -144,7 +142,6 @@
         .seating-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; padding: 10px; }
         .desk-card { background: var(--input-bg); border: 2px solid #3498db; border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor:pointer;}
         
-        /* تصميم التقرير الديناميكي */
         .report-img-card { background: var(--input-bg); border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #dcdde1; }
         .report-img-header { background-color: #2980b9; color: white; padding: 12px 20px; font-size: 16px; font-weight: bold; }
         .report-img-actionbar { background-color: #eaf2f8; padding: 10px 20px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; border-bottom: 1px solid #dcdde1; }
@@ -198,7 +195,7 @@
     </div>
 
     <div class="header-container">
-        <h2>منصة مِحور - إدارة وتقييم الطلاب<span style="font-size:14px; color:#27ae60;">(2.3)</span></h2>
+        <h2>منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(2.7)</span></h2>
         <p class="author-name">إعداد: أ. معاذ اليعقوبي</p>
         <div class="controls">
             <select id="gradeSelect" onchange="updateView()">
@@ -208,8 +205,8 @@
             <select id="sectionSelect" onchange="updateView()">
                 <option value="1">شعبة 1</option><option value="2">شعبة 2</option><option value="3">شعبة 3</option><option value="4">شعبة 4</option><option value="5" id="sec5">شعبة 5</option>
             </select>
-            <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn"> تغيير المظهر</button>
-            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">إخفاء الكشف</button>
+            <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn">🌙 تغيير المظهر</button>
+            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">👁️ إخفاء الكشف</button>
         </div>
     </div>
 
@@ -219,52 +216,42 @@
             </div>
     </div>
 
-    <div id="form6" class="form-section active-form">
-        <div class="table-container">
-            <table id="gradesTable6">
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="header-blue" style="width:30px;">م</th><th rowspan="2" class="header-blue" style="width:200px;">إسم الطالب</th>
-                        <th colspan="2" class="header-blue">الحوار</th><th rowspan="2" class="header-orange">مجموع</th>
-                        <th colspan="4" class="header-blue">الأسئلة القصيرة</th><th rowspan="2" class="header-orange">مجموع</th>
-                        <th colspan="2" class="header-blue">الأنشطة</th><th rowspan="2" class="header-orange">مجموع</th>
-                        <th rowspan="2" class="header-blue">المشروع</th><th rowspan="2" class="header-orange">الكلية</th>
-                    </tr>
-                    <tr><th>10</th><th>10</th><th>5</th><th>5</th><th>5</th><th>5</th><th>20</th><th>20</th></tr>
-                </thead>
-                <tbody id="tbody6"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="form9" class="form-section">
-        <div class="table-container">
-            <table id="gradesTable9">
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="header-blue" style="width:30px;">م</th><th rowspan="2" class="header-blue" style="width:200px;">إسم الطالب</th>
-                        <th colspan="2" class="header-blue">الحوار</th><th rowspan="2" class="header-orange">مجموع</th>
-                        <th colspan="2" class="header-blue">الأنشطة</th><th rowspan="2" class="header-orange">مجموع</th>
-                        <th class="header-blue">اختبار</th><th class="header-blue">مشروع</th><th rowspan="2" class="header-orange">الكلية</th>
-                    </tr>
-                    <tr><th>10</th><th>10</th><th>20</th><th>20</th><th>20</th><th>20</th></tr>
-                </thead>
-                <tbody id="tbody9"></tbody>
-            </table>
-        </div>
-    </div>
-    
     <div id="tableAreaWrapper">
+        <div id="form6" class="form-section active-form">
+            <div class="table-container">
+                <table id="gradesTable6">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="header-blue" style="width:30px;">م</th><th rowspan="2" class="header-blue" style="width:200px;">إسم الطالب</th>
+                            <th colspan="2" class="header-blue">الحوار</th><th rowspan="2" class="header-orange">مجموع</th>
+                            <th colspan="4" class="header-blue">الأسئلة القصيرة</th><th rowspan="2" class="header-orange">مجموع</th>
+                            <th colspan="2" class="header-blue">الأنشطة</th><th rowspan="2" class="header-orange">مجموع</th>
+                            <th rowspan="2" class="header-blue">المشروع</th><th rowspan="2" class="header-orange">الكلية</th>
+                        </tr>
+                        <tr><th>10</th><th>10</th><th>5</th><th>5</th><th>5</th><th>5</th><th>20</th><th>20</th></tr>
+                    </thead>
+                    <tbody id="tbody6"></tbody>
+                </table>
+            </div>
+        </div>
 
-    <div id="form6" class="form-section active-form">
-       </div>
-
-    <div id="form9" class="form-section">
-       </div>
-
-    </div>
-
-    <div id="modalRandom" class="modal">
+        <div id="form9" class="form-section">
+            <div class="table-container">
+                <table id="gradesTable9">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="header-blue" style="width:30px;">م</th><th rowspan="2" class="header-blue" style="width:200px;">إسم الطالب</th>
+                            <th colspan="2" class="header-blue">الحوار</th><th rowspan="2" class="header-orange">مجموع</th>
+                            <th colspan="2" class="header-blue">الأنشطة</th><th rowspan="2" class="header-orange">مجموع</th>
+                            <th class="header-blue">اختبار</th><th class="header-blue">مشروع</th><th rowspan="2" class="header-orange">الكلية</th>
+                        </tr>
+                        <tr><th>10</th><th>10</th><th>20</th><th>20</th><th>20</th><th>20</th></tr>
+                    </thead>
+                    <tbody id="tbody9"></tbody>
+                </table>
+            </div>
+        </div>
+    </div> <div id="modalRandom" class="modal">
         <div class="modal-content text-center">
             <span class="close-btn" onclick="closeModal('modalRandom')">&times;</span>
             <div class="modal-header"><h3 style="color:#9b59b6;">🎲 عجلة الاختيار الذكية</h3></div>
@@ -847,10 +834,10 @@
         drawCorner(30, 30, 1, 1); drawCorner(canvas.width - 30, 30, -1, 1);
         drawCorner(30, canvas.height - 30, 1, -1); drawCorner(canvas.width - 30, canvas.height - 30, -1, -1);
 
-        // --- رسم الشعارات بأماكن متناسقة ---
-        if (minLogo) ctx.drawImage(minLogo, canvas.width - 170, 70, 100, 100); // الوزارة يميناً
-        if (schLogo) ctx.drawImage(schLogo, 70, 70, 100, 100); // المدرسة يساراً
-        if (perLogo) ctx.drawImage(perLogo, canvas.width - 360, 680, 80, 80); // شعارك الخاص
+        // --- رسم الشعارات بأماكن متناسقة (أحجام كبيرة) ---
+        if (minLogo) ctx.drawImage(minLogo, canvas.width - 220, 60, 150, 150); // الوزارة يميناً
+        if (schLogo) ctx.drawImage(schLogo, 70, 60, 150, 150); // المدرسة يساراً
+        if (perLogo) ctx.drawImage(perLogo, canvas.width - 380, 670, 120, 120); // شعارك الخاص
 
         // --- كتابة النصوص ---
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
