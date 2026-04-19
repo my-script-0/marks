@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام ادارة وتقييم الطلاب</title>
+    <title>منصة مِحور - إدارة وتقييم الطلاب</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
@@ -197,9 +197,8 @@
 
    <div class="header-container">
        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
-         
             <img src="logo.png" alt="شعار منصة مِحور" style="width: 200px; height: auto; object-fit: contain;">
-            <h2 style="margin: 0;">منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(3.5)</span></h2>
+            <h2 style="margin: 0;">منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(3.6)</span></h2>
         </div>
         
         <p class="author-name">إعداد: أ. معاذ اليعقوبي</p>
@@ -212,7 +211,7 @@
                 <option value="1">شعبة 1</option><option value="2">شعبة 2</option><option value="3">شعبة 3</option><option value="4">شعبة 4</option><option value="5" id="sec5">شعبة 5</option>
             </select>
             <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn">تغيير المظهر</button>
-            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">إخفاء الكشف</button>
+            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">👁️ إظهار الكشف</button>
         </div>
     </div>
 
@@ -222,7 +221,7 @@
             </div>
     </div>
 
-    <div id="tableAreaWrapper">
+    <div id="tableAreaWrapper" style="display: none;">
         <div id="form6" class="form-section active-form">
             <div class="table-container">
                 <table id="gradesTable6">
@@ -257,7 +256,9 @@
                 </table>
             </div>
         </div>
-    </div> <div id="modalRandom" class="modal">
+    </div> 
+    
+    <div id="modalRandom" class="modal">
         <div class="modal-content text-center">
             <span class="close-btn" onclick="closeModal('modalRandom')">&times;</span>
             <div class="modal-header"><h3 style="color:#9b59b6;">🎲 عجلة الاختيار الذكية</h3></div>
@@ -355,8 +356,10 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyC-nLmHzOpFo7zjuoIMy4d_B-6VfmWIimvDluert5QcRqsEe9n2X658hvlYw_QmGHUEg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwG3hPpB_841FFNSxRzKPVV14JllenBt2GE-ZqOXZRInY9w57Q2LIYbF1B0J_WElSIu2A/exec';
+        
         let currentSheetData = {};
+        let currentAdminPassword = ""; // متغير لحفظ كلمة المرور من جوجل شيت
         
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -398,7 +401,12 @@
             rGrid.innerHTML = `<div style="text-align:center; width:100%; grid-column: 1 / -1;">جاري جلب بيانات التعزيز... ⏳</div>`;
             
             fetch(`${scriptURL}?grade=${g}&section=${document.getElementById("sectionSelect").value}`)
-            .then(r => r.json()).then(d => { currentSheetData = (d.result === 'success') ? d.data : {}; renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); })
+            .then(r => r.json()).then(d => { 
+                currentSheetData = (d.result === 'success') ? d.data : {}; 
+                // حفظ كلمة المرور الواردة من السكريبت
+                if(d.adminPassword) currentAdminPassword = d.adminPassword; 
+                renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); 
+            })
             .catch(() => { currentSheetData = {}; renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); });
         }
 
@@ -946,23 +954,32 @@
             XLSX.utils.book_append_sheet(wb, ws, `شعبة ${s}`);
             XLSX.writeFile(wb, `درجات_الصف_${g}_شعبة_${s}.xlsx`);
         }
+
+        // --- دالة التحكم بكلمة المرور لإظهار الكشف ---
         function toggleTableVisibility() {
-    const wrapper = document.getElementById("tableAreaWrapper");
-    const btn = document.getElementById("toggleTableBtn");
-    
-    // إذا كان الجدول مخفياً، قم بإظهاره
-    if (wrapper.style.display === "none") {
-        wrapper.style.display = "block";
-        btn.innerHTML = "إخفاء الكشف";
-        btn.style.background = "#3498db"; // لون أزرق
-    } 
-    // إذا كان الجدول ظاهراً، قم بإخفائه
-    else {
-        wrapper.style.display = "none";
-        btn.innerHTML = "إظهار الكشف";
-        btn.style.background = "#e74c3c"; // يتغير لونه للأحمر تنبيهاً بأنه مخفي
-    }
-}
+            const wrapper = document.getElementById("tableAreaWrapper");
+            const btn = document.getElementById("toggleTableBtn");
+            
+            // إذا كان الكشف مخفياً (الحالة الافتراضية) ونريد إظهاره
+            if (wrapper.style.display === "none" || wrapper.style.display === "") {
+                const pass = prompt("🔒 الكشف الأكاديمي محمي. الرجاء إدخال كلمة المرور:");
+                
+                // يتم مقارنتها بكلمة المرور القادمة من السكريبت، أو 1234 كرمز طوارئ
+                if (pass === currentAdminPassword || pass === "1234") { 
+                    wrapper.style.display = "block";
+                    btn.innerHTML = "🙈 إخفاء الكشف";
+                    btn.style.background = "#e74c3c"; // يتحول للأحمر
+                } else if (pass !== null) {
+                    alert("❌ كلمة المرور غير صحيحة!");
+                }
+            } 
+            // إذا كان الكشف ظاهراً ونريد إخفاءه (لا يحتاج رمز للإخفاء)
+            else {
+                wrapper.style.display = "none";
+                btn.innerHTML = "👁️ إظهار الكشف";
+                btn.style.background = "#3498db"; // يعود للون الأزرق
+            }
+        }
           
     </script>
 </body>
