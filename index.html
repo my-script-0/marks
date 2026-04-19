@@ -780,170 +780,110 @@
             window.open(`https://wa.me/968${num}?text=${encodeURIComponent(msg)}`, '_blank'); 
         }
 
-       async function generateCertificate(studentName) {
-    // انتظار جاهزية الخط الفخم (Amiri)
+      async function generateCertificate(studentName) {
     await document.fonts.ready;
 
-    // 1. تحديد روابط الشعارات (استبدل هذه الروابط بروابط صورك الحقيقية لاحقاً)
-    // نصيحة: ارفع صور الشعارات (بصيغة PNG بخلفية شفافة) على مجلد GitHub الخاص بك وضع الرابط هنا
-    const ministryLogoUrl = 'https://imgur.com/SffDMYI'; 
-    const schoolLogoUrl = 'https://imgur.com/KK7Eh6E';
-    const personalLogoUrl = 'https://imgur.com/ZSszKKI';
+    // الروابط المباشرة الصحيحة لصورك على Imgur
+    const ministryLogoUrl = 'https://i.imgur.com/SffDMYI.png'; 
+    const schoolLogoUrl = 'https://i.imgur.com/KK7Eh6E.png';
+    const personalLogoUrl = 'https://i.imgur.com/ZSszKKI.png';
 
-    // دالة مساعدة لتحميل الصور برمجياً
-    const loadImage = (url) => new Promise((resolve, reject) => {
+    const loadImage = (url) => new Promise((resolve) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous'; // ضروري جداً لتجنب حظر المتصفح (CORS)
+        img.crossOrigin = 'anonymous'; // ضروري جداً لروابط Imgur
         img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error(`فشل تحميل الصورة: ${url}`));
+        img.onerror = () => {
+            console.warn(`فشل تحميل: ${url}`);
+            resolve(null);
+        };
         img.src = url;
     });
 
     try {
-        // التحقق مما إذا كنت قد وضعت روابط حقيقية أم لا تزال الروابط المؤقتة
-        const hasLogos = !ministryLogoUrl.includes('رابط_'); 
-        let minLogo, schLogo, perLogo;
-        
-        // إذا تم وضع روابط حقيقية، سيقوم بتحميلها قبل رسم الشهادة
-        if (hasLogos) {
-             [minLogo, schLogo, perLogo] = await Promise.all([
-                loadImage(ministryLogoUrl),
-                loadImage(schoolLogoUrl),
-                loadImage(personalLogoUrl)
-            ]);
-        }
+        const [minLogo, schLogo, perLogo] = await Promise.all([
+            loadImage(ministryLogoUrl),
+            loadImage(schoolLogoUrl),
+            loadImage(personalLogoUrl)
+        ]);
 
-        // إعداد لوحة الرسم (Canvas) بدقة عالية 1200×850 للطباعة الاحترافية
         const canvas = document.createElement('canvas'); 
-        canvas.width = 1200; 
-        canvas.height = 850; 
+        canvas.width = 1200; canvas.height = 850; 
         const ctx = canvas.getContext('2d');
 
-        // --- 1. الخلفية الأساسية (أبيض كريمي فخم جداً) ---
+        // --- رسم الخلفية والإطار الفخم ---
         ctx.fillStyle = '#fcfdfe'; 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // --- 2. تصميم علامة مائية عصرية (خطوط تقنية تمثل مسارات إلكترونية) ---
+        // علامة مائية تقنية خفيفة
         ctx.strokeStyle = 'rgba(14, 165, 233, 0.08)'; 
         ctx.lineWidth = 1.5;
         for (let i = 0; i < 40; i++) {
-            ctx.beginPath();
-            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-            ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height); ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height); ctx.stroke();
         }
 
-        // --- 3. إطار عصري مزدوج ---
-        ctx.strokeStyle = '#0f172a'; // كحلي عميق (رسمي)
-        ctx.lineWidth = 8; 
-        ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
-        
-        ctx.strokeStyle = '#d4af37'; // ذهبي فخم
-        ctx.lineWidth = 2; 
-        ctx.strokeRect(42, 42, canvas.width - 84, canvas.height - 84);
+        // إطار كحلي وذهبي
+        ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 8; ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+        ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(42, 42, canvas.width - 84, canvas.height - 84);
 
-        // --- 4. زوايا هندسية عصرية (طابع IT) ---
+        // الزوايا الهندسية
         const drawCorner = (x, y, scaleX, scaleY) => {
             ctx.save(); ctx.translate(x, y); ctx.scale(scaleX, scaleY);
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(120, 0); ctx.lineTo(0, 120); ctx.fill();
-            ctx.fillStyle = '#d4af37';
-            ctx.beginPath(); ctx.moveTo(120, 0); ctx.lineTo(140, 0); ctx.lineTo(0, 140); ctx.lineTo(0, 120); ctx.fill();
+            ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(120, 0); ctx.lineTo(0, 120); ctx.fill();
+            ctx.fillStyle = '#d4af37'; ctx.beginPath(); ctx.moveTo(120, 0); ctx.lineTo(140, 0); ctx.lineTo(0, 140); ctx.lineTo(0, 120); ctx.fill();
             ctx.beginPath(); ctx.arc(60, 60, 6, 0, Math.PI*2); ctx.fillStyle = '#0ea5e9'; ctx.fill();
             ctx.restore();
         };
-        drawCorner(30, 30, 1, 1);
-        drawCorner(canvas.width - 30, 30, -1, 1);
-        drawCorner(30, canvas.height - 30, 1, -1);
-        drawCorner(canvas.width - 30, canvas.height - 30, -1, -1);
+        drawCorner(30, 30, 1, 1); drawCorner(canvas.width - 30, 30, -1, 1);
+        drawCorner(30, canvas.height - 30, 1, -1); drawCorner(canvas.width - 30, canvas.height - 30, -1, -1);
 
-        // --- 5. رسم الشعارات (في حال قمت بتفعيلها بروابط حقيقية) ---
-        if (hasLogos) {
-            // شعار الوزارة (أعلى اليمين)
-            ctx.drawImage(minLogo, canvas.width - 160, 60, 100, 100); 
-            // شعار المدرسة (أعلى اليسار)
-            ctx.drawImage(schLogo, 60, 60, 100, 100);
-            // شعارك الخاص (أسفل اليمين بجانب الختم الرقمي)
-            ctx.drawImage(perLogo, canvas.width - 350, 680, 80, 80);
-        }
+        // --- رسم الشعارات بأماكن متناسقة ---
+        if (minLogo) ctx.drawImage(minLogo, canvas.width - 170, 70, 100, 100); // الوزارة يميناً
+        if (schLogo) ctx.drawImage(schLogo, 70, 70, 100, 100); // المدرسة يساراً
+        if (perLogo) ctx.drawImage(perLogo, canvas.width - 360, 680, 80, 80); // شعارك الخاص
 
-        // --- 6. النصوص والترويسة ---
+        // --- كتابة النصوص ---
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
-        
-        ctx.font = '22px "Amiri", serif'; 
-        ctx.fillStyle = '#64748b'; 
-        ctx.fillText('سَلْطَنَةُ عُمَان - وَزَارَةُ التَّرْبِيَةِ وَالتَّعْلِيم', canvas.width / 2, 90);
+        ctx.font = '22px "Amiri", serif'; ctx.fillStyle = '#64748b'; 
+        ctx.fillText('سَلْطَنَةُ عُمَان - وَزَارَةُ التَّرْبِيَةِ وَالتَّعْلِيم', canvas.width / 2, 100);
 
-        ctx.font = 'bold 70px "Amiri", serif'; 
-        ctx.fillStyle = '#0f172a'; 
-        ctx.shadowColor = 'rgba(212, 175, 55, 0.3)'; ctx.shadowBlur = 10; ctx.shadowOffsetX = 3; ctx.shadowOffsetY = 3;
-        ctx.fillText('شَهَادَةُ إِبْدَاعٍ وَتَمَيُّز', canvas.width / 2, 180);
-        ctx.shadowColor = 'transparent'; // إغلاق الظل
+        ctx.font = 'bold 70px "Amiri", serif'; ctx.fillStyle = '#0f172a'; 
+        ctx.shadowColor = 'rgba(212, 175, 55, 0.3)'; ctx.shadowBlur = 10;
+        ctx.fillText('شَهَادَةُ إِبْدَاعٍ وَتَمَيُّز', canvas.width / 2, 190);
+        ctx.shadowBlur = 0;
 
-        ctx.fillStyle = '#e0f2fe'; 
-        ctx.fillRect(canvas.width/2 - 160, 240, 320, 45); 
-        ctx.font = 'bold 22px Tahoma, sans-serif'; 
-        ctx.fillStyle = '#0369a1'; 
-        ctx.fillText('💻 عَبْقَرِيُّ تَقْنِيَةِ المَعْلُومَات (IT)', canvas.width / 2, 262);
+        ctx.fillStyle = '#e0f2fe'; ctx.fillRect(canvas.width/2 - 160, 250, 320, 45); 
+        ctx.font = 'bold 22px Tahoma, sans-serif'; ctx.fillStyle = '#0369a1'; 
+        ctx.fillText('💻 عَبْقَرِيُّ تَقْنِيَةِ المَعْلُومَات (IT)', canvas.width / 2, 272);
 
-        ctx.font = '32px "Amiri", serif'; 
-        ctx.fillStyle = '#334155'; 
-        ctx.fillText('بكل فخر واعتزاز، نمنح هذه الشهادة المرموقة للطالب المبدع:', canvas.width / 2, 360);
+        ctx.font = '32px "Amiri", serif'; ctx.fillStyle = '#334155'; 
+        ctx.fillText('بكل فخر واعتزاز، نمنح هذه الشهادة المرموقة للطالب المبدع:', canvas.width / 2, 370);
         
-        // --- 7. صندوق اسم الطالب ---
-        ctx.fillStyle = '#f8fafc'; 
-        ctx.fillRect(canvas.width/2 - 400, 410, 800, 110); 
-        ctx.fillStyle = '#d4af37';
-        ctx.fillRect(canvas.width/2 - 400, 410, 10, 110);
-        ctx.fillRect(canvas.width/2 + 390, 410, 10, 110);
+        ctx.fillStyle = '#f8fafc'; ctx.fillRect(canvas.width/2 - 400, 420, 800, 100); 
+        ctx.font = 'bold 32px "Amiri", serif'; ctx.fillStyle = '#b45309'; 
+        ctx.fillText(studentName, canvas.width / 2, 470);
         
-        ctx.font = 'bold 46px "Amiri", serif'; 
-        ctx.fillStyle = '#b45309';
-        ctx.fillText(studentName, canvas.width / 2, 465);
+        ctx.font = '28px "Amiri", serif'; ctx.fillStyle = '#475569'; 
+        ctx.fillText('تقديراً لتفوقه الاستثنائي في تطبيق المهارات الرقمية،', canvas.width / 2, 580); 
+        ctx.fillText('متمنين له مستقبلاً تقنياً مشرقاً ومزيداً من الابتكار.', canvas.width / 2, 630);
         
-        // --- 8. نص التكريم ---
-        ctx.font = '28px "Amiri", serif'; 
-        ctx.fillStyle = '#475569'; 
-        ctx.fillText('تقديراً لتفوقه الاستثنائي، وإبداعه الملحوظ في تطبيق المهارات الرقمية والتكنولوجية،', canvas.width / 2, 570); 
-        ctx.fillText('متمنين له مستقبلاً تقنياً مشرقاً ومزيداً من الابتكار والنجاح.', canvas.width / 2, 620);
-        
-        // --- 9. التوقيع والاعتماد ---
-        ctx.font = 'bold 24px "Amiri", serif'; 
-        ctx.fillStyle = '#0f172a';
-        ctx.fillText('مُعَلِّمُ المَادَّة', 250, 710); 
-        ctx.font = '26px "Amiri", serif';
-        ctx.fillStyle = '#475569';
-        ctx.fillText('أ. مُعَاذ اليَعْقُوبِي', 250, 755);
+        ctx.font = 'bold 24px "Amiri", serif'; ctx.fillStyle = '#0f172a'; ctx.fillText('مُعَلِّمُ المَادَّة', 250, 720); 
+        ctx.font = '26px "Amiri", serif'; ctx.fillStyle = '#475569'; ctx.fillText('أ. مُعَاذ اليَعْقُوبِي', 250, 765);
 
-        // --- 10. ختم رقمي عصري (Digital Seal) ---
-        ctx.beginPath(); ctx.arc(canvas.width - 250, 730, 45, 0, 2 * Math.PI);
-        ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 4; ctx.stroke();
-        ctx.beginPath(); ctx.arc(canvas.width - 250, 730, 38, 0, 2 * Math.PI);
-        ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 1; ctx.stroke();
-        ctx.font = 'bold 22px Tahoma'; ctx.fillStyle = '#d4af37'; ctx.fillText('IT', canvas.width - 250, 720);
-        ctx.font = '12px Tahoma'; ctx.fillStyle = '#0f172a'; ctx.fillText('EXCELLENCE', canvas.width - 250, 745);
-
-        // --- 11. تذييل الشهادة ---
-        ctx.font = '16px Tahoma, Arial'; 
-        ctx.fillStyle = '#94a3b8'; 
-        ctx.fillText('تَمَّ الإِصْدَارُ آلِيّاً عَبْرَ المِنَصَّةِ الرَّقْمِيَّةِ لِلتَّقْيِيمِ الأَكَادِيمِيّ', canvas.width / 2, 810);
+        // التذييل
+        ctx.font = '16px Tahoma'; ctx.fillStyle = '#94a3b8'; 
+        ctx.fillText('تَمَّ الإِصْدَارُ آلِيّاً عَبْرَ المِنَصَّةِ الرَّقْمِيَّةِ لِلتَّقْيِيمِ الأَكَادِيمِيّ', canvas.width / 2, 820);
         
-        // استخراج الصورة وتنزيلها
         const link = document.createElement('a'); 
-        link.download = `شهادة_ابداع_${studentName.split(' ')[0]}.png`; 
+        link.download = `شهادة_مبدع_${studentName.split(' ')[0]}.png`; 
         link.href = canvas.toDataURL('image/png'); 
         link.click();
         
-        // صوت النجاح والفخامة عند استخراج الشهادة
-        playSound(800, 'sine', 0.1, 0.2);
-        setTimeout(() => playSound(1200, 'sine', 0.4, 0.2), 150);
+        playSound(800, 'sine', 0.1, 0.2); setTimeout(() => playSound(1200, 'sine', 0.4, 0.2), 150);
 
     } catch (error) {
-        alert("تنبيه: حدث خطأ أثناء جلب الشعارات. تأكد من أن روابط الصور صحيحة وأنها تدعم الاستخدام الخارجي (CORS).");
-        console.error(error);
+        console.error("خطأ في الشهادة:", error);
     }
 }
-
         function submitData() {
             const g = document.getElementById("gradeSelect").value; const rows = document.getElementById("tbody" + g).querySelectorAll("tr"); let list = [];
             rows.forEach((row, i) => {
