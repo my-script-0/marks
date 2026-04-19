@@ -74,6 +74,7 @@
         .side-icon:hover::after { opacity: 1; right: 60px; }
 
         .bg-export { background: #1d6f42; }
+        .bg-repo { background: #6c5ce7; } /* لون المستودع الجديد */
         .bg-wheel { background: #9b59b6; }
         .bg-timer { background: #e67e22; }
         .bg-radar { background: #e74c3c; }
@@ -128,6 +129,17 @@
         .close-btn { position:absolute; left:15px; top:15px; color: #e74c3c; font-size: 28px; font-weight: bold; cursor: pointer; line-height:1; z-index:10;}
         .modal-header { text-align:center; border-bottom:2px solid #3498db; margin-bottom:15px; padding-bottom:10px; }
         .modal-header h3 { margin:0; }
+
+        /* تنسيقات المستودع السحابي */
+        .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 10px; }
+        .repo-card { background: var(--input-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .repo-card:hover { transform: translateY(-5px); border-color: #6c5ce7; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.15); }
+        .repo-icon { font-size: 45px; margin-bottom: 12px; transition: transform 0.3s; }
+        .repo-card:hover .repo-icon { transform: scale(1.1); }
+        .repo-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; color: var(--text-color); }
+        .repo-desc { font-size: 12px; color: #7f8c8d; line-height: 1.4; padding: 0 10px; }
+        .upload-area { background: var(--category-bg); border: 2px dashed #6c5ce7; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; transition: 0.3s;}
+        .upload-area:hover { background: rgba(108, 92, 231, 0.05); }
 
         .random-box { width: 100%; min-height: 80px; border-radius: 8px; border: 3px solid #9b59b6; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: bold; font-size: 24px; margin-bottom: 15px; background: var(--input-bg); color:#9b59b6;}
         .timer-display { font-size: 60px; font-weight: bold; color: #e74c3c; font-family: monospace; text-align:center; margin: 15px 0;}
@@ -186,6 +198,7 @@
 
     <div class="sidebar-tools">
         <button class="side-icon bg-export" data-title="تصدير إكسل" onclick="exportToExcel()">📊</button>
+        <button class="side-icon bg-repo" data-title="المستودع السحابي" onclick="openRepoModal()">📂</button>
         <button class="side-icon bg-wheel" data-title="عجلة الاختيار" onclick="openModal('modalRandom')">🎲</button>
         <button class="side-icon bg-timer" data-title="المؤقت الذكي" onclick="openModal('modalTimer')">⏱️</button>
         <button class="side-icon bg-radar" data-title="إدارة الصف والرادار" onclick="openModal('modalRadar')">🚦</button>
@@ -258,6 +271,27 @@
         </div>
     </div> 
     
+    <div id="modalRepo" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close-btn" onclick="closeModal('modalRepo')" style="z-index:99;">&times;</span>
+            <div class="modal-header" style="margin-top:20px; border-bottom: 2px solid #6c5ce7;">
+                <h3 style="color:#6c5ce7;">📂 المستودع السحابي التفاعلي</h3>
+            </div>
+            
+            <div class="modal-large-body">
+                <div class="upload-area">
+                    <p style="font-weight:bold; color:var(--text-color);">🚀 اسحب الملفات هنا أو اضغط للرفع المباشر إلى Google Drive</p>
+                    <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(this)">
+                    <button onclick="document.getElementById('fileInput').click()" style="background: #6c5ce7; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight:bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">اختيار ملف من الجهاز</button>
+                    <div id="uploadStatus" style="margin-top: 15px; font-weight: bold; color: #27ae60; font-size:14px;"></div>
+                </div>
+
+                <div id="fileListContainer" class="repo-grid">
+                    </div>
+            </div>
+        </div>
+    </div>
+
     <div id="modalRandom" class="modal">
         <div class="modal-content text-center">
             <span class="close-btn" onclick="closeModal('modalRandom')">&times;</span>
@@ -356,7 +390,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwG3hPpB_841FFNSxRzKPVV14JllenBt2GE-ZqOXZRInY9w57Q2LIYbF1B0J_WElSIu2A/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbw9hKW_RAjSwYdhI0o_qtgPY73jxqYo_faiisfH0iaXw_Z9rUVJvkdFuBJvmkPVN7lh2g/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = ""; // متغير لحفظ كلمة المرور من جوجل شيت
@@ -979,6 +1013,96 @@
                 btn.innerHTML = "إظهار الكشف";
                 btn.style.background = "#3498db"; // يعود للون الأزرق
             }
+        }
+        
+        // --- دوال المستودع السحابي ---
+        function openRepoModal() {
+            openModal('modalRepo');
+            loadRepoFiles();
+        }
+
+        function loadRepoFiles() {
+            const container = document.getElementById("fileListContainer");
+            container.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">جاري جلب الملفات من السحابة... ⏳</p>`;
+            
+            // يتم إرسال طلب لـ Google Script لجلب الملفات
+            fetch(`${scriptURL}?action=getFiles`)
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === "success" && data.files.length > 0) {
+                    container.innerHTML = "";
+                    data.files.forEach(file => {
+                        let icon = "📄";
+                        if(file.type.includes("pdf")) icon = "📕";
+                        else if(file.type.includes("presentation") || file.type.includes("powerpoint")) icon = "💻";
+                        else if(file.type.includes("image")) icon = "🖼️";
+                        else if(file.type.includes("spreadsheet") || file.type.includes("excel")) icon = "📊";
+                        else if(file.type.includes("video")) icon = "🎥";
+
+                        container.innerHTML += `
+                            <a href="${file.url}" target="_blank" class="repo-card">
+                                <div class="repo-icon">${icon}</div>
+                                <div class="repo-title">${file.name}</div>
+                                <div class="repo-desc">الحجم: ${file.size}</div>
+                            </a>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: #e74c3c;">المستودع فارغ حالياً أو لم يتم ربط المجلد بنجاح.</p>`;
+                }
+            })
+            .catch(error => {
+                container.innerHTML = `<p style="text-align: center; grid-column: 1/-1; color: #e74c3c;">حدث خطأ في الاتصال بالسحابة.</p>`;
+            });
+        }
+
+        function handleFileUpload(input) {
+            if (!input.files || input.files.length === 0) return;
+            const file = input.files[0];
+            const statusDiv = document.getElementById("uploadStatus");
+            
+            if(file.size > 10 * 1024 * 1024) { // منع الملفات الأكبر من 10 ميجا لتفادي بطء الرفع المباشر
+                statusDiv.innerHTML = "❌ الملف كبير جداً. أقصى حجم مدعوم للرفع المباشر هو 10 ميجابايت.";
+                statusDiv.style.color = "#e74c3c";
+                return;
+            }
+
+            statusDiv.innerHTML = `⏳ جاري رفع "${file.name}"... يرجى الانتظار.`;
+            statusDiv.style.color = "#f39c12";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                
+                const payload = {
+                    action: "uploadFile",
+                    fileName: file.name,
+                    mimeType: file.type,
+                    data: base64Data
+                };
+
+                fetch(scriptURL, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                    body: JSON.stringify(payload) 
+                })
+                .then(r => r.json())
+                .then(d => {
+                    if(d.status === "success") {
+                        statusDiv.innerHTML = `✅ تم رفع الملف بنجاح!`;
+                        statusDiv.style.color = "#27ae60";
+                        playSound(880, 'sine', 0.2, 0.1);
+                        setTimeout(() => { statusDiv.innerHTML = ""; loadRepoFiles(); }, 2000);
+                    } else {
+                        throw new Error("Upload failed on server");
+                    }
+                })
+                .catch(err => {
+                    statusDiv.innerHTML = "❌ حدث خطأ أثناء الرفع.";
+                    statusDiv.style.color = "#e74c3c";
+                });
+            };
+            reader.readAsDataURL(file);
         }
           
     </script>
