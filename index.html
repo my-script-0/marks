@@ -208,7 +208,8 @@
             <select id="sectionSelect" onchange="updateView()">
                 <option value="1">شعبة 1</option><option value="2">شعبة 2</option><option value="3">شعبة 3</option><option value="4">شعبة 4</option><option value="5" id="sec5">شعبة 5</option>
             </select>
-            <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn">تغيير المظهر</button>
+            <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn"> تغيير المظهر</button>
+            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">إخفاء الكشف</button>
         </div>
     </div>
 
@@ -251,6 +252,16 @@
                 <tbody id="tbody9"></tbody>
             </table>
         </div>
+    </div>
+    
+    <div id="tableAreaWrapper">
+
+    <div id="form6" class="form-section active-form">
+       </div>
+
+    <div id="form9" class="form-section">
+       </div>
+
     </div>
 
     <div id="modalRandom" class="modal">
@@ -941,6 +952,23 @@
             XLSX.utils.book_append_sheet(wb, ws, `شعبة ${s}`);
             XLSX.writeFile(wb, `درجات_الصف_${g}_شعبة_${s}.xlsx`);
         }
+        function toggleTableVisibility() {
+    const wrapper = document.getElementById("tableAreaWrapper");
+    const btn = document.getElementById("toggleTableBtn");
+    
+    // إذا كان الجدول مخفياً، قم بإظهاره
+    if (wrapper.style.display === "none") {
+        wrapper.style.display = "block";
+        btn.innerHTML = "👁️ إخفاء الكشف";
+        btn.style.background = "#3498db"; // لون أزرق
+    } 
+    // إذا كان الجدول ظاهراً، قم بإخفائه
+    else {
+        wrapper.style.display = "none";
+        btn.innerHTML = "👁️ إظهار الكشف";
+        btn.style.background = "#e74c3c"; // يتغير لونه للأحمر تنبيهاً بأنه مخفي
+    }
+}
     </script>
 </body>
 </html>
