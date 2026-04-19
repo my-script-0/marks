@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام ادارة وتقييم الطلاب</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -194,8 +195,12 @@
         <button class="side-icon bg-honor" data-title="إطلاق لوحة الشرف" onclick="toggleHonorRoll()">🏆</button>
     </div>
 
-    <div class="header-container">
-        <h2>منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(2.7)</span></h2>
+   <div class="header-container">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;">
+            <img src="logo.png" alt="شعار منصة مِحور" style="width: 60px; height: 60px; object-fit: contain;">
+            <h2 style="margin: 0;">منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(2.7)</span></h2>
+        </div>
+        
         <p class="author-name">إعداد: أ. معاذ اليعقوبي</p>
         <div class="controls">
             <select id="gradeSelect" onchange="updateView()">
