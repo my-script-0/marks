@@ -1061,44 +1061,50 @@
             const file = input.files[0];
             const statusDiv = document.getElementById("uploadStatus");
             
-            if(file.size > 10 * 1024 * 1024) { // منع الملفات الأكبر من 10 ميجا لتفادي بطء الرفع المباشر
-                statusDiv.innerHTML = "❌ الملف كبير جداً. أقصى حجم مدعوم للرفع المباشر هو 10 ميجابايت.";
+            if(file.size > 10 * 1024 * 1024) { 
+                statusDiv.innerHTML = "❌ الملف كبير جداً. أقصى حجم 10 ميجا.";
                 statusDiv.style.color = "#e74c3c";
                 return;
             }
 
-            statusDiv.innerHTML = `⏳ جاري رفع "${file.name}"... يرجى الانتظار.`;
+            statusDiv.innerHTML = `⏳ جاري الرفع... يرجى الانتظار.`;
             statusDiv.style.color = "#f39c12";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64Data = e.target.result;
-                
-                const payload = {
-                    action: "uploadFile",
-                    fileName: file.name,
-                    mimeType: file.type,
-                    data: base64Data
-                };
+                const payload = { action: "uploadFile", fileName: file.name, mimeType: file.type, data: base64Data };
 
                 fetch(scriptURL, { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                     body: JSON.stringify(payload) 
                 })
-                .then(r => r.json())
-                .then(d => {
-                    if(d.status === "success") {
-                        statusDiv.innerHTML = `✅ تم رفع الملف بنجاح!`;
-                        statusDiv.style.color = "#27ae60";
-                        playSound(880, 'sine', 0.2, 0.1);
-                        setTimeout(() => { statusDiv.innerHTML = ""; loadRepoFiles(); }, 2000);
-                    } else {
-                        throw new Error("Upload failed on server");
+                .then(r => r.text()) // هنا سنقرأ الرد كنص لنعرف الخطأ بدقة
+                .then(text => {
+                    console.log("رد خوادم جوجل:", text);
+                    try {
+                        let d = JSON.parse(text);
+                        if(d.status === "success" || d.result === "success") {
+                            statusDiv.innerHTML = `✅ تم رفع الملف بنجاح!`;
+                            statusDiv.style.color = "#27ae60";
+                            playSound(880, 'sine', 0.2, 0.1);
+                            setTimeout(() => { statusDiv.innerHTML = ""; loadRepoFiles(); }, 2000);
+                        } else {
+                            // إذا الخلل من الكود، سيظهر لك هنا
+                            statusDiv.innerHTML = "❌ خطأ من السيرفر: " + (d.message || text);
+                            statusDiv.style.color = "#e74c3c";
+                            alert("تفاصيل الخطأ من جوجل: " + (d.message || text));
+                        }
+                    } catch(err) {
+                        // إذا كان الخلل من حسابات جوجل (تداخل حسابات)
+                        statusDiv.innerHTML = "❌ تم حظر الرفع بواسطة جوجل (جرب متصفح خفي).";
+                        statusDiv.style.color = "#e74c3c";
+                        alert("يبدو أن هناك تداخلاً في حسابات جوجل المفتوحة في المتصفح.\n\nالرجاء فتح المنصة في نافذة 'تصفح خفي' (Incognito) والتجربة مرة أخرى.\n\nالرد المخفي: " + text.substring(0, 150));
                     }
                 })
                 .catch(err => {
-                    statusDiv.innerHTML = "❌ حدث خطأ أثناء الرفع.";
+                    statusDiv.innerHTML = "❌ حدث خطأ في الاتصال بالشبكة.";
                     statusDiv.style.color = "#e74c3c";
                 });
             };
