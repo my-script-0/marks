@@ -696,15 +696,15 @@
                         let evalAct = maxAct > 0;
                         let evalProj = maxProj > 0;
 
-                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, maxDiag, evalDiag);
+                        detailsHTML += getCriterionImgHTML("-", "التفاعل والحوار الصفي", diag, maxDiag, evalDiag);
                         detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, maxAct, evalAct);
                         detailsHTML += getCriterionImgHTML("❓", "الأسئلة القصيرة", quiz, maxQuiz, evalQuiz);
-                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, maxProj, evalProj);
+                        detailsHTML += getCriterionImgHTML("-", "المشروع العملي", proj, maxProj, evalProj);
 
-                        waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, maxDiag, evalDiag)}\n`;
+                        waDetails += `- الحوار الصفي: ${getWaTextDesc("الحوار", diag, maxDiag, evalDiag)}\n`;
                         waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, maxAct, evalAct)}\n`;
                         waDetails += `❓ الأسئلة القصيرة: ${getWaTextDesc("الأسئلة", quiz, maxQuiz, evalQuiz)}\n`;
-                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, maxProj, evalProj)}\n`;
+                        waDetails += `- المشروع: ${getWaTextDesc("المشروع", proj, maxProj, evalProj)}\n`;
 
                         if(evalDiag) { totalCur += diag; totalPos += maxDiag; }
                         if(evalQuiz) { totalCur += quiz; totalPos += maxQuiz; }
@@ -727,15 +727,15 @@
                         let evalTest = maxTest > 0;
                         let evalProj = maxProj > 0;
 
-                        detailsHTML += getCriterionImgHTML("🗣️", "التفاعل والحوار الصفي", diag, maxDiag, evalDiag);
+                        detailsHTML += getCriterionImgHTML("-", "التفاعل والحوار الصفي", diag, maxDiag, evalDiag);
                         detailsHTML += getCriterionImgHTML("📚", "الأنشطة العملية", act, maxAct, evalAct);
                         detailsHTML += getCriterionImgHTML("📝", "الاختبار القصير", test, maxTest, evalTest);
-                        detailsHTML += getCriterionImgHTML("🚀", "المشروع العملي", proj, maxProj, evalProj);
+                        detailsHTML += getCriterionImgHTML("-", "المشروع العملي", proj, maxProj, evalProj);
 
                         waDetails += `🗣️ الحوار الصفي: ${getWaTextDesc("الحوار", diag, maxDiag, evalDiag)}\n`;
                         waDetails += `📚 الأنشطة: ${getWaTextDesc("الأنشطة", act, maxAct, evalAct)}\n`;
                         waDetails += `📝 الاختبار: ${getWaTextDesc("الاختبار", test, maxTest, evalTest)}\n`;
-                        waDetails += `🚀 المشروع: ${getWaTextDesc("المشروع", proj, maxProj, evalProj)}\n`;
+                        waDetails += `- المشروع: ${getWaTextDesc("المشروع", proj, maxProj, evalProj)}\n`;
 
                         if(evalDiag) { totalCur += diag; totalPos += maxDiag; }
                         if(evalAct) { totalCur += act; totalPos += maxAct; }
@@ -952,13 +952,13 @@
     // إذا كان الجدول مخفياً، قم بإظهاره
     if (wrapper.style.display === "none") {
         wrapper.style.display = "block";
-        btn.innerHTML = "👁️ إخفاء الكشف";
+        btn.innerHTML = "إخفاء الكشف";
         btn.style.background = "#3498db"; // لون أزرق
     } 
     // إذا كان الجدول ظاهراً، قم بإخفائه
     else {
         wrapper.style.display = "none";
-        btn.innerHTML = "👁️ إظهار الكشف";
+        btn.innerHTML = "إظهار الكشف";
         btn.style.background = "#e74c3c"; // يتغير لونه للأحمر تنبيهاً بأنه مخفي
     }
 }
