@@ -835,9 +835,9 @@
         drawCorner(30, canvas.height - 30, 1, -1); drawCorner(canvas.width - 30, canvas.height - 30, -1, -1);
 
         // --- رسم الشعارات بأماكن متناسقة (أحجام كبيرة) ---
-        if (minLogo) ctx.drawImage(minLogo, canvas.width - 240, 62, 152, 152); // الوزارة يميناً
-        if (schLogo) ctx.drawImage(schLogo, 72, 62, 152, 152); // المدرسة يساراً
-        if (perLogo) ctx.drawImage(perLogo, canvas.width - 382, 672, 122, 122); // شعارك الخاص
+        if (minLogo) ctx.drawImage(minLogo, canvas.width - 240, 62, 180, 180); // الوزارة يميناً
+        if (schLogo) ctx.drawImage(schLogo, 72, 62, 180, 180); // المدرسة يساراً
+        if (perLogo) ctx.drawImage(perLogo, canvas.width - 382, 672, 180, 180); // شعارك الخاص
 
         // --- كتابة النصوص ---
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
@@ -851,7 +851,7 @@
 
         ctx.fillStyle = '#e0f2fe'; ctx.fillRect(canvas.width/2 - 160, 250, 320, 45); 
         ctx.font = 'bold 22px Tahoma, sans-serif'; ctx.fillStyle = '#0369a1'; 
-        ctx.fillText('💻 عَبْقَرِيُّ تَقْنِيَةِ المَعْلُومَات (IT)', canvas.width / 2, 272);
+        ctx.fillText('عَبْقَرِيُّ تَقْنِيَةِ المَعْلُومَات (IT)', canvas.width / 2, 272);
 
         ctx.font = '32px "Amiri", serif'; ctx.fillStyle = '#334155'; 
         ctx.fillText('بكل فخر واعتزاز، نمنح هذه الشهادة المرموقة للطالب المبدع:', canvas.width / 2, 370);
