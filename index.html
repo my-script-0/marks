@@ -211,7 +211,7 @@
                 <option value="1">شعبة 1</option><option value="2">شعبة 2</option><option value="3">شعبة 3</option><option value="4">شعبة 4</option><option value="5" id="sec5">شعبة 5</option>
             </select>
             <button class="theme-toggle" onclick="toggleDarkMode()" id="themeBtn">تغيير المظهر</button>
-            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">👁️ إظهار الكشف</button>
+            <button class="theme-toggle" onclick="toggleTableVisibility()" id="toggleTableBtn" style="background:#3498db; color:white; border-color:#2980b9;">إظهار الكشف</button>
         </div>
     </div>
 
@@ -869,7 +869,7 @@
         ctx.fillText('عَبْقَرِيُّ تَقْنِيَةِ المَعْلُومَات (IT)', canvas.width / 2, 272);
 
         ctx.font = '32px "Amiri", serif'; ctx.fillStyle = '#334155'; 
-        ctx.fillText('بكل فخر واعتزاز، نمنح هذه الشهادة المرموقة للطالب المبدع:', canvas.width / 2, 370);
+        ctx.fillText('بكل فخر واعتزاز، نمنح شهادة التقدير هذه للطالب المبدع:', canvas.width / 2, 370);
         
         ctx.fillStyle = '#f8fafc'; ctx.fillRect(canvas.width/2 - 400, 420, 800, 100); 
         ctx.font = 'bold 32px "Amiri", serif'; ctx.fillStyle = '#b45309'; 
@@ -967,7 +967,7 @@
                 // يتم مقارنتها بكلمة المرور القادمة من السكريبت، أو 1234 كرمز طوارئ
                 if (pass === currentAdminPassword || pass === "1234") { 
                     wrapper.style.display = "block";
-                    btn.innerHTML = "🙈 إخفاء الكشف";
+                    btn.innerHTML = "إخفاء الكشف";
                     btn.style.background = "#e74c3c"; // يتحول للأحمر
                 } else if (pass !== null) {
                     alert("❌ كلمة المرور غير صحيحة!");
@@ -976,7 +976,7 @@
             // إذا كان الكشف ظاهراً ونريد إخفاءه (لا يحتاج رمز للإخفاء)
             else {
                 wrapper.style.display = "none";
-                btn.innerHTML = "👁️ إظهار الكشف";
+                btn.innerHTML = "إظهار الكشف";
                 btn.style.background = "#3498db"; // يعود للون الأزرق
             }
         }
