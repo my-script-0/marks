@@ -520,6 +520,7 @@
         }
 
         function startTimer() { 
+            playSound(440, 'sine', 0.01, 0.01);
             clearInterval(timerInterval); 
             timerInterval = setInterval(() => { 
                 if(timeRemaining>0){
