@@ -390,7 +390,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyylQZqs01g-PmAbyvjh4ElCPpcfrzL2-WS4S1fCwAbicLkLriV3EDqbg6Amu2-6FR1cg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyYxoOVJ7GUyc-o_Ew1odhMC6pXnb4-DPKX8Dzdxf-dLKJE4on4l3LEuaOosb7F421yZg/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = ""; // متغير لحفظ كلمة المرور من جوجل شيت
@@ -1044,6 +1044,7 @@
                                 <div class="repo-icon">${icon}</div>
                                 <div class="repo-title">${file.name}</div>
                                 <div class="repo-desc">الحجم: ${file.size}</div>
+                                <button class="delete-file-btn" onclick="event.preventDefault(); deleteFile('${file.id}')" title="حذف الملف">🗑️</button>
                             </a>
                         `;
                     });
@@ -1110,7 +1111,36 @@
             };
             reader.readAsDataURL(file);
         }
-          
+          function deleteFile(fileId) {
+            if (!confirm("هل أنت متأكد من حذف هذا الملف نهائياً؟")) return;
+            
+            const statusDiv = document.getElementById("uploadStatus");
+            statusDiv.innerHTML = "⏳ جاري الحذف...";
+            statusDiv.style.color = "#f39c12";
+
+            const payload = { action: "deleteFile", fileId: fileId };
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify(payload) 
+            })
+            .then(r => r.json())
+            .then(d => {
+                if(d.status === "success") {
+                    statusDiv.innerHTML = "✅ تم حذف الملف بنجاح!";
+                    statusDiv.style.color = "#27ae60";
+                    playSound(880, 'sine', 0.2, 0.1);
+                    setTimeout(() => { statusDiv.innerHTML = ""; loadRepoFiles(); }, 1500);
+                } else {
+                    statusDiv.innerHTML = "❌ حدث خطأ أثناء الحذف.";
+                    statusDiv.style.color = "#e74c3c";
+                }
+            })
+            .catch(err => {
+                statusDiv.innerHTML = "❌ خطأ في الاتصال بالشبكة.";
+            });
+        }
     </script>
 </body>
 </html>
