@@ -456,6 +456,11 @@
             document.getElementById("form6").classList.toggle("active-form", g==="6"); 
             document.getElementById("form9").classList.toggle("active-form", g==="9");
             
+            // 🔴 التعديل الضروري جداً لحل مشكلة تداخل أسماء الطلاب عند الحفظ
+            document.getElementById("tbody6").innerHTML = "";
+            document.getElementById("tbody9").innerHTML = "";
+            // ----------------------------------------------------------------------
+
             const tbody = document.getElementById("tbody" + g); 
             tbody.innerHTML = `<tr><td colspan="15">جاري جلب البيانات... ⏳</td></tr>`;
             const rGrid = document.getElementById("reinforcementGrid");
@@ -464,13 +469,11 @@
             fetch(`${scriptURL}?grade=${g}&section=${document.getElementById("sectionSelect").value}`)
             .then(r => r.json()).then(d => { 
                 currentSheetData = (d.result === 'success') ? d.data : {}; 
-                // حفظ كلمة المرور الواردة من السكريبت
                 if(d.adminPassword) currentAdminPassword = d.adminPassword; 
                 renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); 
             })
             .catch(() => { currentSheetData = {}; renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); });
         }
-
         function changeReinfVal(id, amt) { 
             const el = document.getElementById(id); 
             if(el) { el.value = Math.max(0, (parseInt(el.value) || 0) + amt); }
