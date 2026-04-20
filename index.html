@@ -74,7 +74,7 @@
         .side-icon:hover::after { opacity: 1; right: 60px; }
 
         .bg-export { background: #1d6f42; }
-        .bg-repo { background: #6c5ce7; } /* لون المستودع الجديد */
+        .bg-repo { background: #6c5ce7; }
         .bg-wheel { background: #9b59b6; }
         .bg-timer { background: #e67e22; }
         .bg-radar { background: #e74c3c; }
@@ -183,6 +183,15 @@
         .honor-ticker-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
         .honor-ticker { position: absolute; white-space: nowrap; font-size: 20px; font-weight: bold; line-height: 45px; animation: scrollTicker 20s linear infinite; }
         @keyframes scrollTicker { 0% { right: -100%; } 100% { right: 100%; } }
+
+        /* تنسيقات دفتر الملاحظات المضافة حديثاً */
+        .note-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-family: inherit; box-sizing: border-box; }
+        textarea.note-input { resize: vertical; min-height: 60px; }
+        .btn-save-note { background: #8e44ad; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn-save-note:hover { background: #732d91; }
+        .prev-notes-container { margin-top: 15px; max-height: 250px; overflow-y: auto; border-top: 1px dashed #ccc; padding-top: 10px;}
+        .note-card { background: var(--category-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-right: 4px solid #8e44ad; font-size: 14px; text-align: right; }
+        .note-date { font-size: 11px; color: #7f8c8d; margin-bottom: 4px; direction: ltr; text-align: right;}
     </style>
 </head>
 <body>
@@ -199,6 +208,7 @@
     <div class="sidebar-tools">
         <button class="side-icon bg-export" data-title="تصدير إكسل" onclick="exportToExcel()">📊</button>
         <button class="side-icon bg-repo" data-title="المستودع السحابي" onclick="openRepoModal()">📂</button>
+        <button class="side-icon" style="background: #8e44ad;" data-title="دفتر التحضير" onclick="openNotesModal()">📝</button>
         <button class="side-icon bg-wheel" data-title="عجلة الاختيار" onclick="openModal('modalRandom')">🎲</button>
         <button class="side-icon bg-timer" data-title="المؤقت الذكي" onclick="openModal('modalTimer')">⏱️</button>
         <button class="side-icon bg-radar" data-title="إدارة الصف والرادار" onclick="openModal('modalRadar')">🚦</button>
@@ -374,6 +384,23 @@
         </div>
     </div>
 
+    <div id="modalNotes" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modalNotes')">&times;</span>
+            <div class="modal-header"><h3 style="color:#8e44ad;">📝 دفتر التحضير والملاحظات</h3></div>
+            <p style="text-align:center; font-weight:bold; margin-top:-10px; color: var(--text-color);" id="currentClassLabel"></p>
+
+            <div style="margin-top: 15px;">
+                <input type="text" id="lessonTitle" placeholder="عنوان الدرس الذي توقفنا عنده..." class="note-input">
+                <textarea id="lessonNotes" placeholder="ملاحظات إضافية (الواجب، أدوات مطلوبة، سلوكيات...)" class="note-input"></textarea>
+                <button onclick="saveNote()" class="btn-save-note" id="btnSaveNote">💾 حفظ الملاحظة لهذه الشعبة</button>
+            </div>
+            
+            <div id="previousNotesContainer" class="prev-notes-container">
+                </div>
+        </div>
+    </div>
+
     <script>
         const studentsData = { 
             "9": { 
@@ -390,7 +417,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyYxoOVJ7GUyc-o_Ew1odhMC6pXnb4-DPKX8Dzdxf-dLKJE4on4l3LEuaOosb7F421yZg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycby0YdDsEV8qHT3lQNa1s97ukm40htNQBRL45QCXnuYTd7q71djD0jMDrSdEcQCy90djXw/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = ""; // متغير لحفظ كلمة المرور من جوجل شيت
@@ -1111,7 +1138,8 @@
             };
             reader.readAsDataURL(file);
         }
-          function deleteFile(fileId) {
+        
+        function deleteFile(fileId) {
             if (!confirm("هل أنت متأكد من حذف هذا الملف نهائياً؟")) return;
             
             const statusDiv = document.getElementById("uploadStatus");
@@ -1140,6 +1168,71 @@
             .catch(err => {
                 statusDiv.innerHTML = "❌ خطأ في الاتصال بالشبكة.";
             });
+        }
+
+        // --- دوال دفتر الملاحظات ---
+        function openNotesModal() {
+            openModal('modalNotes');
+            loadTeacherNotes(); // جلب الملاحظات فقط عند فتح النافذة
+        }
+
+        function loadTeacherNotes() {
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            document.getElementById("currentClassLabel").innerText = `الصف ${g === '6' ? 'السادس' : 'التاسع'} - شعبة ${s}`;
+            
+            const container = document.getElementById("previousNotesContainer");
+            container.innerHTML = "<div style='text-align:center;'>جاري جلب الملاحظات السابقة... ⏳</div>";
+            
+            fetch(`${scriptURL}?action=getTeacherNotes`)
+            .then(r => r.json())
+            .then(d => {
+                if (d.status === "success" && d.notes) {
+                    const classNotes = d.notes.filter(n => n[1] == g && n[2] == s).reverse();
+                    if (classNotes.length > 0) {
+                        container.innerHTML = classNotes.map(n => 
+                            `<div class="note-card">
+                                <div class="note-date">📅 ${new Date(n[0]).toLocaleString('ar-OM')}</div>
+                                <strong>الدرس:</strong> ${n[3]}<br>
+                                ${n[4] ? `<strong>ملاحظات:</strong> ${n[4]}` : ''}
+                            </div>`
+                        ).join('');
+                    } else {
+                        container.innerHTML = "<div style='text-align:center; color:#7f8c8d; font-size:13px;'>لا توجد ملاحظات سابقة لهذه الشعبة.</div>";
+                    }
+                } else {
+                    container.innerHTML = "<div style='text-align:center; color:#7f8c8d; font-size:13px;'>لم يتم العثور على ملاحظات.</div>";
+                }
+            })
+            .catch(e => { container.innerHTML = "❌ تعذر جلب الملاحظات من السيرفر."; });
+        }
+
+        function saveNote() {
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            const lesson = document.getElementById("lessonTitle").value.trim();
+            const notes = document.getElementById("lessonNotes").value.trim();
+            
+            if (!lesson) { alert("الرجاء كتابة عنوان الدرس الذي توقفت عنده على الأقل."); return; }
+            
+            const btn = document.getElementById("btnSaveNote");
+            btn.innerText = "⏳ جاري الحفظ...";
+            btn.disabled = true;
+
+            const payload = { action: "saveTeacherNote", grade: g, section: s, lastLesson: lesson, moreNotes: notes };
+
+            fetch(scriptURL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+            .then(r => r.json())
+            .then(d => {
+                if(d.status === "success") {
+                    document.getElementById("lessonTitle").value = "";
+                    document.getElementById("lessonNotes").value = "";
+                    playSound(880, 'sine', 0.2, 0.1);
+                    loadTeacherNotes(); 
+                } else { alert("حدث خطأ أثناء الحفظ."); }
+            })
+            .catch(err => { alert("خطأ في الاتصال بالشبكة."); })
+            .finally(() => { btn.innerText = "💾 حفظ الملاحظة لهذه الشعبة"; btn.disabled = false; });
         }
     </script>
 </body>
