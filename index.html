@@ -290,7 +290,7 @@
             
             <div class="modal-large-body">
                 <div class="upload-area">
-                    <p style="font-weight:bold; color:var(--text-color);">🚀 اسحب الملفات هنا أو اضغط للرفع المباشر إلى Google Drive</p>
+                    <p style="font-weight:bold; color:var(--text-color);">اسحب الملفات هنا أو اضغط للرفع المباشر</p>
                     <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(this)">
                     <button onclick="document.getElementById('fileInput').click()" style="background: #6c5ce7; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight:bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">اختيار ملف من الجهاز</button>
                     <div id="uploadStatus" style="margin-top: 15px; font-weight: bold; color: #27ae60; font-size:14px;"></div>
@@ -1074,7 +1074,7 @@
                                 <div class="repo-icon">${icon}</div>
                                 <div class="repo-title">${file.name}</div>
                                 <div class="repo-desc">الحجم: ${file.size}</div>
-                                <button class="delete-file-btn" onclick="event.preventDefault(); deleteFile('${file.id}')" title="حذف الملف">🗑️</button>
+                                <button class="delete-file-btn" onclick="event.preventDefault(); deleteFile('${file.id}')" title="حذف الملف">🗑️ Delete </button>
                             </a>
                         `;
                     });
