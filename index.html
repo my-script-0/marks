@@ -8,6 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
@@ -192,6 +193,19 @@
         .prev-notes-container { margin-top: 15px; max-height: 250px; overflow-y: auto; border-top: 1px dashed #ccc; padding-top: 10px;}
         .note-card { background: var(--category-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-right: 4px solid #8e44ad; font-size: 14px; text-align: right; }
         .note-date { font-size: 11px; color: #7f8c8d; margin-bottom: 4px; direction: ltr; text-align: right;}
+        
+        /* تنسيق المساعد الذكي */
+        .ai-chat-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; border: 2px solid white; transition: 0.3s; }
+        .ai-chat-btn:hover { transform: rotate(15deg) scale(1.1); }
+        .ai-window { display: none; position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); }
+        .ai-header { background: #6c5ce7; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .ai-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 14px; background: var(--category-bg); }
+        .ai-msg { padding: 10px; border-radius: 10px; max-width: 85%; line-height: 1.4; }
+        .ai-msg.user { background: #e0e0e0; align-self: flex-start; color: #333; }
+        .ai-msg.bot { background: #6c5ce7; color: white; align-self: flex-end; }
+        .ai-footer { padding: 10px; display: flex; gap: 5px; border-top: 1px solid var(--border-color); }
+        .ai-input { flex: 1; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); }
+        .ai-send { background: #6c5ce7; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -356,7 +370,10 @@
             <div style="text-align:center; margin-bottom:15px;">
                 عدد المجموعات المطلوبة: <input type="number" id="groupCount" value="4" min="2" max="10" style="width:50px; padding:5px; text-align:center; border-radius:4px; border:1px solid #ccc;">
             </div>
-            <button onclick="generateGroups()" style="width:100%; background:#3498db; color:white; border:none; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer;">تقسيم الآن</button>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="generateGroups()" style="flex: 2; background:#3498db; color:white; border:none; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer;">تقسيم الآن</button>
+                <button onclick="downloadGroupsPDF()" style="flex: 1; background:#e74c3c; color:white; border:none; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer;">📥 تحميل PDF</button>
+            </div>
             <div id="groupsDisplay" style="margin-top:15px; max-height:300px; overflow-y:auto; line-height:1.8;"></div>
         </div>
     </div>
@@ -398,6 +415,21 @@
             
             <div id="previousNotesContainer" class="prev-notes-container">
                 </div>
+        </div>
+    </div>
+
+    <div class="ai-chat-btn" onclick="toggleAIWindow()" title="اسأل المساعد الذكي">🤖</div>
+    <div class="ai-window" id="aiWindow">
+        <div class="ai-header">
+            <span>المساعد الذكي (مِحور AI)</span>
+            <span style="cursor:pointer" onclick="toggleAIWindow()">✖</span>
+        </div>
+        <div class="ai-body" id="aiBody">
+            <div class="ai-msg bot">مرحباً أستاذ معاذ! كيف يمكنني مساعدتك اليوم في إدارة حصتك؟</div>
+        </div>
+        <div class="ai-footer">
+            <input type="text" id="aiInput" class="ai-input" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') sendToAI()">
+            <button class="ai-send" onclick="sendToAI()">إرسال</button>
         </div>
     </div>
 
@@ -1236,6 +1268,91 @@
             })
             .catch(err => { alert("خطأ في الاتصال بالشبكة."); })
             .finally(() => { btn.innerText = "💾 حفظ الملاحظة لهذه الشعبة"; btn.disabled = false; });
+        }
+
+        // --- دالة تحميل المجموعات كـ PDF ---
+        function downloadGroupsPDF() {
+            const groupsContent = document.getElementById("groupsDisplay").innerHTML;
+            if (!groupsContent || groupsContent.trim() === "") {
+                alert("الرجاء تقسيم المجموعات أولاً قبل محاولة التنزيل!");
+                return;
+            }
+
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            const gradeName = (g === "6") ? "السادس" : "التاسع";
+
+            const printContainer = document.createElement('div');
+            printContainer.style.padding = '30px';
+            printContainer.style.fontFamily = "'Amiri', serif";
+            printContainer.style.direction = 'rtl';
+            printContainer.style.background = '#ffffff';
+            printContainer.style.color = '#000000';
+            
+            printContainer.innerHTML = `
+                <div style="text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 15px; margin-bottom: 30px;">
+                    <h1 style="color: #2c3e50; margin: 0; font-size: 28px;">توزيع المجموعات الدراسية (مادة تقنية المعلومات)</h1>
+                    <h2 style="color: #7f8c8d; margin: 10px 0 0 0; font-size: 20px;">الصف ${gradeName} - شعبة ${s}</h2>
+                </div>
+                <div style="font-size: 18px; line-height: 2.2;">
+                    ${groupsContent}
+                </div>
+                <div style="text-align: center; margin-top: 50px; font-size: 14px; color: #7f8c8d; border-top: 1px dashed #ccc; padding-top: 15px;">
+                    تم التوليد العشوائي عبر منصة مِحور - أ. معاذ اليعقوبي
+                </div>
+            `;
+
+            const opt = {
+                margin:       0.5,
+                filename:     `توزيع_مجموعات_الصف_${gradeName}_شعبة_${s}.pdf`,
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ جاري التنزيل...";
+            btn.disabled = true;
+
+            html2pdf().set(opt).from(printContainer).save().then(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        // --- دوال المساعد الذكي ---
+        function toggleAIWindow() {
+            const win = document.getElementById("aiWindow");
+            win.style.display = (win.style.display === "flex") ? "none" : "flex";
+        }
+
+        function sendToAI() {
+            const input = document.getElementById("aiInput");
+            const body = document.getElementById("aiBody");
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            body.innerHTML += `<div class="ai-msg user">${msg}</div>`;
+            input.value = "";
+            body.scrollTop = body.scrollHeight;
+
+            const loadingId = "ai-loading-" + Date.now();
+            body.innerHTML += `<div class="ai-msg bot" id="${loadingId}">⏳ جاري التفكير...</div>`;
+
+            fetch(scriptURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: "askAI", prompt: msg })
+            })
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById(loadingId).innerText = d.reply;
+                body.scrollTop = body.scrollHeight;
+            })
+            .catch(() => {
+                document.getElementById(loadingId).innerText = "عذراً، حدث خطأ في الاتصال.";
+            });
         }
     </script>
 </body>
