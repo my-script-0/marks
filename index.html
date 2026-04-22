@@ -206,6 +206,26 @@
         .ai-footer { padding: 10px; display: flex; gap: 5px; border-top: 1px solid var(--border-color); }
         .ai-input { flex: 1; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); }
         .ai-send { background: #6c5ce7; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        /* تنسيق زر التحكم الصوتي */
+        .voice-btn {
+            position: fixed; bottom: 30px; left: 240px; 
+            width: 50px; height: 50px; border-radius: 50%;
+            background: #e74c3c; color: white; border: none;
+            font-size: 24px; cursor: pointer; display: flex;
+            justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000;
+            transition: 0.3s;
+        }
+        .voice-btn:hover { transform: scale(1.1); }
+        .voice-btn.listening {
+            background: #c0392b;
+            animation: pulse-ring 1s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
     </style>
 </head>
 <body>
@@ -214,6 +234,7 @@
     <div class="glass-overlay"></div>
     <div id="offline-banner">⚠️ أنت غير متصل بالإنترنت حالياً. التغييرات ستحفظ محلياً وتُرسل لاحقاً.</div>
     <div id="honorTickerWrap" class="honor-ticker-wrap" onclick="this.style.display='none'"><div class="honor-ticker-container"><div id="honorTickerText" class="honor-ticker"></div></div></div>
+    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="التحكم الصوتي">🎤</button>
 
     <button class="btn-floating-save" id="btnFloatSave" onclick="submitData()">
         💾 حفظ ومزامنة البيانات
@@ -1379,6 +1400,84 @@
             }
             
             body.scrollTop = body.scrollHeight;
+        }
+        // --- نظام التحكم الصوتي المتقدم ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isListening = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ar-OM'; // التعرف على اللهجة العمانية والعربية
+            recognition.continuous = false; // التوقف بعد تنفيذ أمر واحد
+            recognition.interimResults = false;
+
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript.trim().toLowerCase();
+                console.log("أمر صوتي: ", command);
+                executeVoiceCommand(command);
+            };
+
+            recognition.onend = function() {
+                stopListening();
+            };
+
+            recognition.onerror = function(event) {
+                console.error("خطأ في المايكروفون: ", event.error);
+                stopListening();
+            };
+        }
+
+        function toggleVoice() {
+            if (!SpeechRecognition) {
+                alert("عذراً، متصفحك الحالي لا يدعم ميزة التحكم الصوتي. يرجى استخدام Google Chrome.");
+                return;
+            }
+            isListening ? stopListening() : startListening();
+        }
+
+        function startListening() {
+            recognition.start();
+            isListening = true;
+            const btn = document.getElementById('voiceBtn');
+            btn.classList.add('listening');
+            btn.innerText = '🔴'; // تغيير الأيقونة أثناء الاستماع
+            playSound(440, 'sine', 0.1, 0.1); // نغمة تنبيه للبدء
+        }
+
+        function stopListening() {
+            recognition.stop();
+            isListening = false;
+            const btn = document.getElementById('voiceBtn');
+            btn.classList.remove('listening');
+            btn.innerText = '🎤';
+        }
+
+        // 🧠 مخ المنصة: ربط الكلمات بالأفعال
+        function executeVoiceCommand(cmd) {
+            if (cmd.includes('طالب') || cmd.includes('عجلة') || cmd.includes('اختار')) {
+                openModal('modalRandom');
+                setTimeout(spinWheel, 500); // فتح العجلة ولفها تلقائياً
+            } 
+            else if (cmd.includes('رادار') || cmd.includes('إزعاج')) {
+                openModal('modalRadar');
+                setTimeout(toggleNoiseRadar, 500); // تشغيل الرادار تلقائياً
+            } 
+            else if (cmd.includes('مؤقت') || cmd.includes('وقت') || cmd.includes('نشاط')) {
+                openModal('modalTimer');
+            } 
+            else if (cmd.includes('تقارير') || cmd.includes('شهادات')) {
+                generateDetailedReports();
+            } 
+            else if (cmd.includes('إخفاء') || cmd.includes('الكشف')) {
+                toggleTableVisibility();
+            }
+            else if (cmd.includes('شرف') || cmd.includes('أبطال')) {
+                toggleHonorRoll();
+            }
+            else {
+                alert("المنصة: عذراً أستاذ معاذ، لم أتعرف على الأمر (" + cmd + ")");
+            }
         }
     </script>
 </body>
