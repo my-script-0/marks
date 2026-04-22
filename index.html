@@ -1322,37 +1322,63 @@
         }
 
         // --- دوال المساعد الذكي ---
+        // --- دوال المساعد الذكي (الاتصال المباشر بالمتصفح) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
             win.style.display = (win.style.display === "flex") ? "none" : "flex";
         }
 
-        function sendToAI() {
+        async function sendToAI() {
             const input = document.getElementById("aiInput");
             const body = document.getElementById("aiBody");
             const msg = input.value.trim();
             if (!msg) return;
 
+            // عرض رسالة المستخدم
             body.innerHTML += `<div class="ai-msg user">${msg}</div>`;
             input.value = "";
             body.scrollTop = body.scrollHeight;
 
+            // عرض رسالة الانتظار
             const loadingId = "ai-loading-" + Date.now();
             body.innerHTML += `<div class="ai-msg bot" id="${loadingId}">⏳ جاري التفكير...</div>`;
+            body.scrollTop = body.scrollHeight;
 
-            fetch(scriptURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: "askAI", prompt: msg })
-            })
-            .then(r => r.json())
-            .then(d => {
-                document.getElementById(loadingId).innerText = d.reply;
-                body.scrollTop = body.scrollHeight;
-            })
-            .catch(() => {
-                document.getElementById(loadingId).innerText = "عذراً، حدث خطأ في الاتصال.";
-            });
+            // 🌟 1. ضع مفتاح (API Key) الجديد الخاص بحسابك الشخصي هنا
+            const apiKey = "ضع_المفتاح_هنا"; 
+            
+            // 🌟 2. رابط الاتصال المباشر من المتصفح لنموذج 2.0 السريع
+            const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+
+            const payload = {
+                "contents": [{
+                    "parts": [{
+                        "text": "أنت مساعد ذكي مدمج في منصة (مِحور) التعليمية في سلطنة عمان. صممك المعلم معاذ اليعقوبي لمساعدة معلمي تقنية المعلومات. أجب باختصار واحترافية وبلهجة تربوية مشجعة. السؤال هو: " + msg
+                    }]
+                }]
+            };
+
+            try {
+                // الاتصال المباشر دون المرور بجوجل سكريبت
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById(loadingId).innerText = "عذراً، خطأ في الاتصال: " + (data.error ? data.error.message : "رمز " + response.status);
+                } else {
+                    const aiReply = data.candidates[0].content.parts[0].text;
+                    document.getElementById(loadingId).innerText = aiReply;
+                }
+            } catch (error) {
+                document.getElementById(loadingId).innerText = "عذراً، تأكد من اتصالك بالإنترنت وصلاحية المفتاح.";
+            }
+            
+            body.scrollTop = body.scrollHeight;
         }
     </script>
 </body>
