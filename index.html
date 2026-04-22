@@ -1402,37 +1402,71 @@
             body.scrollTop = body.scrollHeight;
         }
         // --- نظام التحكم الصوتي المتقدم ---
+       // --- نظام التحكم الصوتي المتقدم (نسخة السرعة الفائقة 🚀) ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;
         let isListening = false;
+        let commandExecuted = false; // مفتاح لمنع تكرار تنفيذ الأمر في نفس اللحظة
 
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
-            recognition.lang = 'ar-OM'; // التعرف على اللهجة العمانية والعربية
-            recognition.continuous = false; // التوقف بعد تنفيذ أمر واحد
-            recognition.interimResults = false;
+            recognition.lang = 'ar-OM'; 
+            recognition.continuous = false; 
+            // 🌟 السر الأول: التقاط الكلمة أثناء النطق مباشرة دون انتظار انتهاء الجملة
+            recognition.interimResults = true; 
+
+            recognition.onstart = function() {
+                commandExecuted = false; // تصفير الحالة مع كل ضغطة مايك
+            };
 
             recognition.onresult = function(event) {
-                const command = event.results[0][0].transcript.trim().toLowerCase();
-                console.log("أمر صوتي: ", command);
-                executeVoiceCommand(command);
+                if (commandExecuted) return; // إذا تم تنفيذ الأمر، تجاهل باقي الكلام
+
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    transcript += event.results[i][0].transcript;
+                }
+                
+                const cmd = transcript.trim().toLowerCase();
+                
+                // 🌟 الفحص اللحظي: بمجرد سماع الكلمة المفتاحية، نفذ فوراً!
+                if (cmd.includes('طالب') || cmd.includes('عجلة') || cmd.includes('اختار')) {
+                    executeFastCommand('modalRandom', spinWheel);
+                } 
+                else if (cmd.includes('رادار') || cmd.includes('إزعاج')) {
+                    executeFastCommand('modalRadar', toggleNoiseRadar);
+                } 
+                else if (cmd.includes('مؤقت') || cmd.includes('وقت') || cmd.includes('نشاط')) {
+                    executeFastCommand('modalTimer', null);
+                } 
+                else if (cmd.includes('تقارير') || cmd.includes('شهادات')) {
+                    commandExecuted = true; stopListening(); generateDetailedReports();
+                } 
+                else if (cmd.includes('إخفاء') || cmd.includes('الكشف')) {
+                    commandExecuted = true; stopListening(); toggleTableVisibility();
+                }
+                else if (cmd.includes('شرف') || cmd.includes('أبطال')) {
+                    commandExecuted = true; stopListening(); toggleHonorRoll();
+                }
             };
 
-            recognition.onend = function() {
-                stopListening();
-            };
+            recognition.onend = function() { stopListening(); };
+            recognition.onerror = function(event) { stopListening(); };
+        }
 
-            recognition.onerror = function(event) {
-                console.error("خطأ في المايكروفون: ", event.error);
-                stopListening();
-            };
+        // 🌟 دالة التنفيذ الخاطف (بِدون تأخير)
+        function executeFastCommand(modalId, actionFunction) {
+            commandExecuted = true; // نقفل التنفيذ لكي لا يتكرر
+            stopListening(); // نغلق المايك فوراً لتسريع المتصفح
+            openModal(modalId);
+            if (actionFunction) {
+                // 🌟 السر الثاني: قللنا التأخير من 500 إلى 50 مللي ثانية فقط (استجابة فورية)
+                setTimeout(actionFunction, 50); 
+            }
         }
 
         function toggleVoice() {
-            if (!SpeechRecognition) {
-                alert("عذراً، متصفحك الحالي لا يدعم ميزة التحكم الصوتي. يرجى استخدام Google Chrome.");
-                return;
-            }
+            if (!SpeechRecognition) return alert("متصفحك لا يدعم التحكم الصوتي.");
             isListening ? stopListening() : startListening();
         }
 
@@ -1441,43 +1475,16 @@
             isListening = true;
             const btn = document.getElementById('voiceBtn');
             btn.classList.add('listening');
-            btn.innerText = '🔴'; // تغيير الأيقونة أثناء الاستماع
-            playSound(440, 'sine', 0.1, 0.1); // نغمة تنبيه للبدء
+            btn.innerText = '🔴';
+            playSound(440, 'sine', 0.1, 0.1);
         }
 
         function stopListening() {
-            recognition.stop();
+            if(isListening) recognition.stop();
             isListening = false;
             const btn = document.getElementById('voiceBtn');
             btn.classList.remove('listening');
             btn.innerText = '🎤';
-        }
-
-        // 🧠 مخ المنصة: ربط الكلمات بالأفعال
-        function executeVoiceCommand(cmd) {
-            if (cmd.includes('طالب') || cmd.includes('عجلة') || cmd.includes('اختار')) {
-                openModal('modalRandom');
-                setTimeout(spinWheel, 500); // فتح العجلة ولفها تلقائياً
-            } 
-            else if (cmd.includes('رادار') || cmd.includes('إزعاج')) {
-                openModal('modalRadar');
-                setTimeout(toggleNoiseRadar, 500); // تشغيل الرادار تلقائياً
-            } 
-            else if (cmd.includes('مؤقت') || cmd.includes('وقت') || cmd.includes('نشاط')) {
-                openModal('modalTimer');
-            } 
-            else if (cmd.includes('تقارير') || cmd.includes('شهادات')) {
-                generateDetailedReports();
-            } 
-            else if (cmd.includes('إخفاء') || cmd.includes('الكشف')) {
-                toggleTableVisibility();
-            }
-            else if (cmd.includes('شرف') || cmd.includes('أبطال')) {
-                toggleHonorRoll();
-            }
-            else {
-                alert("المنصة: عذراً أستاذ معاذ، لم أتعرف على الأمر (" + cmd + ")");
-            }
         }
     </script>
 </body>
