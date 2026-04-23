@@ -33,7 +33,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
-            padding: 20px 80px 60px 20px;
+            padding: 20px 80px 60px 80px; /* تم تعديل الهوامش لتناسب الشريطين */
             color: var(--text-color); 
             transition: 0.3s; 
             min-height: 100vh;
@@ -50,11 +50,20 @@
             z-index: -1;
         }
 
-        .sidebar-tools {
+        /* --- تنسيقات الأشرطة الجانبية (يمين ويسار) --- */
+        .sidebar-right {
             position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
             display: flex; flex-direction: column; gap: 12px;
             background: var(--card-bg); padding: 15px 10px;
             border-radius: 30px; box-shadow: -2px 5px 15px rgba(0,0,0,0.15);
+            z-index: 1000; border: 1px solid var(--border-color);
+        }
+
+        .sidebar-left {
+            position: fixed; left: 10px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 12px;
+            background: var(--card-bg); padding: 15px 10px;
+            border-radius: 30px; box-shadow: 2px 5px 15px rgba(0,0,0,0.15);
             z-index: 1000; border: 1px solid var(--border-color);
         }
 
@@ -67,12 +76,21 @@
         }
         .side-icon:hover { transform: scale(1.1); }
         
-        .side-icon::after {
+        /* تأثيرات النص التوضيحي للشريط الأيمن */
+        .sidebar-right .side-icon::after {
             content: attr(data-title); position: absolute; right: 55px;
             background: #333; color: #fff; padding: 5px 10px; border-radius: 5px;
             font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.3s;
         }
-        .side-icon:hover::after { opacity: 1; right: 60px; }
+        .sidebar-right .side-icon:hover::after { opacity: 1; right: 60px; }
+
+        /* تأثيرات النص التوضيحي للشريط الأيسر */
+        .sidebar-left .side-icon::after {
+            content: attr(data-title); position: absolute; left: 55px;
+            background: #333; color: #fff; padding: 5px 10px; border-radius: 5px;
+            font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        .sidebar-left .side-icon:hover::after { opacity: 1; left: 60px; }
 
         .bg-export { background: #1d6f42; }
         .bg-repo { background: #6c5ce7; }
@@ -85,12 +103,13 @@
         .bg-honor { background: #f1c40f; color:#000; }
 
         .btn-floating-save {
-            position: fixed; bottom: 30px; left: 30px; background-color: #27ae60; color: white;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); /* تم توسط الزر السفلي */
+            background-color: #27ae60; color: white;
             border: none; border-radius: 50px; padding: 12px 25px; font-size: 16px; font-weight: bold;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; display: flex;
             align-items: center; gap: 8px; transition: transform 0.2s, background-color 0.2s;
         }
-        .btn-floating-save:hover { transform: scale(1.05); background-color: #219653; }
+        .btn-floating-save:hover { transform: translateX(-50%) scale(1.05); background-color: #219653; }
 
         .header-container { background: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid var(--border-color);}
         h2 { text-align: center; color: var(--text-color); margin: 0 0 5px 0; }
@@ -206,19 +225,10 @@
         .ai-footer { padding: 10px; display: flex; gap: 5px; border-top: 1px solid var(--border-color); }
         .ai-input { flex: 1; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); }
         .ai-send { background: #6c5ce7; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        /* تنسيق زر التحكم الصوتي */
-        .voice-btn {
-            position: fixed; bottom: 30px; left: 240px; 
-            width: 50px; height: 50px; border-radius: 50%;
-            background: #e74c3c; color: white; border: none;
-            font-size: 24px; cursor: pointer; display: flex;
-            justify-content: center; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000;
-            transition: 0.3s;
-        }
-        .voice-btn:hover { transform: scale(1.1); }
-        .voice-btn.listening {
-            background: #c0392b;
+        
+        /* وميض زر الصوت */
+        .listening {
+            background: #c0392b !important;
             animation: pulse-ring 1s infinite;
         }
         @keyframes pulse-ring {
@@ -234,23 +244,26 @@
     <div class="glass-overlay"></div>
     <div id="offline-banner">⚠️ أنت غير متصل بالإنترنت حالياً. التغييرات ستحفظ محلياً وتُرسل لاحقاً.</div>
     <div id="honorTickerWrap" class="honor-ticker-wrap" onclick="this.style.display='none'"><div class="honor-ticker-container"><div id="honorTickerText" class="honor-ticker"></div></div></div>
-    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="التحكم الصوتي">🎤</button>
-
+    
     <button class="btn-floating-save" id="btnFloatSave" onclick="submitData()">
         💾 حفظ ومزامنة البيانات
     </button>
 
-    <div class="sidebar-tools">
+    <div class="sidebar-right">
+        <button class="side-icon" style="background: #c0392b;" id="voiceBtn" onclick="toggleVoice()" data-title="التحكم الصوتي">🎤</button>
         <button class="side-icon bg-export" data-title="تصدير إكسل" onclick="exportToExcel()">📊</button>
         <button class="side-icon bg-repo" data-title="المستودع السحابي" onclick="openRepoModal()">📂</button>
+        <button class="side-icon bg-reports" data-title="تقارير وشهادات" onclick="generateDetailedReports()">📜</button>
+        <button class="side-icon bg-honor" data-title="إطلاق لوحة الشرف" onclick="toggleHonorRoll()">🏆</button>
+    </div>
+
+    <div class="sidebar-left">
         <button class="side-icon" style="background: #8e44ad;" data-title="دفتر التحضير" onclick="openNotesModal()">📝</button>
         <button class="side-icon bg-wheel" data-title="عجلة الاختيار" onclick="openModal('modalRandom')">🎲</button>
         <button class="side-icon bg-timer" data-title="المؤقت الذكي" onclick="openModal('modalTimer')">⏱️</button>
         <button class="side-icon bg-radar" data-title="إدارة الصف والرادار" onclick="openModal('modalRadar')">🚦</button>
         <button class="side-icon bg-groups" data-title="مقسم المجموعات" onclick="openModal('modalGroups')">👥</button>
         <button class="side-icon bg-seating" data-title="خريطة المقاعد" onclick="openSeatingChart()">🗺️</button>
-        <button class="side-icon bg-reports" data-title="تقارير وشهادات" onclick="generateDetailedReports()">📜</button>
-        <button class="side-icon bg-honor" data-title="إطلاق لوحة الشرف" onclick="toggleHonorRoll()">🏆</button>
     </div>
 
    <div class="header-container">
