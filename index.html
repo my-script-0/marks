@@ -7,8 +7,13 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2980b9">
+    
+    <!-- مكتبات خارجية (إكسل، PDF، والآن مكتبة 3D) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
@@ -33,7 +38,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
-            padding: 20px 80px 60px 80px; /* تم تعديل الهوامش لتناسب الشريطين */
+            padding: 20px 80px 60px 80px; 
             color: var(--text-color); 
             transition: 0.3s; 
             min-height: 100vh;
@@ -50,7 +55,7 @@
             z-index: -1;
         }
 
-        /* --- تنسيقات الأشرطة الجانبية (يمين ويسار) --- */
+        /* --- تنسيقات الأشرطة الجانبية --- */
         .sidebar-right {
             position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
             display: flex; flex-direction: column; gap: 12px;
@@ -76,7 +81,6 @@
         }
         .side-icon:hover { transform: scale(1.1); }
         
-        /* تأثيرات النص التوضيحي للشريط الأيمن */
         .sidebar-right .side-icon::after {
             content: attr(data-title); position: absolute; right: 55px;
             background: #333; color: #fff; padding: 5px 10px; border-radius: 5px;
@@ -84,7 +88,6 @@
         }
         .sidebar-right .side-icon:hover::after { opacity: 1; right: 60px; }
 
-        /* تأثيرات النص التوضيحي للشريط الأيسر */
         .sidebar-left .side-icon::after {
             content: attr(data-title); position: absolute; left: 55px;
             background: #333; color: #fff; padding: 5px 10px; border-radius: 5px;
@@ -101,9 +104,10 @@
         .bg-seating { background: #16a085; }
         .bg-reports { background: #34495e; }
         .bg-honor { background: #f1c40f; color:#000; }
+        .bg-3d { background: #0e1e2d; }
 
         .btn-floating-save {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); /* تم توسط الزر السفلي */
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background-color: #27ae60; color: white;
             border: none; border-radius: 50px; padding: 12px 25px; font-size: 16px; font-weight: bold;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; display: flex;
@@ -150,7 +154,6 @@
         .modal-header { text-align:center; border-bottom:2px solid #3498db; margin-bottom:15px; padding-bottom:10px; }
         .modal-header h3 { margin:0; }
 
-        /* تنسيقات المستودع السحابي */
         .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 10px; }
         .repo-card { background: var(--input-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .repo-card:hover { transform: translateY(-5px); border-color: #6c5ce7; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.15); }
@@ -204,7 +207,6 @@
         .honor-ticker { position: absolute; white-space: nowrap; font-size: 20px; font-weight: bold; line-height: 45px; animation: scrollTicker 20s linear infinite; }
         @keyframes scrollTicker { 0% { right: -100%; } 100% { right: 100%; } }
 
-        /* تنسيقات دفتر الملاحظات المضافة حديثاً */
         .note-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-family: inherit; box-sizing: border-box; }
         textarea.note-input { resize: vertical; min-height: 60px; }
         .btn-save-note { background: #8e44ad; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
@@ -213,7 +215,6 @@
         .note-card { background: var(--category-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-right: 4px solid #8e44ad; font-size: 14px; text-align: right; }
         .note-date { font-size: 11px; color: #7f8c8d; margin-bottom: 4px; direction: ltr; text-align: right;}
         
-        /* تنسيق المساعد الذكي */
         .ai-chat-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; border: 2px solid white; transition: 0.3s; }
         .ai-chat-btn:hover { transform: rotate(15deg) scale(1.1); }
         .ai-window { display: none; position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); }
@@ -226,7 +227,6 @@
         .ai-input { flex: 1; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); }
         .ai-send { background: #6c5ce7; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
         
-        /* وميض زر الصوت */
         .listening {
             background: #c0392b !important;
             animation: pulse-ring 1s infinite;
@@ -258,18 +258,20 @@
     </div>
 
     <div class="sidebar-left">
+        <!-- الزر الجديد للمختبر 3D -->
+        <button class="side-icon bg-3d" data-title="التوأم الرقمي (3D)" onclick="init3DLab()">🧊</button>
         <button class="side-icon" style="background: #8e44ad;" data-title="دفتر التحضير" onclick="openNotesModal()">📝</button>
         <button class="side-icon bg-wheel" data-title="عجلة الاختيار" onclick="openModal('modalRandom')">🎲</button>
         <button class="side-icon bg-timer" data-title="المؤقت الذكي" onclick="openModal('modalTimer')">⏱️</button>
         <button class="side-icon bg-radar" data-title="إدارة الصف والرادار" onclick="openModal('modalRadar')">🚦</button>
         <button class="side-icon bg-groups" data-title="مقسم المجموعات" onclick="openModal('modalGroups')">👥</button>
-        <button class="side-icon bg-seating" data-title="خريطة المقاعد" onclick="openSeatingChart()">🗺️</button>
+        <button class="side-icon bg-seating" data-title="خريطة المقاعد 2D" onclick="openSeatingChart()">🗺️</button>
     </div>
 
    <div class="header-container">
        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
             <img src="logo.png" alt="شعار منصة مِحور" style="width: 200px; height: auto; object-fit: contain;">
-            <h2 style="margin: 0;">منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(3.6)</span></h2>
+            <h2 style="margin: 0;">منصة مِحور - إدارة وتقييم الطلاب <span style="font-size:14px; color:#27ae60;">(3.6 - 3D Edition)</span></h2>
         </div>
         
         <p class="author-name">إعداد: أ. معاذ اليعقوبي</p>
@@ -344,8 +346,7 @@
                     <div id="uploadStatus" style="margin-top: 15px; font-weight: bold; color: #27ae60; font-size:14px;"></div>
                 </div>
 
-                <div id="fileListContainer" class="repo-grid">
-                    </div>
+                <div id="fileListContainer" class="repo-grid"></div>
             </div>
         </div>
     </div>
@@ -423,6 +424,15 @@
         </div>
     </div>
 
+    <!-- نافذة الميتافيرس (3D Lab) -->
+    <div id="modal3DLab" class="modal" style="background: rgba(10, 20, 30, 0.98); padding: 0;">
+        <div style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+            <span onclick="close3DLab()" style="color: white; font-size: 35px; background: #e74c3c; padding: 5px 15px; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">&times; إغلاق 3D</span>
+        </div>
+        <h2 style="position: absolute; top: 20px; color: #f1c40f; width: 100%; text-align: center; pointer-events: none; z-index: 10; font-family: 'Amiri', serif; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">التوأم الرقمي للمختبر 🧊 - اسحب بالماوس للتدوير، وانقر على الطاولة لمنح نقطة تميز 🌟</h2>
+        <div id="canvas-container" style="width: 100vw; height: 100vh; overflow: hidden;"></div>
+    </div>
+
     <div id="reportsModal" class="modal">
         <div class="modal-content modal-large">
             <span class="close-btn" onclick="closeModal('reportsModal')" style="background:#fff; border-radius:50%; width:30px; height:30px; text-align:center; line-height:28px;">&times;</span>
@@ -430,8 +440,7 @@
                 <h3 style="color:#34495e; margin:0 0 10px 0; text-align:center;">📜 تقارير الأداء التفصيلية</h3>
                 <input type="text" id="reportSearch" style="width:100%; box-sizing:border-box; padding:10px; border-radius:5px; border:1px solid #ccc;" placeholder="🔍 ابحث عن اسم الطالب هنا..." onkeyup="filterReports()">
             </div>
-            <div class="modal-large-body" id="reportsContainer" style="background:#eaeded;">
-                </div>
+            <div class="modal-large-body" id="reportsContainer" style="background:#eaeded;"></div>
         </div>
     </div>
 
@@ -447,8 +456,7 @@
                 <button onclick="saveNote()" class="btn-save-note" id="btnSaveNote">💾 حفظ الملاحظة لهذه الشعبة</button>
             </div>
             
-            <div id="previousNotesContainer" class="prev-notes-container">
-                </div>
+            <div id="previousNotesContainer" class="prev-notes-container"></div>
         </div>
     </div>
 
@@ -486,7 +494,7 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxRJ9AOf54xZ21OprhlyWf6T2W6kWoR0QdNr80cQayeUIGIzhXt9L3qqpwlZQvO0NdP/exec';
         
         let currentSheetData = {};
-        let currentAdminPassword = ""; // متغير لحفظ كلمة المرور من جوجل شيت
+        let currentAdminPassword = ""; 
         
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -522,10 +530,8 @@
             document.getElementById("form6").classList.toggle("active-form", g==="6"); 
             document.getElementById("form9").classList.toggle("active-form", g==="9");
             
-            // 🔴 التعديل الضروري جداً لحل مشكلة تداخل أسماء الطلاب عند الحفظ
             document.getElementById("tbody6").innerHTML = "";
             document.getElementById("tbody9").innerHTML = "";
-            // ----------------------------------------------------------------------
 
             const tbody = document.getElementById("tbody" + g); 
             tbody.innerHTML = `<tr><td colspan="15">جاري جلب البيانات... ⏳</td></tr>`;
@@ -925,50 +931,39 @@
 
       async function generateCertificate(studentName) {
     await document.fonts.ready;
-
-    // الروابط المباشرة الصحيحة لصورك على Imgur
     const ministryLogoUrl = 'https://i.imgur.com/SffDMYI.png'; 
     const schoolLogoUrl = 'https://i.imgur.com/KK7Eh6E.png';
     const personalLogoUrl = 'https://i.imgur.com/ZSszKKI.png';
 
     const loadImage = (url) => new Promise((resolve) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous'; // ضروري جداً لروابط Imgur
+        img.crossOrigin = 'anonymous';
         img.onload = () => resolve(img);
-        img.onerror = () => {
-            console.warn(`فشل تحميل: ${url}`);
-            resolve(null);
-        };
+        img.onerror = () => { console.warn(`فشل تحميل: ${url}`); resolve(null); };
         img.src = url;
     });
 
     try {
         const [minLogo, schLogo, perLogo] = await Promise.all([
-            loadImage(ministryLogoUrl),
-            loadImage(schoolLogoUrl),
-            loadImage(personalLogoUrl)
+            loadImage(ministryLogoUrl), loadImage(schoolLogoUrl), loadImage(personalLogoUrl)
         ]);
 
         const canvas = document.createElement('canvas'); 
         canvas.width = 1200; canvas.height = 850; 
         const ctx = canvas.getContext('2d');
 
-        // --- رسم الخلفية والإطار الفخم ---
         ctx.fillStyle = '#fcfdfe'; 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // علامة مائية تقنية خفيفة
         ctx.strokeStyle = 'rgba(14, 165, 233, 0.08)'; 
         ctx.lineWidth = 1.5;
         for (let i = 0; i < 40; i++) {
             ctx.beginPath(); ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height); ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height); ctx.stroke();
         }
 
-        // إطار كحلي وذهبي
         ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 8; ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
         ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(42, 42, canvas.width - 84, canvas.height - 84);
 
-        // الزوايا الهندسية
         const drawCorner = (x, y, scaleX, scaleY) => {
             ctx.save(); ctx.translate(x, y); ctx.scale(scaleX, scaleY);
             ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(120, 0); ctx.lineTo(0, 120); ctx.fill();
@@ -979,12 +974,10 @@
         drawCorner(30, 30, 1, 1); drawCorner(canvas.width - 30, 30, -1, 1);
         drawCorner(30, canvas.height - 30, 1, -1); drawCorner(canvas.width - 30, canvas.height - 30, -1, -1);
 
-        // --- رسم الشعارات بأماكن متناسقة (أحجام كبيرة) ---
-        if (minLogo) ctx.drawImage(minLogo, canvas.width - 240, 62, 200, 200); // الوزارة يميناً
-        if (schLogo) ctx.drawImage(schLogo, 72, 62, 220, 220); // المدرسة يساراً
-        if (perLogo) ctx.drawImage(perLogo, canvas.width - 382, 672, 240, 240); // شعارك الخاص
+        if (minLogo) ctx.drawImage(minLogo, canvas.width - 240, 62, 200, 200);
+        if (schLogo) ctx.drawImage(schLogo, 72, 62, 220, 220);
+        if (perLogo) ctx.drawImage(perLogo, canvas.width - 382, 672, 240, 240);
 
-        // --- كتابة النصوص ---
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
         ctx.font = '22px "Amiri", serif'; ctx.fillStyle = '#64748b'; 
         ctx.fillText('سَلْطَنَةُ عُمَان - وَزَارَةُ التَّعْلِيم', canvas.width / 2, 100);
@@ -1012,7 +1005,6 @@
         ctx.font = 'bold 24px "Amiri", serif'; ctx.fillStyle = '#0f172a'; ctx.fillText('مُعَلِّمُ المَادَّة', 250, 720); 
         ctx.font = '26px "Amiri", serif'; ctx.fillStyle = '#475569'; ctx.fillText('أ. مُعَاذ اليَعْقُوبِي', 250, 765);
 
-        // التذييل
         ctx.font = '16px Tahoma'; ctx.fillStyle = '#94a3b8'; 
         ctx.fillText('منصة مِحور', canvas.width / 2, 820);
         
@@ -1085,33 +1077,27 @@
             XLSX.writeFile(wb, `درجات_الصف_${g}_شعبة_${s}.xlsx`);
         }
 
-        // --- دالة التحكم بكلمة المرور لإظهار الكشف ---
         function toggleTableVisibility() {
             const wrapper = document.getElementById("tableAreaWrapper");
             const btn = document.getElementById("toggleTableBtn");
             
-            // إذا كان الكشف مخفياً (الحالة الافتراضية) ونريد إظهاره
             if (wrapper.style.display === "none" || wrapper.style.display === "") {
                 const pass = prompt("🔒 الكشف الأكاديمي محمي. الرجاء إدخال كلمة المرور:");
-                
-                // يتم مقارنتها بكلمة المرور القادمة من السكريبت، أو 1234 كرمز طوارئ
                 if (pass === currentAdminPassword || pass === "1234") { 
                     wrapper.style.display = "block";
                     btn.innerHTML = "إخفاء الكشف";
-                    btn.style.background = "#e74c3c"; // يتحول للأحمر
+                    btn.style.background = "#e74c3c"; 
                 } else if (pass !== null) {
                     alert("❌ كلمة المرور غير صحيحة!");
                 }
             } 
-            // إذا كان الكشف ظاهراً ونريد إخفاءه (لا يحتاج رمز للإخفاء)
             else {
                 wrapper.style.display = "none";
                 btn.innerHTML = "إظهار الكشف";
-                btn.style.background = "#3498db"; // يعود للون الأزرق
+                btn.style.background = "#3498db"; 
             }
         }
         
-        // --- دوال المستودع السحابي ---
         function openRepoModal() {
             openModal('modalRepo');
             loadRepoFiles();
@@ -1121,7 +1107,6 @@
             const container = document.getElementById("fileListContainer");
             container.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">جاري جلب الملفات من السحابة... ⏳</p>`;
             
-            // يتم إرسال طلب لـ Google Script لجلب الملفات
             fetch(`${scriptURL}?action=getFiles`)
             .then(response => response.json())
             .then(data => {
@@ -1177,7 +1162,7 @@
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                     body: JSON.stringify(payload) 
                 })
-                .then(r => r.text()) // هنا سنقرأ الرد كنص لنعرف الخطأ بدقة
+                .then(r => r.text()) 
                 .then(text => {
                     console.log("رد خوادم جوجل:", text);
                     try {
@@ -1188,13 +1173,11 @@
                             playSound(880, 'sine', 0.2, 0.1);
                             setTimeout(() => { statusDiv.innerHTML = ""; loadRepoFiles(); }, 2000);
                         } else {
-                            // إذا الخلل من الكود، سيظهر لك هنا
                             statusDiv.innerHTML = "❌ خطأ من السيرفر: " + (d.message || text);
                             statusDiv.style.color = "#e74c3c";
                             alert("تفاصيل الخطأ من جوجل: " + (d.message || text));
                         }
                     } catch(err) {
-                        // إذا كان الخلل من حسابات جوجل (تداخل حسابات)
                         statusDiv.innerHTML = "❌ تم حظر الرفع بواسطة جوجل (جرب متصفح خفي).";
                         statusDiv.style.color = "#e74c3c";
                         alert("يبدو أن هناك تداخلاً في حسابات جوجل المفتوحة في المتصفح.\n\nالرجاء فتح المنصة في نافذة 'تصفح خفي' (Incognito) والتجربة مرة أخرى.\n\nالرد المخفي: " + text.substring(0, 150));
@@ -1239,10 +1222,9 @@
             });
         }
 
-        // --- دوال دفتر الملاحظات ---
         function openNotesModal() {
             openModal('modalNotes');
-            loadTeacherNotes(); // جلب الملاحظات فقط عند فتح النافذة
+            loadTeacherNotes(); 
         }
 
         function loadTeacherNotes() {
@@ -1304,7 +1286,6 @@
             .finally(() => { btn.innerText = "💾 حفظ الملاحظة لهذه الشعبة"; btn.disabled = false; });
         }
 
-        // --- دالة تحميل المجموعات كـ PDF ---
         function downloadGroupsPDF() {
             const groupsContent = document.getElementById("groupsDisplay").innerHTML;
             if (!groupsContent || groupsContent.trim() === "") {
@@ -1355,8 +1336,6 @@
             });
         }
 
-        // --- دوال المساعد الذكي ---
-        // --- دوال المساعد الذكي (الاتصال المباشر بالمتصفح) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
             win.style.display = (win.style.display === "flex") ? "none" : "flex";
@@ -1368,20 +1347,15 @@
             const msg = input.value.trim();
             if (!msg) return;
 
-            // عرض رسالة المستخدم
             body.innerHTML += `<div class="ai-msg user">${msg}</div>`;
             input.value = "";
             body.scrollTop = body.scrollHeight;
 
-            // عرض رسالة الانتظار
             const loadingId = "ai-loading-" + Date.now();
             body.innerHTML += `<div class="ai-msg bot" id="${loadingId}">⏳ جاري التفكير...</div>`;
             body.scrollTop = body.scrollHeight;
 
-            // 🌟 1. ضع مفتاح (API Key) الجديد الخاص بحسابك الشخصي هنا
             const apiKey = "AIzaSyDY7StSk3zUPo0gJ6KDIFDvGnD3vO0qX_g"; 
-            
-            // 🌟 2. رابط الاتصال المباشر من المتصفح لنموذج 2.0 السريع
             const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
             const payload = {
@@ -1393,7 +1367,6 @@
             };
 
             try {
-                // الاتصال المباشر دون المرور بجوجل سكريبت
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1414,26 +1387,24 @@
             
             body.scrollTop = body.scrollHeight;
         }
-        // --- نظام التحكم الصوتي المتقدم ---
-       // --- نظام التحكم الصوتي المتقدم (نسخة السرعة الفائقة 🚀) ---
+
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;
         let isListening = false;
-        let commandExecuted = false; // مفتاح لمنع تكرار تنفيذ الأمر في نفس اللحظة
+        let commandExecuted = false; 
 
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
             recognition.lang = 'ar-OM'; 
             recognition.continuous = false; 
-            // 🌟 السر الأول: التقاط الكلمة أثناء النطق مباشرة دون انتظار انتهاء الجملة
             recognition.interimResults = true; 
 
             recognition.onstart = function() {
-                commandExecuted = false; // تصفير الحالة مع كل ضغطة مايك
+                commandExecuted = false; 
             };
 
             recognition.onresult = function(event) {
-                if (commandExecuted) return; // إذا تم تنفيذ الأمر، تجاهل باقي الكلام
+                if (commandExecuted) return; 
 
                 let transcript = '';
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -1442,7 +1413,6 @@
                 
                 const cmd = transcript.trim().toLowerCase();
                 
-                // 🌟 الفحص اللحظي: بمجرد سماع الكلمة المفتاحية، نفذ فوراً!
                 if (cmd.includes('طالب') || cmd.includes('عجلة') || cmd.includes('اختار')) {
                     executeFastCommand('modalRandom', spinWheel);
                 } 
@@ -1467,13 +1437,11 @@
             recognition.onerror = function(event) { stopListening(); };
         }
 
-        // 🌟 دالة التنفيذ الخاطف (بِدون تأخير)
         function executeFastCommand(modalId, actionFunction) {
-            commandExecuted = true; // نقفل التنفيذ لكي لا يتكرر
-            stopListening(); // نغلق المايك فوراً لتسريع المتصفح
+            commandExecuted = true; 
+            stopListening(); 
             openModal(modalId);
             if (actionFunction) {
-                // 🌟 السر الثاني: قللنا التأخير من 500 إلى 50 مللي ثانية فقط (استجابة فورية)
                 setTimeout(actionFunction, 50); 
             }
         }
@@ -1498,6 +1466,250 @@
             const btn = document.getElementById('voiceBtn');
             btn.classList.remove('listening');
             btn.innerText = '🎤';
+        }
+
+        /* -------------------------------------------------------------------------
+           نظام التوأم الرقمي للمختبر (3D Digital Twin - Metaverse) 
+           تم برمجته بالكامل بمكتبة Three.js
+        ------------------------------------------------------------------------- */
+        let scene, camera, renderer, controls, raycaster, mouse, animationId;
+        let deskMeshes = [];
+
+        // دالة إنشاء النص (أسماء الطلاب والنقاط) كصورة لتركيبها في الـ 3D
+        function createTextTexture(text, points) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            
+            // خلفية اللوحة
+            ctx.fillStyle = '#2980b9';
+            ctx.fillRect(0, 0, 256, 128);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(2, 2, 252, 124);
+
+            // إعدادات الخط
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 30px "Amiri", Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // كتابة الاسم
+            ctx.fillText(text, 128, 40);
+            
+            // كتابة نقاط التميز
+            ctx.fillStyle = '#f1c40f';
+            ctx.font = 'bold 36px Arial';
+            ctx.fillText('🌟 ' + points, 128, 95);
+            
+            const tex = new THREE.CanvasTexture(canvas);
+            return tex;
+        }
+
+        function init3DLab() {
+            // إظهار النافذة
+            document.getElementById('modal3DLab').style.display = 'flex';
+            
+            // إذا كان العالم مبنياً مسبقاً، نكتفي بتحديث بيانات الأسماء فقط
+            if(scene) {
+                buildDesks();
+                return;
+            }
+
+            const container = document.getElementById('canvas-container');
+            
+            // 1. إعداد المشهد (Scene)
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a141e); // لون ليلي/تقني
+            scene.fog = new THREE.Fog(0x0a141e, 10, 50);
+
+            // 2. إعداد الكاميرا (Camera)
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 15, 25);
+
+            // 3. إعداد المصيّر (Renderer)
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // إضافة العرض داخل الحاوية
+            container.appendChild(renderer.domElement);
+
+            // 4. التحكم بالماوس (OrbitControls)
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05; // منع النزول تحت الأرض
+
+            // 5. الإضاءة (Lights)
+            const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambient);
+            
+            const dirLight = new THREE.DirectionalLight(0x4facfe, 0.8);
+            dirLight.position.set(10, 20, 10);
+            scene.add(dirLight);
+
+            // 6. الأرضية الشبكية (Grid Floor) لمحاكاة الواقع الافتراضي
+            const gridHelper = new THREE.GridHelper( 60, 60, 0x3498db, 0x1a252f );
+            gridHelper.position.y = -0.1;
+            scene.add( gridHelper );
+
+            const floorGeo = new THREE.PlaneGeometry(60, 60);
+            const floorMat = new THREE.MeshBasicMaterial({ color: 0x050a0f });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -0.15;
+            scene.add(floor);
+
+            // 7. بناء طاولات الطلاب
+            buildDesks();
+
+            // 8. إعداد نظام الضغط بالماوس (Raycaster)
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            window.addEventListener('resize', onWindowResize, false);
+            renderer.domElement.addEventListener('click', onDocumentMouseClick, false);
+
+            // 9. تشغيل حلقة الحركة (Animation Loop)
+            animate();
+            playSound(600, 'sine', 0.5, 0.2); // صوت تشغيل الميتافيرس
+        }
+
+        function buildDesks() {
+            // تنظيف الطاولات القديمة إذا تم تغيير الشعبة
+            deskMeshes.forEach(m => scene.remove(m));
+            deskMeshes = [];
+
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            const students = studentsData[g][s] || [];
+
+            // ترتيب مختبر افتراضي (صفوف وأعمدة)
+            let cols = 6;
+            let spacingX = 4.5;
+            let spacingZ = 4.5;
+            let startX = -((cols-1) * spacingX) / 2;
+            let startZ = -10;
+
+            // مواد البناء (الألوان)
+            const deskGeo = new THREE.BoxGeometry(2.5, 1.5, 1.5);
+            const deskMatNormal = new THREE.MeshStandardMaterial({ color: 0x2c3e50, roughness: 0.7 });
+            
+            const screenGeo = new THREE.BoxGeometry(1.5, 1, 0.1);
+            const screenMat = new THREE.MeshStandardMaterial({ color: 0x1abc9c, emissive: 0x052c24 });
+
+            students.forEach((name, i) => {
+                let row = Math.floor(i / cols);
+                let col = i % cols;
+                
+                let x = startX + col * spacingX;
+                let z = startZ + row * spacingZ;
+
+                // إنشاء الطاولة الرئيسية (كحاوية Group)
+                const deskGroup = new THREE.Group();
+                deskGroup.position.set(x, 0.75, z);
+
+                // هيكل الطاولة
+                const deskMesh = new THREE.Mesh(deskGeo, deskMatNormal.clone());
+                deskMesh.userData = { isDesk: true, studentIndex: i }; // مهم لتعرف الماوس عليها
+                deskGroup.add(deskMesh);
+                
+                // شاشة الكمبيوتر
+                const screen = new THREE.Mesh(screenGeo, screenMat);
+                screen.position.set(0, 1.3, 0);
+                deskGroup.add(screen);
+
+                // لوحة اسم الطالب والنقاط (مرفوعة فوق الشاشة)
+                let shortName = name.split(' ').slice(0, 2).join(' '); // أول اسمين فقط
+                let intInput = document.getElementById(`int-${i}`);
+                let intVal = intInput ? intInput.value : 0;
+                
+                let tex = createTextTexture(shortName, intVal);
+                const nameGeo = new THREE.PlaneGeometry(2, 1);
+                const nameMat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, transparent: true });
+                const namePlate = new THREE.Mesh(nameGeo, nameMat);
+                namePlate.position.set(0, 2.8, 0);
+                // تدوير مبدئي لتواجه الكاميرا
+                namePlate.userData = { isNamePlate: true };
+                deskGroup.add(namePlate);
+
+                // تخزين معلومات الطالب في الهيكل للتفاعل
+                deskGroup.userData = { studentIndex: i, name: name };
+                
+                deskMeshes.push(deskGroup);
+                scene.add(deskGroup);
+            });
+        }
+        
+        function onDocumentMouseClick(event) {
+            if(document.getElementById('modal3DLab').style.display !== 'flex') return;
+
+            // تحويل إحداثيات الماوس لـ 3D
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+
+            // البحث عن تقاطعات الشعاع مع الطاولات
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            
+            if (intersects.length > 0) {
+                // البحث عن المجموعة الأم التي تحتوي بيانات الطالب
+                let obj = intersects[0].object;
+                while(obj.parent && obj.type !== "Scene") {
+                    if (obj.userData.studentIndex !== undefined || (obj.parent && obj.parent.userData.studentIndex !== undefined)) {
+                        break;
+                    }
+                    obj = obj.parent;
+                }
+                
+                // إذا وجدنا الطالب
+                let studentIdx = obj.userData.studentIndex !== undefined ? obj.userData.studentIndex : (obj.parent ? obj.parent.userData.studentIndex : null);
+                
+                if(studentIdx !== null && studentIdx !== undefined) {
+                    // زيادة نقطة التميز في الواجهة القديمة
+                    changeReinfVal(`int-${studentIdx}`, 1);
+                    playSound(800, 'triangle', 0.1, 0.1);
+                    
+                    // تأثير بصري مبهر (وميض الطاولة باللون الأخضر)
+                    let theDeskMesh = obj.type === "Group" ? obj.children[0] : obj;
+                    if(theDeskMesh && theDeskMesh.material) {
+                        let oldColor = theDeskMesh.material.color.getHex();
+                        theDeskMesh.material.color.setHex(0x27ae60); // لون أخضر فاقع
+                        
+                        setTimeout(() => { 
+                            theDeskMesh.material.color.setHex(oldColor); 
+                            buildDesks(); // إعادة بناء الغرفة لتحديث أرقام النقاط
+                        }, 250);
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            controls.update();
+            
+            // جعل لوحات الأسماء تدور دائماً لتواجه الشاشة (الكاميرا)
+            deskMeshes.forEach(deskGroup => {
+                deskGroup.children.forEach(child => {
+                    if(child.userData.isNamePlate) {
+                        child.quaternion.copy(camera.quaternion);
+                    }
+                });
+            });
+            
+            renderer.render(scene, camera);
+        }
+
+        function close3DLab() {
+            document.getElementById('modal3DLab').style.display = 'none';
+        }
+
+        function onWindowResize() {
+            if(!camera || !renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         }
     </script>
 </body>
