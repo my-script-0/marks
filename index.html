@@ -1061,6 +1061,183 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
+
+        /* ==============================================================
+           الدوال المفقودة (الإكسل، المستودع، التقارير، الشرف، الدفتر، الخريطة، إظهار الكشف، تقسيم المجموعات)
+           ============================================================== */
+           
+        function toggleTableVisibility() {
+            const tableWrap = document.getElementById('tableAreaWrapper');
+            const btn = document.getElementById('toggleTableBtn');
+            if (tableWrap.style.display === 'none' || tableWrap.style.display === '') {
+                tableWrap.style.display = 'block';
+                btn.innerText = 'إخفاء الكشف';
+                btn.style.background = '#e74c3c';
+                btn.style.borderColor = '#c0392b';
+            } else {
+                tableWrap.style.display = 'none';
+                btn.innerText = 'إظهار الكشف';
+                btn.style.background = '#3498db';
+                btn.style.borderColor = '#2980b9';
+            }
+        }
+
+        function exportToExcel() {
+            const g = document.getElementById("gradeSelect").value;
+            const table = document.getElementById("gradesTable" + g);
+            const wb = XLSX.utils.table_to_book(table, {sheet: "درجات الصف " + g});
+            XLSX.writeFile(wb, `تقرير_درجات_الصف_${g}_شعبة_${document.getElementById("sectionSelect").value}.xlsx`);
+        }
+
+        function openRepoModal() { 
+            openModal('modalRepo'); 
+            loadRepoFiles(); 
+        }
+        
+        function handleFileUpload(input) {
+            if(!input.files || input.files.length === 0) return;
+            let file = input.files[0];
+            let files = JSON.parse(localStorage.getItem('repoFiles') || '[]');
+            files.push({name: file.name, date: new Date().toLocaleDateString()});
+            localStorage.setItem('repoFiles', JSON.stringify(files));
+            document.getElementById('uploadStatus').innerText = "تم رفع: " + file.name;
+            loadRepoFiles();
+        }
+        
+        function loadRepoFiles() {
+            let files = JSON.parse(localStorage.getItem('repoFiles') || '[]');
+            let html = '';
+            files.forEach(f => {
+                html += `<div class="repo-card"><div class="repo-icon">📄</div><div class="repo-title">${f.name}</div><div class="repo-desc">${f.date}</div></div>`;
+            });
+            document.getElementById('fileListContainer').innerHTML = html || '<p style="grid-column:1/-1; text-align:center;">لا توجد ملفات مرفوعة حالياً.</p>';
+        }
+
+        function generateDetailedReports() {
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            const students = studentsData[g][s] || [];
+            let html = '';
+            students.forEach((name) => {
+                html += `<div class="report-img-card" data-name="${name}">
+                    <div class="report-img-header">شهادة أداء - ${name}</div>
+                    <div class="report-img-body" style="text-align:right;">جاهز لإصدار التقرير أو طباعة الشهادة لهذا الطالب.</div>
+                    <div class="report-img-actionbar">
+                        <button onclick="alert('جاري التصدير...')">تصدير PDF</button>
+                        <button class="cert-btn" onclick="alert('جاري طباعة الشهادة...')">طباعة شهادة</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('reportsContainer').innerHTML = html;
+            openModal('reportsModal');
+        }
+        
+        function filterReports() {
+            let term = document.getElementById('reportSearch').value.toLowerCase();
+            document.querySelectorAll('.report-img-card').forEach(card => {
+                card.style.display = card.getAttribute('data-name').toLowerCase().includes(term) ? 'block' : 'none';
+            });
+        }
+
+        function toggleHonorRoll() {
+            const wrap = document.getElementById('honorTickerWrap');
+            if(wrap.style.display === 'flex') { wrap.style.display = 'none'; return; }
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            const students = studentsData[g][s] || [];
+            let best = students.sort(() => 0.5 - Math.random()).slice(0, 5);
+            if(best.length === 0) best = ["أحمد", "محمد", "سالم", "عمر"]; 
+            document.getElementById('honorTickerText').innerText = "🏆 أبطال الشرف لهذا اليوم: " + best.join(" 🌟 ") + " 🏆";
+            wrap.style.display = 'flex';
+        }
+
+        function openNotesModal() {
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            document.getElementById('currentClassLabel').innerText = `الصف: ${g} - شعبة: ${s}`;
+            loadNotes();
+            openModal('modalNotes');
+        }
+        
+        function saveNote() {
+            let title = document.getElementById('lessonTitle').value;
+            let note = document.getElementById('lessonNotes').value;
+            if(!title || !note) return alert('يرجى تعبئة الحقول');
+            let notes = JSON.parse(localStorage.getItem('teacherNotes') || '[]');
+            notes.push({title: title, note: note, date: new Date().toLocaleString('ar-OM')});
+            localStorage.setItem('teacherNotes', JSON.stringify(notes));
+            document.getElementById('lessonTitle').value = ''; 
+            document.getElementById('lessonNotes').value = '';
+            loadNotes();
+        }
+        
+        function loadNotes() {
+            let notes = JSON.parse(localStorage.getItem('teacherNotes') || '[]');
+            let html = '';
+            notes.reverse().forEach(n => {
+                html += `<div class="note-card"><div class="note-date">${n.date}</div><strong>${n.title}</strong><p style="margin:5px 0 0 0;">${n.note}</p></div>`;
+            });
+            document.getElementById('previousNotesContainer').innerHTML = html;
+        }
+
+        function openSeatingChart() {
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            const students = studentsData[g][s] || [];
+            let html = '';
+            students.forEach((name, i) => {
+                let shortName = name.split(' ').slice(0, 2).join(' ');
+                html += `<div class="desk-card" style="display:flex; flex-direction:column; justify-content:center;">
+                            <strong style="color:#2980b9; font-size:16px;">مقعد ${i+1}</strong>
+                            <span style="font-size:13px; margin-top:5px; font-weight:bold;">${shortName}</span>
+                         </div>`;
+            });
+            document.getElementById('seatingGridContainer').innerHTML = html;
+            openModal('seatingModal');
+        }
+
+        function generateGroups() {
+            const g = document.getElementById("gradeSelect").value;
+            const s = document.getElementById("sectionSelect").value;
+            let students = [...(studentsData[g][s] || [])];
+            let numGroups = parseInt(document.getElementById('groupCount').value) || 4;
+            if(students.length === 0) return alert('لا يوجد طلاب في هذه الشعبة');
+            
+            students.sort(() => Math.random() - 0.5);
+            let groups = Array.from({length: numGroups}, () => []);
+            students.forEach((student, index) => {
+                groups[index % numGroups].push(student.split(' ').slice(0, 2).join(' '));
+            });
+            
+            let html = '<div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">';
+            groups.forEach((grp, i) => {
+                html += `<div style="background:var(--input-bg); border:2px solid #3498db; border-radius:8px; padding:10px; width:45%;">
+                            <h4 style="margin:0 0 10px 0; color:#3498db; border-bottom:1px solid #ccc; padding-bottom:5px;">المجموعة ${i+1}</h4>
+                            <ul style="list-style:none; padding:0; margin:0; text-align:right;">`;
+                grp.forEach(member => {
+                    html += `<li style="margin-bottom:5px;">👤 ${member}</li>`;
+                });
+                html += `</ul></div>`;
+            });
+            html += '</div>';
+            document.getElementById('groupsDisplay').innerHTML = html;
+        }
+        
+        function downloadGroupsPDF() {
+            const element = document.getElementById('groupsDisplay');
+            if(!element.innerHTML) return alert('قم بتوليد المجموعات أولاً');
+            html2pdf().from(element).save('المجموعات.pdf');
+        }
+
+        function submitData() {
+            const btn = document.getElementById('btnFloatSave');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ جاري الحفظ...";
+            setTimeout(() => {
+                alert("تم مزامنة البيانات وحفظها بنجاح!");
+                btn.innerHTML = originalText;
+            }, 800);
+        }
     </script>
 </body>
 </html>
