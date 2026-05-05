@@ -445,20 +445,13 @@
         </div>
     </div>
 
-    <!-- نافذة صانع الاختبارات الجديدة (الاستقبال المباشر للنص وتجهيز الرابط) -->
+    <!-- نافذة صانع الاختبارات الجديدة -->
     <div id="modalQuizForm" class="modal">
         <div class="modal-content modal-large">
             <span class="close-btn" onclick="closeModal('modalQuizForm')">&times;</span>
             <div class="modal-header"><h3 style="color:#2c3e50;">📝 صانع ومجهز الاختبارات التفاعلية</h3></div>
             
             <div class="modal-large-body">
-                <!-- المربع الجديد لحفظ رابطك -->
-                <div style="background:#eaf2f8; padding:10px; border-radius:8px; border:1px solid #3498db; margin-bottom:15px;">
-                    <label style="font-weight:bold; color:#2980b9; font-size:13px; display:block; margin-bottom:5px;">🔗 رابط ملف الاختبار الخاص بك (GitHub):</label>
-                    <input type="text" id="githubQuizUrl" class="note-input" placeholder="مثال: https://moaaz.github.io/Quiz/" onchange="localStorage.setItem('githubQuizUrl', this.value)" style="direction:ltr; text-align:left; margin-bottom:0; border-color:#bdc3c7;">
-                    <span style="font-size:11px; color:#7f8c8d;">سيتم حفظ الرابط تلقائياً ولن تضطر لإدخاله مجدداً.</span>
-                </div>
-
                 <p style="font-size:14px; font-weight:bold; color:var(--text-color); margin-top:0;">انسخ أسئلة الاختبار والصقها في المربع بالأسفل.</p>
                 <p style="font-size:13px; color:#7f8c8d; margin-top:-5px;">💡 اترك سطر فارغ بين كل سؤال. (السطر الواحد = إجابة قصيرة/طويلة، الأسطر المتعددة = اختيار من متعدد).</p>
                 
@@ -490,12 +483,6 @@
     </div>
 
     <script>
-        // استدعاء رابط الجيت هاب المحفوظ عند فتح الصفحة
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedUrl = localStorage.getItem('githubQuizUrl');
-            if(savedUrl) document.getElementById('githubQuizUrl').value = savedUrl;
-        });
-
         const studentsData = { 
             "9": { 
                 "1": ["أحمد بن محمد بن خميس ضحي الغافري", "أنس بن سالم بن مسلم سالم المعمري", "المؤيد بن سباع بن خلفان سعيد الغافري", "المنذر بن سعيد بن علي سالم الشهومي", "تركي بن سعيد بن مطر علي الحاتمي", "تركي بن سلطان بن عبدالله سيف الغافري", "تميم بن خالد بن سيف حمد التميمي", "تيمور بن سعيد بن سليـّم خميس المقرشي", "جاسم بن عبدالله بن حميد راشد العبري", "جراح بن سعيد بن سالم سعيد الغافري", "حميد بن سعيد بن حميد سعيد الغافري", "خالد الوليد عمر يعقوب", "راشد بن جمعه بن عبدالله خميس الغافري", "سامي بن أحمد بن سرور عبدالله المقبالي", "سعود بن راشد بن ظاهر ظاوي الغافري", "سعود بن سعيد بن خلفان سعيد الغافري", "سعيد بن خالد بن سعيد حمد السعيدي", "سلطان بن سعيد بن صياح مبارك الغافري", "سلطان بن محمود بن عيد محبوب الغافري", "سيف بن عبدالله بن سيف سليمان الحاتمي", "عبد الملك بن سعيد بن مانع عامر الغافري", "عمار بن بخيت بن علي بخيت الغافري", "عمر بن سالم بن حميد مرهون الشكيلي", "غيث بن أيوب بن سيف سلطان الغافري", "فلا ح بن ناصر بن سالم أحمد الغافري", "كهلان بن قحطان بن زاهر ناصر الغريبي", "لؤي بن أنور بن حمد راشد الشكيلي", "محمد بن أحمد بن طالب سيف الغافري", "محمد بن عبدالله بن مبارك سعيد الناصري", "محمد بن عمر بن سالم أحمد الغافري", "نهيان بن علي بن خميس سيف الغافري", "نواف بن محمد بن مطر علي الحاتمي", "هشام بن راشد بن مسعود راشد الناصري", "وسام بن عبدالله بن حمد عبيد الغافري", "يوسف بن أحمد بن حمد عبيد الغافري"], 
@@ -1423,24 +1410,16 @@
         }
 
         function generateQuizLink() {
-            // التحقق من وجود رابط الجيت هاب
-            let userUrl = document.getElementById('githubQuizUrl').value.trim();
-            if(!userUrl) return alert("⚠️ الرجاء إدخال رابط ملف الاختبار (GitHub) الخاص بك في المربع العلوي أولاً.");
-            
-            // تنظيف الرابط
-            if(!userUrl.endsWith('/')) userUrl += '/';
-            if(userUrl.includes('?')) userUrl = userUrl.split('?')[0];
-
             const btn = document.getElementById('btnGenerateLink');
             const res = document.getElementById('quizLinkResult');
             btn.disabled = true;
             btn.innerText = "⏳ جاري حفظ الاختبار وإنشاء الرابط القصير...";
             
-            // تقليل طول الرمز العشوائي ليكون 4 خانات فقط لسهولة أكبر
+            // توليد رمز عشوائي قصير (4 حروف/أرقام)
             const quizId = Math.random().toString(36).substring(2, 6).toUpperCase();
             const payload = { action: "save_quiz", quizId: quizId, questions: currentParsedQuiz };
 
-            // 1. إرسال البيانات للحفظ في جوجل شيت
+            // إرسال البيانات للحفظ في جوجل شيت
             fetch(scriptURL, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
@@ -1449,15 +1428,16 @@
             .then(r => r.json())
             .then(d => {
                 if(d.status === "success") {
-                    const realQuizLink = userUrl + "?q=" + quizId;
+                    // التقاط الرابط الحالي لمنصتك تلقائياً ودمجه مع كود الاختبار
+                    let autoUrl = window.location.origin + window.location.pathname;
+                    const realQuizLink = autoUrl + "?q=" + quizId;
                     
-                    // 2. استخدام واجهة برمجة تطبيقات (API) مجانية لتقصير الرابط
+                    // إرسال الرابط المدمج لخدمة التقصير
                     fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(realQuizLink)}`)
                     .then(resShort => resShort.json())
                     .then(dataShort => {
-                        // إذا نجح التقصير، استخدم الرابط القصير، وإلا استخدم الرابط العادي كبديل
                         let finalLink = dataShort.shorturl || realQuizLink;
-                        let displayLink = finalLink.replace(/^https?:\/\//, ''); // إزالة https:// لتبسيط العرض للطلاب
+                        let displayLink = finalLink.replace(/^https?:\/\//, ''); 
                         
                         res.innerHTML = `
                             <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:10px;">
@@ -1476,7 +1456,6 @@
                         playSound(800, 'sine', 0.3, 0.1);
                     })
                     .catch(err => {
-                        // في حال تعطل خدمة التقصير، نعرض الرابط الأساسي
                         res.innerHTML = `<div style="color:#e74c3c; font-weight:bold; margin-top:10px;">تم حفظ الاختبار، ولكن تعذر تقصير الرابط مؤقتاً. الرابط: ${realQuizLink}</div>`;
                     });
                     
