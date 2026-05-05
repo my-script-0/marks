@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاختبار التفاعلي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
+        .bg-mesh { background-color: #f3f4f6; background-image: radial-gradient(at 40% 20%, hsla(253,100%,74%,0.4) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189,100%,56%,0.4) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,93%,0.4) 0px, transparent 50%); background-attachment: fixed; animation: breathe 10s ease-in-out infinite alternate; }
+        @keyframes breathe { 0% { background-size: 100% 100%; } 100% { background-size: 120% 120%; } }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .option-label { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; }
+        .option-label:hover { transform: translateY(-2px); border-color: rgba(99, 102, 241, 0.4); background-color: #fff; }
+        input[type="radio"]:checked + span { font-weight: 700; color: #4f46e5; }
+        .option-label:has(input[type="radio"]:checked) { border-color: #4f46e5; background-color: #eef2ff; }
+        .no-select { user-select: none; -webkit-user-select: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-mesh py-12 px-4 relative">
+
+    <div id="loading-screen" class="glass-panel rounded-3xl p-12 text-center max-w-xl mx-auto mt-20">
+        <h2 class="text-3xl font-bold text-indigo-700 mb-4 animate-pulse">⏳ جاري تحميل الاختبار...</h2>
+        <p class="text-gray-500 font-medium">يرجى الانتظار لحظات...</p>
+    </div>
+
+    <div id="main-content" class="relative z-10 w-full max-w-5xl mx-auto hidden">
+        <div id="student-panel" class="max-w-3xl mx-auto no-select animate-fade-in">
+            <div id="student-info-step" class="glass-panel rounded-3xl p-10 text-center">
+                <div class="inline-block bg-indigo-100 p-4 rounded-full mb-6"><span class="text-5xl">🎓</span></div>
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-2">الاختبار التفاعلي</h2>
+                <p class="text-red-500 font-bold mt-2 text-sm bg-red-50 p-2 rounded-lg inline-block border border-red-100">⚠️ وضع التركيز الآمن مُفعل (يمنع النسخ أو الخروج)</p>
+                <div class="mt-10 space-y-6 text-right">
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2 text-lg">الاسم الرباعي</label>
+                        <input type="text" id="s-name" class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/20 text-lg" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2 text-lg">الصف والشعبة</label>
+                            <input type="text" id="s-grade" class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/20 text-lg" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2 text-lg">رقم الطالب (في الكشف)</label>
+                            <input type="number" id="s-id" class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl outline-none focus:ring-4 focus:ring-indigo-500/20 text-lg" required>
+                        </div>
+                    </div>
+                    <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg text-xl mt-6">
+                        🚀 بدء الاختبار الآن
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-step" class="hidden">
+                <div class="glass-panel rounded-3xl p-8 mb-8 border-t-8 border-indigo-500 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800" id="display-student-name"></h3>
+                        <p class="text-indigo-600 font-semibold mt-1" id="display-student-details"></p>
+                    </div>
+                </div>
+                <form id="quiz-form" onsubmit="submitQuiz(event)">
+                    <div id="questions-container" class="space-y-8"></div>
+                    <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-5 px-6 rounded-2xl transition-all shadow-xl text-2xl mt-10">
+                        📤 اعتماد الإجابات وإرسال
+                    </button>
+                </form>
+            </div>
+
+            <div id="success-step" class="glass-panel rounded-3xl p-12 text-center hidden animate-fade-in">
+                <div class="text-8xl mb-6 animate-bounce">🎉</div>
+                <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-500 mb-4">تم تسليم الاختبار بنجاح!</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9S4fq-RmICNbLYy9FLrHhfvyibRflxpYuGM3bVn-OxfmidnMr-hv0B_Gwani-wXM6Tw/exec'; 
+        
+        let isStudentActive = false;
+        let cheatCount = 0;
+        document.addEventListener('contextmenu', e => { if (isStudentActive) { e.preventDefault(); alert("⚠️ النقر بزر الفأرة الأيمن معطل."); } });
+        document.addEventListener('copy', e => { if (isStudentActive) { e.preventDefault(); alert("⚠️ النسخ معطل."); } });
+        document.addEventListener('paste', e => { if (isStudentActive) { e.preventDefault(); alert("⚠️ اللصق معطل."); } });
+        document.addEventListener('visibilitychange', () => {
+            if (isStudentActive && document.visibilityState === 'hidden') { cheatCount++; alert("⛔ تنبيه: الخروج من الصفحة غير مسموح وتم تسجيل المخالفة."); }
+        });
+
+        function createQuestionHTML(q, index) {
+            let html = `<div class="bg-white/90 p-8 rounded-3xl shadow-sm border border-gray-100"><h4 class="text-xl font-bold text-gray-800 mb-6 leading-relaxed">${q.title}</h4>`;
+            if (q.type === 'mcq' || q.type === 'boolean') {
+                html += `<div class="space-y-3">`;
+                q.options.forEach((opt) => {
+                    html += `<label class="option-label flex items-center p-4 rounded-xl bg-gray-50 cursor-pointer"><input type="radio" name="q${index}" value="${opt}" required class="w-5 h-5 text-indigo-600 focus:ring-indigo-500"><span class="mr-4 text-gray-700 text-lg">${opt}</span></label>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'long') {
+                html += `<textarea name="q${index}" rows="4" required class="w-full p-4 border border-gray-200 rounded-xl bg-gray-50 text-lg" placeholder="إجابة مقالية..."></textarea>`;
+            } else {
+                html += `<input type="text" name="q${index}" required class="w-full p-4 border border-gray-200 rounded-xl bg-gray-50 text-lg" placeholder="إجابة قصيرة...">`;
+            }
+            return html + `</div>`;
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const quizId = urlParams.get('q'); 
+            if (!quizId) {
+                document.getElementById('loading-screen').innerHTML = `<h2 class="text-3xl font-bold text-red-600">❌ رابط الاختبار غير مكتمل.</h2>`;
+                return;
+            }
+
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "get_quiz", quizId: quizId })
+            }).then(res => res.json()).then(data => {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                
+                if(data.status === "success") {
+                    window.quizData = data.questions;
+                } else {
+                    document.getElementById('student-info-step').innerHTML = `<div class="text-center p-10 text-red-600 font-bold text-2xl">❌ عذراً، الاختبار غير متاح أو تم حذفه.</div>`;
+                }
+            }).catch(() => { alert("خطأ في جلب الاختبار. تأكد من اتصالك."); });
+        };
+
+        function startQuiz() {
+            const name = document.getElementById('s-name').value;
+            const grade = document.getElementById('s-grade').value;
+            const id = document.getElementById('s-id').value;
+            if(!name || !grade || !id) return alert("الرجاء إكمال كافة بياناتك!");
+            
+            isStudentActive = true; 
+            document.getElementById('student-info-step').classList.add('hidden');
+            document.getElementById('quiz-step').classList.remove('hidden');
+            document.getElementById('display-student-name').innerText = name;
+            document.getElementById('display-student-details').innerText = `الصف: ${grade} | الرقم: ${id}`;
+            
+            const container = document.getElementById('questions-container');
+            window.quizData.forEach((q, idx) => container.innerHTML += createQuestionHTML(q, idx));
+        }
+
+        function submitQuiz(e) {
+            e.preventDefault();
+            isStudentActive = false; 
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "جاري الإرسال..."; btn.disabled = true;
+            
+            const formData = new FormData(e.target);
+            let answers = {};
+            window.quizData.forEach((q, index) => answers[q.title] = formData.get(`q${index}`));
+
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "submit", studentName: document.getElementById('s-name').value, grade: document.getElementById('s-grade').value, studentId: document.getElementById('s-id').value, answers: answers, cheatCount: cheatCount })
+            }).then(() => {
+                document.getElementById('quiz-step').classList.add('hidden');
+                document.getElementById('success-step').classList.remove('hidden');
+            }).catch(() => { alert("خطأ في الشبكة. حاول مرة أخرى."); btn.innerText = "📤 إرسال"; btn.disabled = false; });
+        }
+    </script>
+</body>
+</html>
