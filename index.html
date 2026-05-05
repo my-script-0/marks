@@ -452,10 +452,17 @@
             <div class="modal-header"><h3 style="color:#2c3e50;">📝 صانع ومجهز الاختبارات التفاعلية</h3></div>
             
             <div class="modal-large-body">
+                <!-- المربع الجديد لحفظ رابطك -->
+                <div style="background:#eaf2f8; padding:10px; border-radius:8px; border:1px solid #3498db; margin-bottom:15px;">
+                    <label style="font-weight:bold; color:#2980b9; font-size:13px; display:block; margin-bottom:5px;">🔗 رابط ملف الاختبار الخاص بك (GitHub):</label>
+                    <input type="text" id="githubQuizUrl" class="note-input" placeholder="مثال: https://moaaz.github.io/Quiz/" onchange="localStorage.setItem('githubQuizUrl', this.value)" style="direction:ltr; text-align:left; margin-bottom:0; border-color:#bdc3c7;">
+                    <span style="font-size:11px; color:#7f8c8d;">سيتم حفظ الرابط تلقائياً ولن تضطر لإدخاله مجدداً.</span>
+                </div>
+
                 <p style="font-size:14px; font-weight:bold; color:var(--text-color); margin-top:0;">انسخ أسئلة الاختبار والصقها في المربع بالأسفل.</p>
-                <p style="font-size:13px; color:#7f8c8d; margin-top:-5px;">💡 ملاحظة هامة: يجب أن تترك <strong>سطراً فارغاً</strong> بين كل سؤال والسؤال الذي يليه. (السطر الأول سيعتبره النظام هو السؤال، والأسطر التي تليه هي الخيارات).</p>
+                <p style="font-size:13px; color:#7f8c8d; margin-top:-5px;">💡 اترك سطر فارغ بين كل سؤال. (السطر الواحد = إجابة قصيرة/طويلة، الأسطر المتعددة = اختيار من متعدد).</p>
                 
-                <textarea id="quizPasteArea" class="note-input" style="min-height: 180px; font-family:Tahoma;" placeholder="مثال للصق الصحيح:&#10;&#10;ما هي وحدة قياس سرعة المعالج؟&#10;الجيجاهرتز&#10;البايت&#10;الميجابكسل&#10;&#10;ما هو نظام التشغيل؟&#10;ويندوز&#10;أوفيس&#10;فوتوشوب"></textarea>
+                <textarea id="quizPasteArea" class="note-input" style="min-height: 180px; font-family:Tahoma;" placeholder="ما هي وحدة قياس سرعة المعالج؟&#10;الجيجاهرتز&#10;البايت&#10;الميجابكسل&#10;&#10;عرف نظام التشغيل؟ (هذا سطر واحد سيعتبر إجابة قصيرة)&#10;&#10;اشرح مكونات الحاسب الآلي؟ (كلمة اشرح ستجعله إجابة طويلة)"></textarea>
                 
                 <button onclick="parseAndPreviewQuiz()" class="btn-save-note" style="background:#3498db; margin-bottom:15px; font-size:16px;">🔍 معاينة وترتيب الاختبار</button>
                 
@@ -483,6 +490,12 @@
     </div>
 
     <script>
+        // استدعاء رابط الجيت هاب المحفوظ عند فتح الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUrl = localStorage.getItem('githubQuizUrl');
+            if(savedUrl) document.getElementById('githubQuizUrl').value = savedUrl;
+        });
+
         const studentsData = { 
             "9": { 
                 "1": ["أحمد بن محمد بن خميس ضحي الغافري", "أنس بن سالم بن مسلم سالم المعمري", "المؤيد بن سباع بن خلفان سعيد الغافري", "المنذر بن سعيد بن علي سالم الشهومي", "تركي بن سعيد بن مطر علي الحاتمي", "تركي بن سلطان بن عبدالله سيف الغافري", "تميم بن خالد بن سيف حمد التميمي", "تيمور بن سعيد بن سليـّم خميس المقرشي", "جاسم بن عبدالله بن حميد راشد العبري", "جراح بن سعيد بن سالم سعيد الغافري", "حميد بن سعيد بن حميد سعيد الغافري", "خالد الوليد عمر يعقوب", "راشد بن جمعه بن عبدالله خميس الغافري", "سامي بن أحمد بن سرور عبدالله المقبالي", "سعود بن راشد بن ظاهر ظاوي الغافري", "سعود بن سعيد بن خلفان سعيد الغافري", "سعيد بن خالد بن سعيد حمد السعيدي", "سلطان بن سعيد بن صياح مبارك الغافري", "سلطان بن محمود بن عيد محبوب الغافري", "سيف بن عبدالله بن سيف سليمان الحاتمي", "عبد الملك بن سعيد بن مانع عامر الغافري", "عمار بن بخيت بن علي بخيت الغافري", "عمر بن سالم بن حميد مرهون الشكيلي", "غيث بن أيوب بن سيف سلطان الغافري", "فلا ح بن ناصر بن سالم أحمد الغافري", "كهلان بن قحطان بن زاهر ناصر الغريبي", "لؤي بن أنور بن حمد راشد الشكيلي", "محمد بن أحمد بن طالب سيف الغافري", "محمد بن عبدالله بن مبارك سعيد الناصري", "محمد بن عمر بن سالم أحمد الغافري", "نهيان بن علي بن خميس سيف الغافري", "نواف بن محمد بن مطر علي الحاتمي", "هشام بن راشد بن مسعود راشد الناصري", "وسام بن عبدالله بن حمد عبيد الغافري", "يوسف بن أحمد بن حمد عبيد الغافري"], 
@@ -498,7 +511,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxNIev-WNmtk-CaW4Bt_B4NxNQI2uq5XOtC_9EFk2NtbbJXXOvjWlrUHEWHAhRhe7GDDw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvV5HQl-q-4qQdxCTHuNKkpOdEjsWp96BR0brMFoFvO93RxIAFXC7B2AseXqLbYdjr/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = "";
@@ -1356,31 +1369,49 @@
             const text = document.getElementById('quizPasteArea').value.trim();
             if(!text) return alert("الرجاء لصق الأسئلة أولاً!");
             
-            // تقسيم النص بناءً على السطرين الفارغين (أو الأسطر الفارغة المتتالية)
             const blocks = text.split(/\n\s*\n/);
             currentParsedQuiz = [];
             let previewHTML = "<h4 style='text-align:center; margin-top:0; margin-bottom:15px; color:var(--text-color); border-bottom:1px solid #ccc; padding-bottom:10px;'>👀 معاينة شكل الاختبار قبل الاعتماد</h4>";
             
             blocks.forEach((block, index) => {
-                // تقسيم البلوك الواحد إلى أسطر (السطر الأول هو السؤال، والباقي خيارات)
                 const lines = block.trim().split('\n').map(l => l.trim()).filter(l => l !== "");
                 
-                if(lines.length >= 2) {
+                if(lines.length > 0) {
                     const q = lines[0];
-                    const opts = lines.slice(1);
-                    currentParsedQuiz.push({ question: q, options: opts });
+                    let type = 'short';
+                    let opts = [];
+                    let previewItem = '';
+
+                    // تحديد نوع السؤال
+                    if(lines.length >= 2) {
+                        type = 'mcq';
+                        opts = lines.slice(1);
+                        previewItem = opts.map(o => `<div class="quiz-option-item">○ ${o}</div>`).join('');
+                    } else {
+                        // سطر واحد: التحقق هل هو مقالي طويل أم قصير
+                        if(/اشرح|علل|قارن|لماذا|كيف|تحدث|مقال|وضح/.test(q)) {
+                            type = 'long';
+                            previewItem = `<textarea disabled placeholder="مربع إجابة طويلة للطالب..." class="note-input" style="background:#eee;"></textarea>`;
+                        } else {
+                            type = 'short';
+                            previewItem = `<input type="text" disabled placeholder="مربع إجابة قصيرة/إكمال للطالب..." class="note-input" style="background:#eee; margin-bottom:0;">`;
+                        }
+                    }
+
+                    // حفظ السؤال بالنوع الصحيح
+                    currentParsedQuiz.push({ question: q, type: type, options: opts });
                     
                     previewHTML += `<div style="background:var(--input-bg); padding:12px; margin-bottom:10px; border-radius:6px; border:1px solid var(--border-color);">
                         <div style="font-weight:bold; color:#2980b9; margin-bottom:8px; font-size:15px;">${index + 1}. ${q}</div>
                         <div style="display:flex; flex-direction:column; gap:4px;">
-                            ${opts.map(o => `<div class="quiz-option-item">○ ${o}</div>`).join('')}
+                            ${previewItem}
                         </div>
                     </div>`;
                 }
             });
             
             if(currentParsedQuiz.length === 0) {
-                alert("لم يتم التعرف على الأسئلة. تأكد من وضع سطر فارغ بين كل سؤال وآخر، وأن كل سؤال يتبعه خياراته في أسطر متتالية.");
+                alert("لم يتم التعرف على الأسئلة. تأكد من صحة التنسيق.");
                 return;
             }
             
@@ -1392,22 +1423,22 @@
         }
 
         function generateQuizLink() {
+            // التحقق من وجود رابط الجيت هاب
+            let userUrl = document.getElementById('githubQuizUrl').value.trim();
+            if(!userUrl) return alert("⚠️ الرجاء إدخال رابط ملف الاختبار (GitHub) الخاص بك في المربع العلوي أولاً لتكوين الرابط الصحيح للطالب.");
+            
+            // تنظيف الرابط لضمان عدم وجود أخطاء في تكوينه
+            if(!userUrl.endsWith('/')) userUrl += '/';
+            if(userUrl.includes('?')) userUrl = userUrl.split('?')[0];
+
             const btn = document.getElementById('btnGenerateLink');
             const res = document.getElementById('quizLinkResult');
             btn.disabled = true;
             btn.innerText = "⏳ جاري إرسال الأسئلة للسيرفر وإنشاء الرابط...";
             
-            // توليد رمز فريد للاختبار من 6 أحرف
             const quizId = Math.random().toString(36).substring(2, 8).toUpperCase();
-            
-            // تجهيز البيانات للإرسال
-            const payload = { 
-                action: "save_quiz", 
-                quizId: quizId, 
-                questions: currentParsedQuiz 
-            };
+            const payload = { action: "save_quiz", quizId: quizId, questions: currentParsedQuiz };
 
-            // إرسال الاختبار إلى جوجل سكريبت
             fetch(scriptURL, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
@@ -1416,34 +1447,32 @@
             .then(r => r.json())
             .then(d => {
                 if(d.status === "success") {
-                    // ⚠️ ضع رابط ملف الـ Quiz الخاص بك المرفوع على GitHub هنا
-                    const baseStudentUrl = "https://your-github-username.github.io/Quiz/"; 
-                    const realQuizLink = baseStudentUrl + "?q=" + quizId;
+                    // دمج رابط الجيت هاب الخاص بك مع الرمز
+                    const realQuizLink = userUrl + "?q=" + quizId;
                     
                     res.innerHTML = `
                         <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:10px;">
                             <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
-                            تم حفظ الاختبار في قاعدة البيانات بنجاح!<br>
+                            تم حفظ الاختبار بنجاح!<br>
                             الرابط جاهز للمشاركة مع الطلاب:<br>
                             <a href="${realQuizLink}" target="_blank" style="display:inline-block; margin-top:10px; color:#2980b9; background:#fff; padding:5px 10px; border-radius:4px; border:1px dashed #2980b9; text-decoration:none; font-family:monospace; font-size:16px;">
                                 ${realQuizLink}
                             </a>
                             <br>
-                            <button onclick="navigator.clipboard.writeText('${realQuizLink}'); alert('تم نسخ الرابط بنجاح!');" style="margin-top:12px; background:#27ae60; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">📋 نسخ الرابط لإرساله للطلاب</button>
+                            <button onclick="navigator.clipboard.writeText('${realQuizLink}'); alert('تم نسخ الرابط بنجاح!');" style="margin-top:12px; background:#27ae60; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">📋 نسخ الرابط لإرساله</button>
                         </div>`;
                     playSound(800, 'sine', 0.3, 0.1);
                 } else {
                     alert("❌ حدث خطأ أثناء حفظ الاختبار في السيرفر.");
                 }
             })
-            .catch(err => {
-                alert("❌ خطأ في الاتصال بالشبكة.");
-            })
+            .catch(err => alert("❌ خطأ في الاتصال بالشبكة."))
             .finally(() => {
                 btn.disabled = false;
                 btn.innerText = "🔗 إعادة إنشاء الاختبار وتوليد الرابط القصير للطالب";
             });
         }
+
         // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
