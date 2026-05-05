@@ -1395,36 +1395,55 @@
             const btn = document.getElementById('btnGenerateLink');
             const res = document.getElementById('quizLinkResult');
             btn.disabled = true;
-            btn.innerText = "⏳ جاري إرسال الأسئلة لملف الـ Quiz وإنشاء الرابط...";
+            btn.innerText = "⏳ جاري إرسال الأسئلة للسيرفر وإنشاء الرابط...";
             
-            // في المستقبل، سيتم إرسال currentParsedQuiz إلى ملف الـ GAS الخاص بك ليتم حفظه هناك.
-            // حالياً نقوم بمحاكاة إنشاء الرابط. 
-            // سيحتاج الطالب لاحقاً للدخول على رابط ملف Quiz الخاص بك الموجود في المستودع.
+            // توليد رمز فريد للاختبار من 6 أحرف
+            const quizId = Math.random().toString(36).substring(2, 8).toUpperCase();
             
-            setTimeout(() => {
-                // توليد رابط افتراضي (يمكنك لاحقاً تعديله ليكون رابط ملف الـ Quiz الحقيقي الخاص بك)
-                const quizId = Math.random().toString(36).substring(2, 8).toUpperCase();
-                // بافتراض أن رابط ملف الكويز في الجيت هاب سيكون بهذا الشكل:
-                const realQuizLink = "https://your-github-username.github.io/Quiz/?id=" + quizId;
-                
-                res.innerHTML = `
-                    <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:10px;">
-                        <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
-                        تم تجهيز الاختبار بنجاح!<br>
-                        الرابط جاهز للمشاركة مع الطلاب:<br>
-                        <a href="${realQuizLink}" target="_blank" style="display:inline-block; margin-top:10px; color:#2980b9; background:#fff; padding:5px 10px; border-radius:4px; border:1px dashed #2980b9; text-decoration:none; font-family:monospace; font-size:16px;">
-                            ${realQuizLink}
-                        </a>
-                        <br>
-                        <button onclick="navigator.clipboard.writeText('${realQuizLink}'); alert('تم نسخ الرابط بنجاح!');" style="margin-top:12px; background:#27ae60; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">📋 نسخ الرابط لإرساله</button>
-                    </div>`;
-                
-                playSound(800, 'sine', 0.3, 0.1);
+            // تجهيز البيانات للإرسال
+            const payload = { 
+                action: "save_quiz", 
+                quizId: quizId, 
+                questions: currentParsedQuiz 
+            };
+
+            // إرسال الاختبار إلى جوجل سكريبت
+            fetch(scriptURL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify(payload) 
+            })
+            .then(r => r.json())
+            .then(d => {
+                if(d.status === "success") {
+                    // ⚠️ ضع رابط ملف الـ Quiz الخاص بك المرفوع على GitHub هنا
+                    const baseStudentUrl = "https://your-github-username.github.io/Quiz/"; 
+                    const realQuizLink = baseStudentUrl + "?q=" + quizId;
+                    
+                    res.innerHTML = `
+                        <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:10px;">
+                            <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
+                            تم حفظ الاختبار في قاعدة البيانات بنجاح!<br>
+                            الرابط جاهز للمشاركة مع الطلاب:<br>
+                            <a href="${realQuizLink}" target="_blank" style="display:inline-block; margin-top:10px; color:#2980b9; background:#fff; padding:5px 10px; border-radius:4px; border:1px dashed #2980b9; text-decoration:none; font-family:monospace; font-size:16px;">
+                                ${realQuizLink}
+                            </a>
+                            <br>
+                            <button onclick="navigator.clipboard.writeText('${realQuizLink}'); alert('تم نسخ الرابط بنجاح!');" style="margin-top:12px; background:#27ae60; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">📋 نسخ الرابط لإرساله للطلاب</button>
+                        </div>`;
+                    playSound(800, 'sine', 0.3, 0.1);
+                } else {
+                    alert("❌ حدث خطأ أثناء حفظ الاختبار في السيرفر.");
+                }
+            })
+            .catch(err => {
+                alert("❌ خطأ في الاتصال بالشبكة.");
+            })
+            .finally(() => {
                 btn.disabled = false;
                 btn.innerText = "🔗 إعادة إنشاء الاختبار وتوليد الرابط القصير للطالب";
-            }, 1500);
+            });
         }
-
         // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
