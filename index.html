@@ -1439,24 +1439,32 @@
                         let finalLink = dataShort.shorturl || realQuizLink;
                         let displayLink = finalLink.replace(/^https?:\/\//, ''); 
                         
+                        // تصميم المربع الجديد مع خصائص منع القص (word-break)
                         res.innerHTML = `
-                            <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:10px;">
+                            <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:15px; word-wrap: break-word; overflow-wrap: break-word; text-align: center; width: 100%; box-sizing: border-box;">
                                 <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
-                                تم تجهيز الاختبار بنجاح!<br>
-                                <span style="color:#2c3e50; font-size:14px;">اطلب من الطلاب كتابة هذا الرابط القصير في متصفحهم:</span><br>
+                                <span style="font-size:16px; font-weight:bold; color:#2c3e50;">تم تجهيز الاختبار بنجاح!</span><br>
+                                <span style="color:#34495e; font-size:14px;">اطلب من الطلاب كتابة هذا الرابط في متصفحهم:</span><br>
                                 
                                 <div style="margin: 15px 0;">
-                                    <a href="${finalLink}" target="_blank" style="display:inline-block; color:#2c3e50; background:#fff; padding:10px 20px; border-radius:6px; border:2px solid #2980b9; text-decoration:none; font-family: Tahoma, sans-serif; font-size:26px; font-weight:bold; letter-spacing: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                    <a href="${finalLink}" target="_blank" style="display:inline-block; color:#2c3e50; background:#fff; padding:10px 15px; border-radius:6px; border:2px solid #2980b9; text-decoration:none; font-family: Tahoma, sans-serif; font-size:22px; font-weight:bold; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: break-all; max-width: 100%;">
                                         ${displayLink}
                                     </a>
                                 </div>
                                 
-                                <button onclick="navigator.clipboard.writeText('${finalLink}'); alert('تم نسخ الرابط بنجاح!');" style="background:#27ae60; color:white; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px;">📋 نسخ الرابط للمشاركة</button>
+                                <button onclick="navigator.clipboard.writeText('${finalLink}'); alert('تم نسخ الرابط بنجاح!');" style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px; width: 100%; max-width: 250px;">📋 نسخ الرابط للمشاركة</button>
                             </div>`;
+                            
                         playSound(800, 'sine', 0.3, 0.1);
+
+                        // التمرير التلقائي للأسفل لرؤية المربع كاملاً بدون قص
+                        setTimeout(() => {
+                            res.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }, 100);
                     })
                     .catch(err => {
-                        res.innerHTML = `<div style="color:#e74c3c; font-weight:bold; margin-top:10px;">تم حفظ الاختبار، ولكن تعذر تقصير الرابط مؤقتاً. الرابط: ${realQuizLink}</div>`;
+                        res.innerHTML = `<div style="color:#e74c3c; font-weight:bold; margin-top:10px; word-wrap: break-word;">تم حفظ الاختبار، ولكن تعذر تقصير الرابط مؤقتاً. الرابط: ${realQuizLink}</div>`;
+                        setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100);
                     });
                     
                 } else {
@@ -1469,7 +1477,6 @@
                 btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
             });
         }
-
         // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
