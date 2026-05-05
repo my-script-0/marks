@@ -468,7 +468,7 @@
                 
                 <div id="quizPreviewArea" style="display:none; background:var(--category-bg); padding:15px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:15px; max-height:250px; overflow-y:auto;"></div>
                 
-                <button id="btnGenerateLink" onclick="generateQuizLink()" class="btn-save-note" style="display:none; background:#27ae60; font-size:16px; margin-top:10px;">🔗 إنشاء الاختبار وتوليد الرابط القصير للطالب</button>
+                <button id="btnGenerateLink" onclick="generateQuizLink()" class="btn-save-note" style="display:none; background:#27ae60; font-size:16px; margin-top:10px;">🔗 إنشاء وتوليد رابط الاختبار القصير للطالب</button>
                 <div id="quizLinkResult" style="margin-top:15px; text-align:center; font-weight:bold; color:#27ae60;"></div>
             </div>
         </div>
@@ -511,7 +511,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvV5HQl-q-4qQdxCTHuNKkpOdEjsWp96BR0brMFoFvO93RxIAFXC7B2AseXqLbYdjr/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxNIev-WNmtk-CaW4Bt_B4NxNQI2uq5XOtC_9EFk2NtbbJXXOvjWlrUHEWHAhRhe7GDDw/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = "";
@@ -1051,7 +1051,7 @@
             rows.forEach((row, i) => {
                 let v = row.querySelectorAll(".col-calc"); let name = document.getElementById(`name-${i}`).innerText; 
                 let interact = document.getElementById(`int-${i}`).value; let violations = document.getElementById(`viol-${i}`).value;
-                if(g==="6") list.push({name:name, interaction:interact, violation:violations, d1:v[0].value, d2:v[1].value, tDiag:row.querySelector('.t-dialogue').innerText, q1:v[2].value, q2:v[3].value, q3:v[4].value, q4:v[5].value, tQuiz:row.querySelector('.t-quiz').innerText, a1:v[6].value, a2:v[7].value, tAct:row.querySelector('.t-activity').innerText, proj:v[8].value, total:row.querySelector('.t-grand').innerText});
+                if(g==="6") list.push({name:name, interaction:interact, violation:violations, d1:v[0].value, d2:v[1].value, tDiag:row.querySelector('.t-dialogue').innerText, q1:v[2].value, q3:v[3].value, q3:v[4].value, q4:v[5].value, tQuiz:row.querySelector('.t-quiz').innerText, a1:v[6].value, a2:v[7].value, tAct:row.querySelector('.t-activity').innerText, proj:v[8].value, total:row.querySelector('.t-grand').innerText});
                 else list.push({name:name, interaction:interact, violation:violations, d1:v[0].value, d2:v[1].value, tDiag:row.querySelector('.t-dialogue').innerText, a1:v[2].value, a2:v[3].value, tAct:row.querySelector('.t-activity').innerText, test:v[4].value, proj:v[5].value, total:row.querySelector('.t-grand').innerText});
             });
             const payload = {grade:g, section:document.getElementById("sectionSelect").value, students:list};
@@ -1490,6 +1490,7 @@
                 btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
             });
         }
+
         // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
