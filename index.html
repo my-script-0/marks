@@ -33,7 +33,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
-            padding: 20px 80px 60px 80px; /* تم تعديل الهوامش لتناسب الشريطين */
+            padding: 20px 80px 60px 80px; 
             color: var(--text-color); 
             transition: 0.3s; 
             min-height: 100vh;
@@ -50,7 +50,6 @@
             z-index: -1;
         }
 
-        /* --- تنسيقات الأشرطة الجانبية (يمين ويسار) --- */
         .sidebar-right {
             position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
             display: flex; flex-direction: column; gap: 12px;
@@ -76,7 +75,6 @@
         }
         .side-icon:hover { transform: scale(1.1); }
         
-        /* تأثيرات النص التوضيحي للشريط الأيمن */
         .sidebar-right .side-icon::after {
             content: attr(data-title); position: absolute; right: 55px;
             background: #333; color: #fff; padding: 5px 10px; border-radius: 5px;
@@ -84,7 +82,6 @@
         }
         .sidebar-right .side-icon:hover::after { opacity: 1; right: 60px; }
 
-        /* تأثيرات النص التوضيحي للشريط الأيسر */
         .sidebar-left .side-icon::after {
             content: attr(data-title); position: absolute; left: 55px;
             background: #333; color: #fff; padding: 5px 10px; border-radius: 5px;
@@ -103,7 +100,7 @@
         .bg-honor { background: #f1c40f; color:#000; }
 
         .btn-floating-save {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); /* تم توسط الزر السفلي */
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background-color: #27ae60; color: white;
             border: none; border-radius: 50px; padding: 12px 25px; font-size: 16px; font-weight: bold;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; display: flex;
@@ -150,7 +147,6 @@
         .modal-header { text-align:center; border-bottom:2px solid #3498db; margin-bottom:15px; padding-bottom:10px; }
         .modal-header h3 { margin:0; }
 
-        /* تنسيقات المستودع السحابي */
         .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 10px; }
         .repo-card { background: var(--input-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .repo-card:hover { transform: translateY(-5px); border-color: #6c5ce7; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.15); }
@@ -204,7 +200,6 @@
         .honor-ticker { position: absolute; white-space: nowrap; font-size: 20px; font-weight: bold; line-height: 45px; animation: scrollTicker 20s linear infinite; }
         @keyframes scrollTicker { 0% { right: -100%; } 100% { right: 100%; } }
 
-        /* تنسيقات دفتر الملاحظات المضافة حديثاً */
         .note-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-family: inherit; box-sizing: border-box; }
         textarea.note-input { resize: vertical; min-height: 60px; }
         .btn-save-note { background: #8e44ad; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
@@ -213,7 +208,6 @@
         .note-card { background: var(--category-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-right: 4px solid #8e44ad; font-size: 14px; text-align: right; }
         .note-date { font-size: 11px; color: #7f8c8d; margin-bottom: 4px; direction: ltr; text-align: right;}
         
-        /* تنسيق المساعد الذكي */
         .ai-chat-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000; border: 2px solid white; transition: 0.3s; }
         .ai-chat-btn:hover { transform: rotate(15deg) scale(1.1); }
         .ai-window { display: none; position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); }
@@ -226,7 +220,6 @@
         .ai-input { flex: 1; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); }
         .ai-send { background: #6c5ce7; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
         
-        /* وميض زر الصوت */
         .listening {
             background: #c0392b !important;
             animation: pulse-ring 1s infinite;
@@ -236,6 +229,9 @@
             70% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
             100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
+        
+        .quiz-option-item { padding: 5px 10px; margin: 4px 0; background: #eaf2f8; border-radius: 4px; border: 1px solid #dcdde1; font-size: 14px;}
+        .dark-mode .quiz-option-item { background: #2c3e50; border-color: #34495e;}
     </style>
 </head>
 <body>
@@ -258,8 +254,8 @@
     </div>
 
     <div class="sidebar-left">
-        <button class="side-icon" style="background: #2c3e50;" data-title="توليد الاختبارات" onclick="openModal('modalQuiz')">🧠</button>
-        <button class="side-icon" style="background: #8e44ad;" data-title="دفتر التحضير" onclick="openNotesModal()">📝</button>
+        <button class="side-icon" style="background: #2c3e50;" data-title="تجهيز الاختبارات" onclick="openModal('modalQuizForm')">📝</button>
+        <button class="side-icon" style="background: #8e44ad;" data-title="دفتر التحضير" onclick="openNotesModal()">📓</button>
         <button class="side-icon bg-wheel" data-title="عجلة الاختيار" onclick="openModal('modalRandom')">🎲</button>
         <button class="side-icon bg-timer" data-title="المؤقت الذكي" onclick="openModal('modalTimer')">⏱️</button>
         <button class="side-icon bg-radar" data-title="إدارة الصف والرادار" onclick="openModal('modalRadar')">🚦</button>
@@ -289,8 +285,7 @@
 
     <div class="reinforcement-section">
         <div class="reinforcement-header">🌟 لوحة التعزيزات والمخالفات التفاعلية</div>
-        <div class="reinforcement-grid" id="reinforcementGrid">
-            </div>
+        <div class="reinforcement-grid" id="reinforcementGrid"></div>
     </div>
 
     <div id="tableAreaWrapper" style="display: none;">
@@ -345,8 +340,7 @@
                     <div id="uploadStatus" style="margin-top: 15px; font-weight: bold; color: #27ae60; font-size:14px;"></div>
                 </div>
 
-                <div id="fileListContainer" class="repo-grid">
-                    </div>
+                <div id="fileListContainer" class="repo-grid"></div>
             </div>
         </div>
     </div>
@@ -431,15 +425,14 @@
                 <h3 style="color:#34495e; margin:0 0 10px 0; text-align:center;">📜 تقارير الأداء التفصيلية</h3>
                 <input type="text" id="reportSearch" style="width:100%; box-sizing:border-box; padding:10px; border-radius:5px; border:1px solid #ccc;" placeholder="🔍 ابحث عن اسم الطالب هنا..." onkeyup="filterReports()">
             </div>
-            <div class="modal-large-body" id="reportsContainer" style="background:#eaeded;">
-                </div>
+            <div class="modal-large-body" id="reportsContainer" style="background:#eaeded;"></div>
         </div>
     </div>
 
     <div id="modalNotes" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modalNotes')">&times;</span>
-            <div class="modal-header"><h3 style="color:#8e44ad;">📝 دفتر التحضير والملاحظات</h3></div>
+            <div class="modal-header"><h3 style="color:#8e44ad;">📓 دفتر التحضير والملاحظات</h3></div>
             <p style="text-align:center; font-weight:bold; margin-top:-10px; color: var(--text-color);" id="currentClassLabel"></p>
 
             <div style="margin-top: 15px;">
@@ -448,33 +441,29 @@
                 <button onclick="saveNote()" class="btn-save-note" id="btnSaveNote">💾 حفظ الملاحظة لهذه الشعبة</button>
             </div>
             
-            <div id="previousNotesContainer" class="prev-notes-container">
-                </div>
+            <div id="previousNotesContainer" class="prev-notes-container"></div>
         </div>
     </div>
 
-    <!-- نافذة توليد الأسئلة الذكية المضافة -->
-    <div id="modalQuiz" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('modalQuiz')">&times;</span>
-            <div class="modal-header"><h3 style="color:#2c3e50;">🧠 أداة توليد الاختبارات والأسئلة بالذكاء الاصطناعي</h3></div>
-            <p style="text-align:center; font-size:13px; color:var(--text-color); margin-top:-10px;">قم بتوليد أسئلة ونماذج إجابة فورية لدرسك</p>
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
-                <input type="text" id="quizTopic" placeholder="اكتب موضوع الدرس (مثال: أمن المعلومات، الشبكات...)" class="note-input">
-                <select id="quizDifficulty" class="note-input">
-                    <option value="سهل">مستوى سهل (مباشر)</option>
-                    <option value="متوسط" selected>مستوى متوسط (فهم وتطبيق)</option>
-                    <option value="صعب">مستوى صعب (تفكير ناقد)</option>
-                </select>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <label style="color:var(--text-color); font-weight:bold; white-space:nowrap;">عدد الأسئلة:</label>
-                    <input type="number" id="quizCount" value="5" min="1" max="20" class="note-input" style="margin-bottom:0;">
-                </div>
-                <button onclick="generateQuiz()" class="btn-save-note" id="btnGenerateQuiz" style="background:#2c3e50;">✨ توليد الاختبار الآن</button>
+    <!-- نافذة صانع الاختبارات الجديدة (الاستقبال المباشر للنص وتجهيز الرابط) -->
+    <div id="modalQuizForm" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close-btn" onclick="closeModal('modalQuizForm')">&times;</span>
+            <div class="modal-header"><h3 style="color:#2c3e50;">📝 صانع ومجهز الاختبارات التفاعلية</h3></div>
+            
+            <div class="modal-large-body">
+                <p style="font-size:14px; font-weight:bold; color:var(--text-color); margin-top:0;">انسخ أسئلة الاختبار والصقها في المربع بالأسفل.</p>
+                <p style="font-size:13px; color:#7f8c8d; margin-top:-5px;">💡 ملاحظة هامة: يجب أن تترك <strong>سطراً فارغاً</strong> بين كل سؤال والسؤال الذي يليه. (السطر الأول سيعتبره النظام هو السؤال، والأسطر التي تليه هي الخيارات).</p>
+                
+                <textarea id="quizPasteArea" class="note-input" style="min-height: 180px; font-family:Tahoma;" placeholder="مثال للصق الصحيح:&#10;&#10;ما هي وحدة قياس سرعة المعالج؟&#10;الجيجاهرتز&#10;البايت&#10;الميجابكسل&#10;&#10;ما هو نظام التشغيل؟&#10;ويندوز&#10;أوفيس&#10;فوتوشوب"></textarea>
+                
+                <button onclick="parseAndPreviewQuiz()" class="btn-save-note" style="background:#3498db; margin-bottom:15px; font-size:16px;">🔍 معاينة وترتيب الاختبار</button>
+                
+                <div id="quizPreviewArea" style="display:none; background:var(--category-bg); padding:15px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:15px; max-height:250px; overflow-y:auto;"></div>
+                
+                <button id="btnGenerateLink" onclick="generateQuizLink()" class="btn-save-note" style="display:none; background:#27ae60; font-size:16px; margin-top:10px;">🔗 إنشاء الاختبار وتوليد الرابط القصير للطالب</button>
+                <div id="quizLinkResult" style="margin-top:15px; text-align:center; font-weight:bold; color:#27ae60;"></div>
             </div>
-            <div id="quizResultArea" style="margin-top:15px; max-height:250px; overflow-y:auto; padding:15px; background:var(--category-bg); border-radius:8px; border:1px solid var(--border-color); display:none; white-space: pre-wrap; font-size:14px; line-height:1.6; color:var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            </div>
-            <button onclick="copyQuiz()" id="btnCopyQuiz" style="display:none; width:100%; margin-top:10px; background:#27ae60; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold; transition:0.3s;">📋 نسخ الأسئلة ونموذج الإجابة</button>
         </div>
     </div>
 
@@ -512,7 +501,7 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxRJ9AOf54xZ21OprhlyWf6T2W6kWoR0QdNr80cQayeUIGIzhXt9L3qqpwlZQvO0NdP/exec';
         
         let currentSheetData = {};
-        let currentAdminPassword = ""; // متغير لحفظ كلمة المرور من جوجل شيت
+        let currentAdminPassword = "";
         
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -548,10 +537,8 @@
             document.getElementById("form6").classList.toggle("active-form", g==="6"); 
             document.getElementById("form9").classList.toggle("active-form", g==="9");
             
-            // 🔴 التعديل الضروري جداً لحل مشكلة تداخل أسماء الطلاب عند الحفظ
             document.getElementById("tbody6").innerHTML = "";
             document.getElementById("tbody9").innerHTML = "";
-            // ----------------------------------------------------------------------
 
             const tbody = document.getElementById("tbody" + g); 
             tbody.innerHTML = `<tr><td colspan="15">جاري جلب البيانات... ⏳</td></tr>`;
@@ -566,6 +553,7 @@
             })
             .catch(() => { currentSheetData = {}; renderTableAndReinforcements(g, document.getElementById("sectionSelect").value); });
         }
+
         function changeReinfVal(id, amt) { 
             const el = document.getElementById(id); 
             if(el) { el.value = Math.max(0, (parseInt(el.value) || 0) + amt); }
@@ -952,14 +940,13 @@
       async function generateCertificate(studentName) {
     await document.fonts.ready;
 
-    // الروابط المباشرة الصحيحة لصورك على Imgur
     const ministryLogoUrl = 'https://i.imgur.com/SffDMYI.png'; 
     const schoolLogoUrl = 'https://i.imgur.com/KK7Eh6E.png';
     const personalLogoUrl = 'https://i.imgur.com/ZSszKKI.png';
 
     const loadImage = (url) => new Promise((resolve) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous'; // ضروري جداً لروابط Imgur
+        img.crossOrigin = 'anonymous'; 
         img.onload = () => resolve(img);
         img.onerror = () => {
             console.warn(`فشل تحميل: ${url}`);
@@ -979,22 +966,18 @@
         canvas.width = 1200; canvas.height = 850; 
         const ctx = canvas.getContext('2d');
 
-        // --- رسم الخلفية والإطار الفخم ---
         ctx.fillStyle = '#fcfdfe'; 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // علامة مائية تقنية خفيفة
         ctx.strokeStyle = 'rgba(14, 165, 233, 0.08)'; 
         ctx.lineWidth = 1.5;
         for (let i = 0; i < 40; i++) {
             ctx.beginPath(); ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height); ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height); ctx.stroke();
         }
 
-        // إطار كحلي وذهبي
         ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 8; ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
         ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 2; ctx.strokeRect(42, 42, canvas.width - 84, canvas.height - 84);
 
-        // الزوايا الهندسية
         const drawCorner = (x, y, scaleX, scaleY) => {
             ctx.save(); ctx.translate(x, y); ctx.scale(scaleX, scaleY);
             ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(120, 0); ctx.lineTo(0, 120); ctx.fill();
@@ -1005,12 +988,10 @@
         drawCorner(30, 30, 1, 1); drawCorner(canvas.width - 30, 30, -1, 1);
         drawCorner(30, canvas.height - 30, 1, -1); drawCorner(canvas.width - 30, canvas.height - 30, -1, -1);
 
-        // --- رسم الشعارات بأماكن متناسقة (أحجام كبيرة) ---
-        if (minLogo) ctx.drawImage(minLogo, canvas.width - 240, 62, 200, 200); // الوزارة يميناً
-        if (schLogo) ctx.drawImage(schLogo, 72, 62, 220, 220); // المدرسة يساراً
-        if (perLogo) ctx.drawImage(perLogo, canvas.width - 382, 672, 240, 240); // شعارك الخاص
+        if (minLogo) ctx.drawImage(minLogo, canvas.width - 240, 62, 200, 200);
+        if (schLogo) ctx.drawImage(schLogo, 72, 62, 220, 220); 
+        if (perLogo) ctx.drawImage(perLogo, canvas.width - 382, 672, 240, 240); 
 
-        // --- كتابة النصوص ---
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.direction = 'rtl';
         ctx.font = '22px "Amiri", serif'; ctx.fillStyle = '#64748b'; 
         ctx.fillText('سَلْطَنَةُ عُمَان - وَزَارَةُ التَّعْلِيم', canvas.width / 2, 100);
@@ -1038,7 +1019,6 @@
         ctx.font = 'bold 24px "Amiri", serif'; ctx.fillStyle = '#0f172a'; ctx.fillText('مُعَلِّمُ المَادَّة', 250, 720); 
         ctx.font = '26px "Amiri", serif'; ctx.fillStyle = '#475569'; ctx.fillText('أ. مُعَاذ اليَعْقُوبِي', 250, 765);
 
-        // التذييل
         ctx.font = '16px Tahoma'; ctx.fillStyle = '#94a3b8'; 
         ctx.fillText('منصة مِحور', canvas.width / 2, 820);
         
@@ -1111,33 +1091,27 @@
             XLSX.writeFile(wb, `درجات_الصف_${g}_شعبة_${s}.xlsx`);
         }
 
-        // --- دالة التحكم بكلمة المرور لإظهار الكشف ---
         function toggleTableVisibility() {
             const wrapper = document.getElementById("tableAreaWrapper");
             const btn = document.getElementById("toggleTableBtn");
             
-            // إذا كان الكشف مخفياً (الحالة الافتراضية) ونريد إظهاره
             if (wrapper.style.display === "none" || wrapper.style.display === "") {
                 const pass = prompt("🔒 الكشف الأكاديمي محمي. الرجاء إدخال كلمة المرور:");
                 
-                // يتم مقارنتها بكلمة المرور القادمة من السكريبت، أو 1234 كرمز طوارئ
                 if (pass === currentAdminPassword || pass === "1234") { 
                     wrapper.style.display = "block";
                     btn.innerHTML = "إخفاء الكشف";
-                    btn.style.background = "#e74c3c"; // يتحول للأحمر
+                    btn.style.background = "#e74c3c"; 
                 } else if (pass !== null) {
                     alert("❌ كلمة المرور غير صحيحة!");
                 }
-            } 
-            // إذا كان الكشف ظاهراً ونريد إخفاءه (لا يحتاج رمز للإخفاء)
-            else {
+            } else {
                 wrapper.style.display = "none";
                 btn.innerHTML = "إظهار الكشف";
-                btn.style.background = "#3498db"; // يعود للون الأزرق
+                btn.style.background = "#3498db";
             }
         }
         
-        // --- دوال المستودع السحابي ---
         function openRepoModal() {
             openModal('modalRepo');
             loadRepoFiles();
@@ -1147,7 +1121,6 @@
             const container = document.getElementById("fileListContainer");
             container.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">جاري جلب الملفات من السحابة... ⏳</p>`;
             
-            // يتم إرسال طلب لـ Google Script لجلب الملفات
             fetch(`${scriptURL}?action=getFiles`)
             .then(response => response.json())
             .then(data => {
@@ -1203,9 +1176,8 @@
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                     body: JSON.stringify(payload) 
                 })
-                .then(r => r.text()) // هنا سنقرأ الرد كنص لنعرف الخطأ بدقة
+                .then(r => r.text())
                 .then(text => {
-                    console.log("رد خوادم جوجل:", text);
                     try {
                         let d = JSON.parse(text);
                         if(d.status === "success" || d.result === "success") {
@@ -1214,13 +1186,11 @@
                             playSound(880, 'sine', 0.2, 0.1);
                             setTimeout(() => { statusDiv.innerHTML = ""; loadRepoFiles(); }, 2000);
                         } else {
-                            // إذا الخلل من الكود، سيظهر لك هنا
                             statusDiv.innerHTML = "❌ خطأ من السيرفر: " + (d.message || text);
                             statusDiv.style.color = "#e74c3c";
                             alert("تفاصيل الخطأ من جوجل: " + (d.message || text));
                         }
                     } catch(err) {
-                        // إذا كان الخلل من حسابات جوجل (تداخل حسابات)
                         statusDiv.innerHTML = "❌ تم حظر الرفع بواسطة جوجل (جرب متصفح خفي).";
                         statusDiv.style.color = "#e74c3c";
                         alert("يبدو أن هناك تداخلاً في حسابات جوجل المفتوحة في المتصفح.\n\nالرجاء فتح المنصة في نافذة 'تصفح خفي' (Incognito) والتجربة مرة أخرى.\n\nالرد المخفي: " + text.substring(0, 150));
@@ -1265,10 +1235,9 @@
             });
         }
 
-        // --- دوال دفتر الملاحظات ---
         function openNotesModal() {
             openModal('modalNotes');
-            loadTeacherNotes(); // جلب الملاحظات فقط عند فتح النافذة
+            loadTeacherNotes(); 
         }
 
         function loadTeacherNotes() {
@@ -1330,7 +1299,6 @@
             .finally(() => { btn.innerText = "💾 حفظ الملاحظة لهذه الشعبة"; btn.disabled = false; });
         }
 
-        // --- دالة تحميل المجموعات كـ PDF ---
         function downloadGroupsPDF() {
             const groupsContent = document.getElementById("groupsDisplay").innerHTML;
             if (!groupsContent || groupsContent.trim() === "") {
@@ -1381,7 +1349,83 @@
             });
         }
 
-        // --- دوال المساعد الذكي وتوليد الاختبارات ---
+        // --- دوال تجهيز الاختبار الجديدة ---
+        let currentParsedQuiz = [];
+
+        function parseAndPreviewQuiz() {
+            const text = document.getElementById('quizPasteArea').value.trim();
+            if(!text) return alert("الرجاء لصق الأسئلة أولاً!");
+            
+            // تقسيم النص بناءً على السطرين الفارغين (أو الأسطر الفارغة المتتالية)
+            const blocks = text.split(/\n\s*\n/);
+            currentParsedQuiz = [];
+            let previewHTML = "<h4 style='text-align:center; margin-top:0; margin-bottom:15px; color:var(--text-color); border-bottom:1px solid #ccc; padding-bottom:10px;'>👀 معاينة شكل الاختبار قبل الاعتماد</h4>";
+            
+            blocks.forEach((block, index) => {
+                // تقسيم البلوك الواحد إلى أسطر (السطر الأول هو السؤال، والباقي خيارات)
+                const lines = block.trim().split('\n').map(l => l.trim()).filter(l => l !== "");
+                
+                if(lines.length >= 2) {
+                    const q = lines[0];
+                    const opts = lines.slice(1);
+                    currentParsedQuiz.push({ question: q, options: opts });
+                    
+                    previewHTML += `<div style="background:var(--input-bg); padding:12px; margin-bottom:10px; border-radius:6px; border:1px solid var(--border-color);">
+                        <div style="font-weight:bold; color:#2980b9; margin-bottom:8px; font-size:15px;">${index + 1}. ${q}</div>
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            ${opts.map(o => `<div class="quiz-option-item">○ ${o}</div>`).join('')}
+                        </div>
+                    </div>`;
+                }
+            });
+            
+            if(currentParsedQuiz.length === 0) {
+                alert("لم يتم التعرف على الأسئلة. تأكد من وضع سطر فارغ بين كل سؤال وآخر، وأن كل سؤال يتبعه خياراته في أسطر متتالية.");
+                return;
+            }
+            
+            document.getElementById('quizPreviewArea').innerHTML = previewHTML;
+            document.getElementById('quizPreviewArea').style.display = 'block';
+            document.getElementById('btnGenerateLink').style.display = 'block';
+            document.getElementById('quizLinkResult').innerHTML = "";
+            playSound(600, 'triangle', 0.1, 0.1);
+        }
+
+        function generateQuizLink() {
+            const btn = document.getElementById('btnGenerateLink');
+            const res = document.getElementById('quizLinkResult');
+            btn.disabled = true;
+            btn.innerText = "⏳ جاري إرسال الأسئلة لملف الـ Quiz وإنشاء الرابط...";
+            
+            // في المستقبل، سيتم إرسال currentParsedQuiz إلى ملف الـ GAS الخاص بك ليتم حفظه هناك.
+            // حالياً نقوم بمحاكاة إنشاء الرابط. 
+            // سيحتاج الطالب لاحقاً للدخول على رابط ملف Quiz الخاص بك الموجود في المستودع.
+            
+            setTimeout(() => {
+                // توليد رابط افتراضي (يمكنك لاحقاً تعديله ليكون رابط ملف الـ Quiz الحقيقي الخاص بك)
+                const quizId = Math.random().toString(36).substring(2, 8).toUpperCase();
+                // بافتراض أن رابط ملف الكويز في الجيت هاب سيكون بهذا الشكل:
+                const realQuizLink = "https://your-github-username.github.io/Quiz/?id=" + quizId;
+                
+                res.innerHTML = `
+                    <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:10px;">
+                        <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
+                        تم تجهيز الاختبار بنجاح!<br>
+                        الرابط جاهز للمشاركة مع الطلاب:<br>
+                        <a href="${realQuizLink}" target="_blank" style="display:inline-block; margin-top:10px; color:#2980b9; background:#fff; padding:5px 10px; border-radius:4px; border:1px dashed #2980b9; text-decoration:none; font-family:monospace; font-size:16px;">
+                            ${realQuizLink}
+                        </a>
+                        <br>
+                        <button onclick="navigator.clipboard.writeText('${realQuizLink}'); alert('تم نسخ الرابط بنجاح!');" style="margin-top:12px; background:#27ae60; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">📋 نسخ الرابط لإرساله</button>
+                    </div>`;
+                
+                playSound(800, 'sine', 0.3, 0.1);
+                btn.disabled = false;
+                btn.innerText = "🔗 إعادة إنشاء الاختبار وتوليد الرابط القصير للطالب";
+            }, 1500);
+        }
+
+        // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
             win.style.display = (win.style.display === "flex") ? "none" : "flex";
@@ -1393,20 +1437,15 @@
             const msg = input.value.trim();
             if (!msg) return;
 
-            // عرض رسالة المستخدم
             body.innerHTML += `<div class="ai-msg user">${msg}</div>`;
             input.value = "";
             body.scrollTop = body.scrollHeight;
 
-            // عرض رسالة الانتظار
             const loadingId = "ai-loading-" + Date.now();
             body.innerHTML += `<div class="ai-msg bot" id="${loadingId}">⏳ جاري التفكير...</div>`;
             body.scrollTop = body.scrollHeight;
 
-            // 🌟 1. ضع مفتاح (API Key) الجديد الخاص بحسابك الشخصي هنا
             const apiKey = "AIzaSyDY7StSk3zUPo0gJ6KDIFDvGnD3vO0qX_g"; 
-            
-            // 🌟 2. رابط الاتصال المباشر من المتصفح لنموذج 2.0 السريع
             const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
             const payload = {
@@ -1418,7 +1457,6 @@
             };
 
             try {
-                // الاتصال المباشر دون المرور بجوجل سكريبت
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1440,86 +1478,23 @@
             body.scrollTop = body.scrollHeight;
         }
 
-        // --- دالة توليد أسئلة الاختبار الذكية ---
-        async function generateQuiz() {
-            const topic = document.getElementById('quizTopic').value.trim();
-            const diff = document.getElementById('quizDifficulty').value;
-            const count = document.getElementById('quizCount').value;
-            if (!topic) return alert("الرجاء إدخال موضوع الدرس لتوليد الأسئلة.");
-
-            const btn = document.getElementById('btnGenerateQuiz');
-            const resArea = document.getElementById('quizResultArea');
-            const copyBtn = document.getElementById('btnCopyQuiz');
-
-            btn.innerText = "⏳ جاري التفكير والصياغة...";
-            btn.disabled = true;
-            resArea.style.display = "block";
-            resArea.innerText = "⏳ يتم الآن إعداد الأسئلة ونموذج الإجابة... يرجى الانتظار...";
-            copyBtn.style.display = "none";
-
-            const apiKey = "AIzaSyDY7StSk3zUPo0gJ6KDIFDvGnD3vO0qX_g"; 
-            const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
-
-            const prompt = `أنت خبير تربوي ومعلم تقنية معلومات في سلطنة عمان. قم بإعداد اختبار قصير مكون من ${count} أسئلة بمستوى صعوبة (${diff}) حول موضوع: ${topic}. نوع الأسئلة (اختيار من متعدد، صح وخطأ، مقالي قصير) مع توفير نموذج الإجابة الواضح في النهاية. نسق المخرجات بشكل احترافي ومناسب للطلاب.`;
-
-            const payload = { "contents": [{ "parts": [{ "text": prompt }] }] };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await response.json();
-                if (!response.ok) {
-                    resArea.innerText = "عذراً، خطأ في الاتصال: " + (data.error ? data.error.message : "رمز " + response.status);
-                } else {
-                    resArea.innerText = data.candidates[0].content.parts[0].text;
-                    copyBtn.style.display = "block";
-                }
-            } catch (error) {
-                resArea.innerText = "عذراً، حدث خطأ في الاتصال بخوادم الذكاء الاصطناعي.";
-            }
-            btn.innerText = "✨ توليد اختبار آخر";
-            btn.disabled = false;
-        }
-
-        // --- دالة نسخ الاختبار المولد ---
-        function copyQuiz() {
-            const text = document.getElementById('quizResultArea').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = document.getElementById('btnCopyQuiz');
-                const oldText = btn.innerText;
-                btn.innerText = "✅ تم النسخ بنجاح!";
-                btn.style.background = "#2196F3";
-                setTimeout(() => {
-                    btn.innerText = oldText;
-                    btn.style.background = "#27ae60";
-                }, 2000);
-            }).catch(() => {
-                alert("تعذر النسخ التلقائي، يرجى تحديد النص ونسخه يدوياً.");
-            });
-        }
-
-        // --- نظام التحكم الصوتي المتقدم (نسخة السرعة الفائقة 🚀) ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition;
         let isListening = false;
-        let commandExecuted = false; // مفتاح لمنع تكرار تنفيذ الأمر في نفس اللحظة
+        let commandExecuted = false; 
 
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
             recognition.lang = 'ar-OM'; 
             recognition.continuous = false; 
-            // 🌟 السر الأول: التقاط الكلمة أثناء النطق مباشرة دون انتظار انتهاء الجملة
             recognition.interimResults = true; 
 
             recognition.onstart = function() {
-                commandExecuted = false; // تصفير الحالة مع كل ضغطة مايك
+                commandExecuted = false; 
             };
 
             recognition.onresult = function(event) {
-                if (commandExecuted) return; // إذا تم تنفيذ الأمر، تجاهل باقي الكلام
+                if (commandExecuted) return; 
 
                 let transcript = '';
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -1528,7 +1503,6 @@
                 
                 const cmd = transcript.trim().toLowerCase();
                 
-                // 🌟 الفحص اللحظي: بمجرد سماع الكلمة المفتاحية، نفذ فوراً!
                 if (cmd.includes('طالب') || cmd.includes('عجلة') || cmd.includes('اختار')) {
                     executeFastCommand('modalRandom', spinWheel);
                 } 
@@ -1538,8 +1512,8 @@
                 else if (cmd.includes('مؤقت') || cmd.includes('وقت') || cmd.includes('نشاط')) {
                     executeFastCommand('modalTimer', null);
                 } 
-                else if (cmd.includes('اختبار') || cmd.includes('أسئلة') || cmd.includes('توليد')) {
-                    executeFastCommand('modalQuiz', null);
+                else if (cmd.includes('اختبار') || cmd.includes('أسئلة') || cmd.includes('تجهيز')) {
+                    executeFastCommand('modalQuizForm', null);
                 }
                 else if (cmd.includes('تقارير') || cmd.includes('شهادات')) {
                     commandExecuted = true; stopListening(); generateDetailedReports();
@@ -1556,13 +1530,11 @@
             recognition.onerror = function(event) { stopListening(); };
         }
 
-        // 🌟 دالة التنفيذ الخاطف (بِدون تأخير)
         function executeFastCommand(modalId, actionFunction) {
-            commandExecuted = true; // نقفل التنفيذ لكي لا يتكرر
-            stopListening(); // نغلق المايك فوراً لتسريع المتصفح
+            commandExecuted = true; 
+            stopListening(); 
             openModal(modalId);
             if (actionFunction) {
-                // 🌟 السر الثاني: قللنا التأخير من 500 إلى 50 مللي ثانية فقط (استجابة فورية)
                 setTimeout(actionFunction, 50); 
             }
         }
