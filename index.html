@@ -522,10 +522,170 @@
         }
         
         window.onload = () => { 
-            if (localStorage.getItem("theme") === "dark") toggleDarkMode(); 
-            if(!navigator.onLine) document.getElementById('offline-banner').style.display = 'block'; 
-            updateView(); 
+            // فحص الرابط: هل هو رابط اختبار طالب؟
+            const urlParams = new URLSearchParams(window.location.search);
+            const quizId = urlParams.get('q');
+            
+            if (quizId) {
+                // تفعيل واجهة الطالب المستقلة
+                setupStudentRegistrationView(quizId);
+            } else {
+                // تفعيل واجهة المعلم (لوحة التحكم المعتادة)
+                if (localStorage.getItem("theme") === "dark") toggleDarkMode(); 
+                if(!navigator.onLine) document.getElementById('offline-banner').style.display = 'block'; 
+                updateView(); 
+            }
         };
+
+        // 1. دالة بناء صفحة التسجيل المستقلة للطالب
+        function setupStudentRegistrationView(quizId) {
+            // مسح واجهة المعلم بالكامل واستبدالها بصفحة الطالب
+            document.body.innerHTML = `
+                <div style="min-height: 100vh; background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; display: flex; justify-content: center; align-items: flex-start; padding: 20px; margin: 0; position: absolute; top: 0; left: 0; width: 100%; box-sizing: border-box;">
+                    
+                    <div style="background: #ffffff; width: 100%; max-width: 600px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-top: 6px solid #2980b9; padding: 30px; margin-top: 20px;">
+                        
+                        <!-- ترويسة المنصة -->
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <h2 style="color: #2c3e50; margin: 0; font-size: 24px;">منصة مِحور التعليمية</h2>
+                            <p style="color: #7f8c8d; margin-top: 5px; font-size: 15px;">بوابة الاختبارات الإلكترونية</p>
+                        </div>
+
+                        <!-- قسم التسجيل (يظهر أولاً) -->
+                        <div id="registrationStep">
+                            <h3 style="color: #2980b9; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px; font-size: 18px;">📝 تسجيل بيانات الطالب</h3>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; font-weight: bold; color: #34495e; margin-bottom: 8px;">الاسم الرباعي والقبيلة: <span style="color:red;">*</span></label>
+                                <input type="text" id="stuName" placeholder="مثال: أحمد بن محمد بن علي اليعقوبي" style="width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 15px; box-sizing: border-box; font-family: inherit;">
+                            </div>
+
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; font-weight: bold; color: #34495e; margin-bottom: 8px;">الصف والشعبة: <span style="color:red;">*</span></label>
+                                <select id="stuGrade" style="width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 15px; box-sizing: border-box; font-family: inherit; background-color: #fff;">
+                                    <option value="">-- يرجى الاختيار --</option>
+                                    <optgroup label="الصف السادس">
+                                        <option value="6-1">السادس - شعبة 1</option>
+                                        <option value="6-2">السادس - شعبة 2</option>
+                                        <option value="6-3">السادس - شعبة 3</option>
+                                        <option value="6-4">السادس - شعبة 4</option>
+                                        <option value="6-5">السادس - شعبة 5</option>
+                                    </optgroup>
+                                    <optgroup label="الصف التاسع">
+                                        <option value="9-1">التاسع - شعبة 1</option>
+                                        <option value="9-2">التاسع - شعبة 2</option>
+                                        <option value="9-3">التاسع - شعبة 3</option>
+                                        <option value="9-4">التاسع - شعبة 4</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 25px;">
+                                <label style="display: block; font-weight: bold; color: #34495e; margin-bottom: 8px;">رقم الطالب (إن وجد):</label>
+                                <input type="number" id="stuId" placeholder="أدخل رقمك المدرسي (اختياري)" style="width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 15px; box-sizing: border-box; font-family: inherit;">
+                            </div>
+
+                            <button onclick="startQuizProcess('${quizId}')" id="btnStartQuiz" style="width: 100%; background: #27ae60; color: #fff; padding: 15px; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">🚀 بدء الاختبار الآن</button>
+                        </div>
+
+                        <!-- قسم الاختبار (مخفي حتى إتمام التسجيل) -->
+                        <div id="quizStep" style="display: none;">
+                            <!-- سيتم حقن الأسئلة هنا -->
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        // 2. دالة التحقق من البيانات والبدء في جلب الاختبار
+        function startQuizProcess(quizId) {
+            const name = document.getElementById('stuName').value.trim();
+            const grade = document.getElementById('stuGrade').value;
+            
+            if(!name || !grade) {
+                alert("⚠️ الرجاء كتابة الاسم الرباعي واختيار الصف والشعبة للبدء!");
+                return;
+            }
+
+            const btn = document.getElementById('btnStartQuiz');
+            btn.disabled = true;
+            btn.innerHTML = "⏳ جاري تحضير الأسئلة...";
+            btn.style.background = "#f39c12";
+
+            // جلب أسئلة الاختبار من جوجل شيت بناءً على الرمز
+            fetch(`${scriptURL}?action=get_quiz&quizId=${quizId}`)
+            .then(r => r.json())
+            .then(data => {
+                if(data.status === "success" && data.questions) {
+                    // إخفاء صفحة التسجيل وإظهار الأسئلة
+                    document.getElementById('registrationStep').style.display = 'none';
+                    document.getElementById('quizStep').style.display = 'block';
+                    renderQuestionsForStudent(data.questions, name, grade);
+                } else {
+                    alert("❌ عذراً، لم يتم العثور على الاختبار. تأكد من صحة الرابط.");
+                    btn.disabled = false;
+                    btn.innerHTML = "🚀 بدء الاختبار الآن";
+                    btn.style.background = "#27ae60";
+                }
+            })
+            .catch(err => {
+                alert("❌ حدث خطأ في الاتصال بالإنترنت. يرجى المحاولة مرة أخرى.");
+                btn.disabled = false;
+                btn.innerHTML = "🚀 بدء الاختبار الآن";
+                btn.style.background = "#27ae60";
+            });
+        }
+
+        // 3. دالة رسم الأسئلة للطالب بعد اجتياز التسجيل
+        function renderQuestionsForStudent(questions, studentName, studentGrade) {
+            let html = `
+                <div style="background: #eafaf1; border: 1px solid #27ae60; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; color: #2c3e50;">
+                    👋 أهلاً بك: ${studentName} <br>
+                    <span style="font-size: 13px; color: #7f8c8d;">الصف: ${studentGrade.replace('-', ' شعبة ')}</span>
+                </div>
+            `;
+            
+            questions.forEach((q, i) => {
+                html += `
+                <div style="margin-bottom: 20px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #dcdde1; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                    <div style="font-weight: bold; font-size: 17px; color: #2c3e50; margin-bottom: 15px; line-height: 1.5;">السؤال ${i+1}: ${q.question}</div>
+                `;
+                
+                if(q.type === 'mcq') {
+                    q.options.forEach(opt => {
+                        html += `
+                        <label style="display: block; margin-bottom: 10px; font-size: 16px; cursor: pointer; padding: 12px; background: #f8f9fa; border: 1px solid #bdc3c7; border-radius: 6px; transition: 0.2s;">
+                            <input type="radio" name="q_${i}" value="${opt}" style="margin-left: 10px; transform: scale(1.2);"> ${opt}
+                        </label>`;
+                    });
+                } else if(q.type === 'long') {
+                    html += `<textarea id="q_${i}" rows="5" style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #bdc3c7; font-family: inherit; font-size: 15px; box-sizing: border-box;" placeholder="اكتب إجابتك بالتفصيل هنا..."></textarea>`;
+                } else {
+                    html += `<input type="text" id="q_${i}" style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #bdc3c7; font-family: inherit; font-size: 15px; box-sizing: border-box;" placeholder="إجابتك القصيرة...">`;
+                }
+                html += '</div>';
+            });
+
+            html += `<button onclick="submitStudentAnswers('${studentName}', '${studentGrade}')" style="background: #2980b9; color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">📤 إنهاء وتسليم الاختبار</button>`;
+
+            document.getElementById('quizStep').innerHTML = html;
+        }
+
+        // 4. دالة تسليم الاختبار (الرسالة الختامية)
+        function submitStudentAnswers(studentName, studentGrade) {
+            // ملاحظة: هنا سيتم لاحقاً دمج كود إرسال درجات وإجابات الطالب لجدولك في جوجل شيت.
+            
+            document.getElementById('quizStep').innerHTML = `
+                <div style="text-align: center; padding: 30px 10px;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">🎉</div>
+                    <h2 style="color:#27ae60; margin-bottom: 10px;">تم استلام إجاباتك بنجاح!</h2>
+                    <p style="color: #34495e; font-size: 16px; font-weight: bold;">أحسنت يا ${studentName}</p>
+                    <p style="color: #7f8c8d; font-size: 14px; line-height: 1.6;">تم إرسال إجاباتك إلى أستاذ المادة. <br> يمكنك الآن إغلاق هذه الصفحة بأمان.</p>
+                </div>
+            `;
+            playSound(880, 'sine', 0.2, 0.1);
+        }
 
         window.addEventListener('online', () => { document.getElementById('offline-banner').style.display = 'none'; syncOfflineData(); });
         window.addEventListener('offline', () => { document.getElementById('offline-banner').style.display = 'block'; });
