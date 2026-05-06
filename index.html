@@ -445,7 +445,6 @@
         </div>
     </div>
 
-    <!-- نافذة صانع الاختبارات الجديدة -->
     <div id="modalQuizForm" class="modal">
         <div class="modal-content modal-large">
             <span class="close-btn" onclick="closeModal('modalQuizForm')">&times;</span>
@@ -545,13 +544,11 @@
                     
                     <div style="background: #ffffff; width: 100%; max-width: 600px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-top: 6px solid #2980b9; padding: 30px; margin-top: 20px;">
                         
-                        <!-- ترويسة المنصة -->
                         <div style="text-align: center; margin-bottom: 25px;">
                             <h2 style="color: #2c3e50; margin: 0; font-size: 24px;">منصة مِحور التعليمية</h2>
                             <p style="color: #7f8c8d; margin-top: 5px; font-size: 15px;">بوابة الاختبارات الإلكترونية</p>
                         </div>
 
-                        <!-- قسم التسجيل (يظهر أولاً) -->
                         <div id="registrationStep">
                             <h3 style="color: #2980b9; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px; font-size: 18px;">📝 تسجيل بيانات الطالب</h3>
                             
@@ -588,10 +585,8 @@
                             <button onclick="startQuizProcess('${quizId}')" id="btnStartQuiz" style="width: 100%; background: #27ae60; color: #fff; padding: 15px; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">🚀 بدء الاختبار الآن</button>
                         </div>
 
-                        <!-- قسم الاختبار (مخفي حتى إتمام التسجيل) -->
                         <div id="quizStep" style="display: none;">
-                            <!-- سيتم حقن الأسئلة هنا -->
-                        </div>
+                            </div>
 
                     </div>
                 </div>
@@ -1575,65 +1570,52 @@
             btn.disabled = true;
             btn.innerText = "⏳ جاري تجهيز الرابط...";
             
-            // 1. توليد رمز عشوائي قصير (4 حروف/أرقام)
+            // 1. توليد رمز عشوائي قصير
             const quizId = Math.random().toString(36).substring(2, 6).toUpperCase();
             
             // 2. تحديد الرابط التلقائي للصفحة الحالية
             let autoUrl = window.location.origin + window.location.pathname;
-            
-            // إذا كنت تفتح الملف من الكمبيوتر مباشرة (بدون استضافة)، نضع رابطاً افتراضياً لكي لا يتعطل التقصير
             if (autoUrl.includes("file://") || autoUrl.includes("null")) {
                 autoUrl = "https://moaaz.github.io/Quiz/"; 
             }
             
-            const realQuizLink = autoUrl + "?q=" + quizId;
+            // لضمان شكل الرابط النهائي وتجهيزه
+            const finalLink = autoUrl + "?q=" + quizId;
+            let displayLink = finalLink.replace(/^https?:\/\//, '');
 
-            // 3. دالة لعرض المربع الأخضر فوراً (سواء نجح التقصير أو فشل)
-            const displaySuccessBox = (finalLink) => {
-                let displayLink = finalLink.replace(/^https?:\/\//, ''); 
-                res.innerHTML = `
-                    <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:15px; text-align: center; width: 100%; box-sizing: border-box;">
-                        <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
-                        <span style="font-size:16px; font-weight:bold; color:#2c3e50;">تم تجهيز الاختبار بنجاح!</span><br>
-                        <span style="color:#34495e; font-size:14px;">اطلب من الطلاب الدخول لهذا الرابط:</span><br>
-                        
-                        <div style="margin: 15px 0;">
-                            <a href="${finalLink}" target="_blank" style="display:inline-block; color:#2c3e50; background:#fff; padding:10px 15px; border-radius:6px; border:2px solid #2980b9; text-decoration:none; font-family: Tahoma, sans-serif; font-size:22px; font-weight:bold; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: break-all;">
-                                ${displayLink}
-                            </a>
-                        </div>
-                        
-                        <button onclick="navigator.clipboard.writeText('${finalLink}'); alert('تم نسخ الرابط بنجاح!');" style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px;">📋 نسخ الرابط للمشاركة</button>
-                    </div>`;
+            // 3. عرض المربع الأخضر فوراً (تم إزالة خدمة التقصير لتفادي التعليق)
+            res.innerHTML = `
+                <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:15px; text-align: center; width: 100%; box-sizing: border-box;">
+                    <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
+                    <span style="font-size:16px; font-weight:bold; color:#2c3e50;">تم تجهيز الاختبار بنجاح!</span><br>
+                    <span style="color:#34495e; font-size:14px;">اطلب من الطلاب الدخول لهذا الرابط:</span><br>
                     
-                playSound(800, 'sine', 0.3, 0.1);
-                // النزول التلقائي للأسفل لرؤية المربع بوضوح
-                setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100);
+                    <div style="margin: 15px 0;">
+                        <a href="${finalLink}" target="_blank" style="display:inline-block; color:#2c3e50; background:#fff; padding:10px 15px; border-radius:6px; border:2px solid #2980b9; text-decoration:none; font-family: Tahoma, sans-serif; font-size:22px; font-weight:bold; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: break-all;">
+                            ${displayLink}
+                        </a>
+                    </div>
+                    
+                    <button onclick="navigator.clipboard.writeText('${finalLink}'); alert('تم نسخ الرابط بنجاح!');" style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px;">📋 نسخ الرابط للمشاركة</button>
+                </div>`;
                 
-                btn.disabled = false;
-                btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
-            };
+            // تجاوز أي حظر تلقائي للصوت في متصفحات الجوال قد يوقف عمل الكود
+            try { playSound(800, 'sine', 0.3, 0.1); } catch(e) {}
+            
+            setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100);
+            
+            btn.disabled = false;
+            btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
 
-            // 4. محاولة تقصير الرابط عبر الخدمة المجانية
-            fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(realQuizLink)}`)
-            .then(r => r.json())
-            .then(data => {
-                // عرض الرابط القصير
-                displaySuccessBox(data.shorturl || realQuizLink);
-            })
-            .catch(err => {
-                // في حال وجود مانع إعلانات أو تعطل خدمة التقصير، نعرض الرابط الأساسي فوراً دون أن يتوقف الكود
-                displaySuccessBox(realQuizLink);
-            });
-
-            // 5. إرسال بيانات الأسئلة للحفظ في السيرفر في "الخلفية" دون تأخير الشاشة
+            // 4. الحفظ في السيرفر في الخلفية
             const payload = { action: "save_quiz", quizId: quizId, questions: currentParsedQuiz };
             fetch(scriptURL, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                 body: JSON.stringify(payload) 
-            }).catch(e => console.log("Background save error:", e));
+            }).catch(e => console.log("Background save error", e));
         }
+
         // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
