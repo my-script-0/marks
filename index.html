@@ -1607,8 +1607,14 @@
             btn.disabled = false;
             btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
 
-            // 4. الحفظ في السيرفر في الخلفية
-            const payload = { action: "save_quiz", quizId: quizId, questions: currentParsedQuiz };
+            // 4. الحفظ في السيرفر في الخلفية (تمت إضافة quizLink هنا ليُحفظ في الشيت)
+            const payload = { 
+                action: "save_quiz", 
+                quizId: quizId, 
+                questions: currentParsedQuiz,
+                quizLink: finalLink // السطر المضاف لحفظ الرابط في جوجل شيت
+            };
+            
             fetch(scriptURL, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
