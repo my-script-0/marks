@@ -508,7 +508,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx8CKY-E0Ox-55TEOHsVb4TrngAuV0X0entCW7EWCs6wH2acvTPy7Ee5C5_-q7Dqf_7iw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz1hHj_c7vMO19JAUQCrMfBsfw4mydSLjlZP0e5CaPGsKXvB5S3ZSviRYo3ZjaQ1hc4Hg/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = "";
@@ -1648,54 +1648,73 @@
         // --- دوال إدارة سجل الاختبارات السابقة ---
         
         // أ. حفظ الرابط في الذاكرة
+        // --- دوال إدارة سجل الاختبارات السابقة (النسخة السحابية) ---
+        
+        // أ. لم نعد بحاجة لحفظها محلياً، فدالة "توليد الرابط" ترسلها لجوجل شيت تلقائياً. 
+        // سنكتفي بتأخير بسيط ثم إعادة جلب القائمة من جوجل لتظهر محدثة.
         function saveQuizToHistory(name, url, id) {
-            let history = JSON.parse(localStorage.getItem('quizLinksHistory') || '[]');
-            const date = new Date().toLocaleDateString('ar-OM', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            // إضافة الاختبار الجديد في أعلى القائمة
-            history.unshift({ id: id, name: name, url: url, date: date });
-            localStorage.setItem('quizLinksHistory', JSON.stringify(history));
-            loadQuizHistory(); // تحديث العرض فوراً
+            setTimeout(loadQuizHistory, 2500); // تحديث القائمة بعد 2.5 ثانية لضمان حفظها في جوجل
         }
 
-        // ب. عرض السجل في الواجهة
+        // ب. جلب السجل من السحابة (جوجل شيت)
         function loadQuizHistory() {
             const container = document.getElementById('quizHistoryContainer');
             if(!container) return; 
 
-            let history = JSON.parse(localStorage.getItem('quizLinksHistory') || '[]');
-            
-            if (history.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px; background:var(--category-bg); border-radius:8px;">لا توجد روابط لاختبارات سابقة حتى الآن.</div>`;
-                return;
-            }
+            container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px;">جاري جلب الروابط من السحابة... ⏳</div>`;
 
-            let html = '';
-            history.forEach((quiz, index) => {
-                html += `
-                <div style="background:var(--input-bg); border:1px solid var(--border-color); padding:12px; border-radius:8px; display:flex; flex-direction:column; gap:8px; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="font-weight:bold; color:#2980b9; font-size:15px;">📝 ${quiz.name}</div>
-                        <div style="font-size:12px; color:#7f8c8d;" dir="ltr">${quiz.date}</div>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--category-bg); padding:8px; border-radius:4px; border: 1px solid #ecf0f1;">
-                        <input type="text" value="${quiz.url}" readonly style="flex:1; border:none; background:transparent; outline:none; font-family:monospace; font-size:13px; color:#34495e; direction:ltr; text-align:left;">
-                        <button onclick="navigator.clipboard.writeText('${quiz.url}'); alert('تم نسخ رابط ${quiz.name} بنجاح!');" style="background:#27ae60; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;">📋 نسخ</button>
-                        <button onclick="deleteQuizHistory(${index})" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;" title="حذف من السجل">🗑️</button>
-                    </div>
-                </div>`;
+            fetch(`${scriptURL}?action=get_quiz_history`)
+            .then(r => r.json())
+            .then(data => {
+                if(data.status === "success" && data.history && data.history.length > 0) {
+                    let html = '';
+                    data.history.forEach((quiz) => {
+                        html += `
+                        <div style="background:var(--input-bg); border:1px solid var(--border-color); padding:12px; border-radius:8px; display:flex; flex-direction:column; gap:8px; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-weight:bold; color:#2980b9; font-size:15px;">📝 ${quiz.name}</div>
+                                <div style="font-size:12px; color:#7f8c8d;" dir="ltr">${quiz.date}</div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--category-bg); padding:8px; border-radius:4px; border: 1px solid #ecf0f1;">
+                                <input type="text" value="${quiz.url}" readonly style="flex:1; border:none; background:transparent; outline:none; font-family:monospace; font-size:13px; color:#34495e; direction:ltr; text-align:left;">
+                                <button onclick="navigator.clipboard.writeText('${quiz.url}'); alert('تم نسخ رابط ${quiz.name} بنجاح!');" style="background:#27ae60; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;">📋 نسخ</button>
+                                <button onclick="deleteQuizHistory('${quiz.id}')" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;" title="حذف من السجل السحابي">🗑️</button>
+                            </div>
+                        </div>`;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px; background:var(--category-bg); border-radius:8px;">لا توجد روابط لاختبارات سابقة محفوظة في السحابة حتى الآن.</div>`;
+                }
+            })
+            .catch(err => {
+                container.innerHTML = `<div style="text-align:center; color:#e74c3c; font-size:14px; padding:15px;">❌ حدث خطأ في الاتصال. لا يمكن جلب السجل الآن.</div>`;
             });
-            container.innerHTML = html;
         }
 
-        // ج. حذف رابط من السجل
-        function deleteQuizHistory(index) {
-            if(!confirm("هل أنت متأكد من إزالة هذا الرابط من السجل؟ (سيتم حذفه من هذه القائمة فقط)")) return;
-            let history = JSON.parse(localStorage.getItem('quizLinksHistory') || '[]');
-            history.splice(index, 1);
-            localStorage.setItem('quizLinksHistory', JSON.stringify(history));
-            loadQuizHistory();
-        }
+        // ج. حذف الرابط من السحابة (جوجل شيت)
+        function deleteQuizHistory(quizId) {
+            if(!confirm("⚠️ هل أنت متأكد من حذف هذا الرابط؟\n(سيتم حذفه من جميع أجهزتك نهائياً)")) return;
+            
+            const container = document.getElementById('quizHistoryContainer');
+            container.innerHTML = `<div style="text-align:center; color:#f39c12; font-size:14px; padding:15px;">جاري الحذف من السحابة... ⏳</div>`;
 
+            const payload = { action: "delete_quiz_history", quizId: quizId };
+            
+            fetch(scriptURL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify(payload) 
+            })
+            .then(r => r.json())
+            .then(d => {
+                loadQuizHistory(); // إعادة تحميل القائمة بعد الحذف الناجح
+            })
+            .catch(err => {
+                alert("❌ حدث خطأ أثناء الاتصال بالشبكة ولم يتم الحذف.");
+                loadQuizHistory();
+            });
+        }
         // --- المساعد الذكي القديم (باقي كما هو) ---
         function toggleAIWindow() {
             const win = document.getElementById("aiWindow");
