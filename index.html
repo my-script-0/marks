@@ -254,7 +254,7 @@
     </div>
 
     <div class="sidebar-left">
-        <button class="side-icon" style="background: #2c3e50;" data-title="تجهيز الاختبارات" onclick="openModal('modalQuizForm')">📝</button>
+        <button class="side-icon" style="background: #2c3e50;" data-title="تجهيز الاختبارات" onclick="openModal('modalQuizForm'); loadQuizHistory();">📝</button>
         <button class="side-icon" style="background: #8e44ad;" data-title="دفتر التحضير" onclick="openNotesModal()">📓</button>
         <button class="side-icon bg-wheel" data-title="عجلة الاختيار" onclick="openModal('modalRandom')">🎲</button>
         <button class="side-icon bg-timer" data-title="المؤقت الذكي" onclick="openModal('modalTimer')">⏱️</button>
@@ -451,6 +451,11 @@
             <div class="modal-header"><h3 style="color:#2c3e50;">📝 صانع ومجهز الاختبارات التفاعلية</h3></div>
             
             <div class="modal-large-body">
+                <div style="margin-bottom: 15px; background: #eaf2f8; padding: 15px; border-radius: 8px; border: 1px solid #3498db;">
+                    <label style="font-weight:bold; color:#2c3e50; display:block; margin-bottom:8px;">اسم الاختبار / عنوانه (مطلوب لحفظ الرابط): <span style="color:red;">*</span></label>
+                    <input type="text" id="quizNameInput" class="note-input" placeholder="مثال: الاختبار القصير الأول - وحدة الشبكات" style="font-weight:bold; font-size:16px; border:2px solid #bdc3c7; margin-bottom:0;">
+                </div>
+
                 <p style="font-size:14px; font-weight:bold; color:var(--text-color); margin-top:0;">انسخ أسئلة الاختبار والصقها في المربع بالأسفل.</p>
                 <p style="font-size:13px; color:#7f8c8d; margin-top:-5px;">💡 اترك سطر فارغ بين كل سؤال. (السطر الواحد = إجابة قصيرة/طويلة، الأسطر المتعددة = اختيار من متعدد).</p>
                 
@@ -462,6 +467,12 @@
                 
                 <button id="btnGenerateLink" onclick="generateQuizLink()" class="btn-save-note" style="display:none; background:#27ae60; font-size:16px; margin-top:10px;">🔗 إنشاء وتوليد رابط الاختبار القصير للطالب</button>
                 <div id="quizLinkResult" style="margin-top:15px; text-align:center; font-weight:bold; color:#27ae60;"></div>
+
+                <div style="margin-top: 30px; border-top: 2px dashed #bdc3c7; padding-top: 20px;">
+                    <h4 style="color:#2c3e50; margin-top:0; margin-bottom:15px; display:flex; align-items:center; gap:8px;">📚 سجل روابط الاختبارات السابقة</h4>
+                    <div id="quizHistoryContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                        </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1565,15 +1576,23 @@
         }
 
         function generateQuizLink() {
+            // 1. التحقق من كتابة اسم الاختبار
+            const quizName = document.getElementById('quizNameInput').value.trim();
+            if(!quizName) {
+                alert("⚠️ الرجاء كتابة 'اسم الاختبار' في الحقل المخصص بالأعلى قبل توليد الرابط!");
+                document.getElementById('quizNameInput').focus();
+                return;
+            }
+
             const btn = document.getElementById('btnGenerateLink');
             const res = document.getElementById('quizLinkResult');
             btn.disabled = true;
             btn.innerText = "⏳ جاري تجهيز الرابط...";
             
-            // 1. توليد رمز عشوائي قصير
+            // 2. توليد رمز ورابط الاختبار
             const quizId = Math.random().toString(36).substring(2, 6).toUpperCase();
             
-            // 2. تحديد الرابط التلقائي للصفحة الحالية
+            // 3. تحديد الرابط التلقائي للصفحة الحالية
             let autoUrl = window.location.origin + window.location.pathname;
             if (autoUrl.includes("file://") || autoUrl.includes("null")) {
                 autoUrl = "https://moaaz.github.io/Quiz/"; 
@@ -1583,7 +1602,7 @@
             const finalLink = autoUrl + "?q=" + quizId;
             let displayLink = finalLink.replace(/^https?:\/\//, '');
 
-            // 3. عرض المربع الأخضر فوراً (تم إزالة خدمة التقصير لتفادي التعليق)
+            // 4. عرض المربع الأخضر فوراً (تم إزالة خدمة التقصير لتفادي التعليق)
             res.innerHTML = `
                 <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:15px; text-align: center; width: 100%; box-sizing: border-box;">
                     <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
@@ -1607,12 +1626,16 @@
             btn.disabled = false;
             btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
 
-            // 4. الحفظ في السيرفر في الخلفية (تمت إضافة quizLink هنا ليُحفظ في الشيت)
+            // 5. حفظ الاختبار في السجل المحلي للمنصة
+            saveQuizToHistory(quizName, finalLink, quizId);
+
+            // 6. الحفظ في السيرفر في الخلفية
             const payload = { 
                 action: "save_quiz", 
                 quizId: quizId, 
+                quizName: quizName, 
                 questions: currentParsedQuiz,
-                quizLink: finalLink // السطر المضاف لحفظ الرابط في جوجل شيت
+                quizLink: finalLink 
             };
             
             fetch(scriptURL, { 
@@ -1620,6 +1643,57 @@
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                 body: JSON.stringify(payload) 
             }).catch(e => console.log("Background save error", e));
+        }
+
+        // --- دوال إدارة سجل الاختبارات السابقة ---
+        
+        // أ. حفظ الرابط في الذاكرة
+        function saveQuizToHistory(name, url, id) {
+            let history = JSON.parse(localStorage.getItem('quizLinksHistory') || '[]');
+            const date = new Date().toLocaleDateString('ar-OM', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            // إضافة الاختبار الجديد في أعلى القائمة
+            history.unshift({ id: id, name: name, url: url, date: date });
+            localStorage.setItem('quizLinksHistory', JSON.stringify(history));
+            loadQuizHistory(); // تحديث العرض فوراً
+        }
+
+        // ب. عرض السجل في الواجهة
+        function loadQuizHistory() {
+            const container = document.getElementById('quizHistoryContainer');
+            if(!container) return; 
+
+            let history = JSON.parse(localStorage.getItem('quizLinksHistory') || '[]');
+            
+            if (history.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px; background:var(--category-bg); border-radius:8px;">لا توجد روابط لاختبارات سابقة حتى الآن.</div>`;
+                return;
+            }
+
+            let html = '';
+            history.forEach((quiz, index) => {
+                html += `
+                <div style="background:var(--input-bg); border:1px solid var(--border-color); padding:12px; border-radius:8px; display:flex; flex-direction:column; gap:8px; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-weight:bold; color:#2980b9; font-size:15px;">📝 ${quiz.name}</div>
+                        <div style="font-size:12px; color:#7f8c8d;" dir="ltr">${quiz.date}</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--category-bg); padding:8px; border-radius:4px; border: 1px solid #ecf0f1;">
+                        <input type="text" value="${quiz.url}" readonly style="flex:1; border:none; background:transparent; outline:none; font-family:monospace; font-size:13px; color:#34495e; direction:ltr; text-align:left;">
+                        <button onclick="navigator.clipboard.writeText('${quiz.url}'); alert('تم نسخ رابط ${quiz.name} بنجاح!');" style="background:#27ae60; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;">📋 نسخ</button>
+                        <button onclick="deleteQuizHistory(${index})" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;" title="حذف من السجل">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ج. حذف رابط من السجل
+        function deleteQuizHistory(index) {
+            if(!confirm("هل أنت متأكد من إزالة هذا الرابط من السجل؟ (سيتم حذفه من هذه القائمة فقط)")) return;
+            let history = JSON.parse(localStorage.getItem('quizLinksHistory') || '[]');
+            history.splice(index, 1);
+            localStorage.setItem('quizLinksHistory', JSON.stringify(history));
+            loadQuizHistory();
         }
 
         // --- المساعد الذكي القديم (باقي كما هو) ---
