@@ -452,7 +452,7 @@
             
             <div class="modal-large-body">
                 <div style="margin-bottom: 15px; background: #eaf2f8; padding: 15px; border-radius: 8px; border: 1px solid #3498db;">
-                    <label style="font-weight:bold; color:#2c3e50; display:block; margin-bottom:8px;">اسم الاختبار / عنوانه (مطلوب لحفظ الرابط): <span style="color:red;">*</span></label>
+                    <label style="font-weight:bold; color:#2c3e50; display:block; margin-bottom:8px;">اسم الاختبار / عنوانه (مطلوب لحفظ الكود): <span style="color:red;">*</span></label>
                     <input type="text" id="quizNameInput" class="note-input" placeholder="مثال: الاختبار القصير الأول - وحدة الشبكات" style="font-weight:bold; font-size:16px; border:2px solid #bdc3c7; margin-bottom:0;">
                 </div>
 
@@ -465,11 +465,11 @@
                 
                 <div id="quizPreviewArea" style="display:none; background:var(--category-bg); padding:15px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:15px; max-height:250px; overflow-y:auto;"></div>
                 
-                <button id="btnGenerateLink" onclick="generateQuizLink()" class="btn-save-note" style="display:none; background:#27ae60; font-size:16px; margin-top:10px;">🔗 إنشاء وتوليد رابط الاختبار القصير للطالب</button>
+                <button id="btnGenerateLink" onclick="generateQuizLink()" class="btn-save-note" style="display:none; background:#27ae60; font-size:16px; margin-top:10px;">🔑 إنشاء وتوليد كود الاختبار للطالب</button>
                 <div id="quizLinkResult" style="margin-top:15px; text-align:center; font-weight:bold; color:#27ae60;"></div>
 
                 <div style="margin-top: 30px; border-top: 2px dashed #bdc3c7; padding-top: 20px;">
-                    <h4 style="color:#2c3e50; margin-top:0; margin-bottom:15px; display:flex; align-items:center; gap:8px;">📚 سجل روابط الاختبارات السابقة</h4>
+                    <h4 style="color:#2c3e50; margin-top:0; margin-bottom:15px; display:flex; align-items:center; gap:8px;">📚 سجل أكواد الاختبارات السابقة</h4>
                     <div id="quizHistoryContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
                         </div>
                 </div>
@@ -508,7 +508,7 @@
                 "5": ["محمد بن خالد بن حامد حمود الناصري", "محمد بن خميس بن سيف حمد الحاتمي", "محمد بن راشد بن محمد عبدالله الغافري", "محمد بن زايد بن محمد سعيد المقبالي", "محمد بن سالم بن سليم حمد الناصري", "محمد بن سالم بن صالح راشد الغافري", "محمد بن علي بن سليّم راشد الحاتمي", "محمد بن مانع بن سالم خايف الهنائي", "محمد بن محمود بن سلمان سالم المنظري", "محمد بن محمود بن محمد سعيد المقبالي", "محمد بن مطر بن عبيد باروت الغافري", "مسعود بن خليفه بن مسعود سيف المجرفي", "منذر بن مرزوق بن حميد عبدالله الغافري", "مهند بن محمد بن عبيد عيد الكلباني", "ناصر بن محمود بن ناصر سليمان الهنائي", "نهيان بن أحمد بن سيف سليمان الغافري", "نهيان بن محمود بن عيد محبوب الغافري", "نواف بن حميد بن سالم سعيد العبري", "نواف بن قاسم بن حمد سعيد الغافري", "هزاع بن ابراهيم بن خلفان سعيد المقبالي", "هزاع بن ناجي بن سعيد سعيّد الغافري", "هزاع بن ناصر بن حمد خميس الناصري", "هناد بن سيف بن سالم سيف المجرفي", "وسام بن عبدالله بن ناصر حميد الشهومي", "وسام بن عمر بن صالح خميس الغافري", "يعقوب بن يوسف بن سعيد سيف المعمري", "يوسف بن حميد بن علي ناصر الشقصي", "يوسف بن خالد بن سيف حمد التميمي", "يوسف بن سليمان بن سليّم سعيد المقبالي", "يوسف بن مالك بن سباع زياد الغافري", "يوسف بن يعقوب بن مرهون سليمان الناصري"] 
             } 
         };
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbygshUihcBQT_MIl3d8LrO_k5VW033v2zVDLT322Ni8LA7I9fVqGVGc2qXPcWSZLX_czA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbySwBY1zNiHN55KA6UVowKJqCcxEPGGlG8PWTLSQ9aoGGcWbxIzXuNrtpcl21ggajBFCQ/exec';
         
         let currentSheetData = {};
         let currentAdminPassword = "";
@@ -1424,7 +1424,7 @@
             // 1. التحقق من كتابة اسم الاختبار
             const quizName = document.getElementById('quizNameInput').value.trim();
             if(!quizName) {
-                alert("⚠️ الرجاء كتابة 'اسم الاختبار' في الحقل المخصص بالأعلى قبل توليد الرابط!");
+                alert("⚠️ الرجاء كتابة 'اسم الاختبار' في الحقل المخصص بالأعلى قبل توليد الكود!");
                 document.getElementById('quizNameInput').focus();
                 return;
             }
@@ -1432,57 +1432,44 @@
             const btn = document.getElementById('btnGenerateLink');
             const res = document.getElementById('quizLinkResult');
             btn.disabled = true;
-            btn.innerText = "⏳ جاري تجهيز الرابط...";
+            btn.innerText = "⏳ جاري تجهيز الكود...";
             
-            // 2. توليد رمز ورابط الاختبار
+            // 2. توليد رمز الكود فقط
             const quizId = Math.random().toString(36).substring(2, 6).toUpperCase();
             
-            // 3. تحديد الرابط التلقائي للصفحة الحالية وتوجيهه لمجلد الطالب
-            let autoUrl = window.location.origin + window.location.pathname;
-            autoUrl = autoUrl.substring(0, autoUrl.lastIndexOf('/') + 1); // إزالة index.html
-            
-            if (autoUrl.includes("file://") || autoUrl.includes("null")) {
-                autoUrl = "https://moaaz.github.io/Quiz/"; 
-            }
-            
-            // لضمان شكل الرابط النهائي وتوجيهه مباشرة لملف الطالب المستقل
-            const finalLink = autoUrl + "student/?q=" + quizId;
-            let displayLink = finalLink.replace(/^https?:\/\//, '');
-
-            // 4. عرض المربع الأخضر فوراً
+            // 3. عرض المربع الأخضر وبداخله الكود
             res.innerHTML = `
                 <div style="background:#eafaf1; border:1px solid #27ae60; padding:15px; border-radius:8px; margin-top:15px; text-align: center; width: 100%; box-sizing: border-box;">
                     <span style="font-size:24px; display:block; margin-bottom:5px;">✅</span>
                     <span style="font-size:16px; font-weight:bold; color:#2c3e50;">تم تجهيز الاختبار بنجاح!</span><br>
-                    <span style="color:#34495e; font-size:14px;">اطلب من الطلاب الدخول لهذا الرابط:</span><br>
+                    <span style="color:#34495e; font-size:14px;">اطلب من الطلاب الدخول لمنصة الطلاب وإدخال الكود التالي:</span><br>
                     
                     <div style="margin: 15px 0;">
-                        <a href="${finalLink}" target="_blank" style="display:inline-block; color:#2c3e50; background:#fff; padding:10px 15px; border-radius:6px; border:2px solid #2980b9; text-decoration:none; font-family: Tahoma, sans-serif; font-size:22px; font-weight:bold; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); word-break: break-all;">
-                            ${displayLink}
-                        </a>
+                        <div style="display:inline-block; color:#2c3e50; background:#fff; padding:10px 25px; border-radius:6px; border:2px dashed #2980b9; font-family: monospace; font-size:32px; font-weight:bold; letter-spacing: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            ${quizId}
+                        </div>
                     </div>
                     
-                    <button onclick="navigator.clipboard.writeText('${finalLink}'); alert('تم نسخ الرابط بنجاح!');" style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px;">📋 نسخ الرابط للمشاركة</button>
+                    <button onclick="navigator.clipboard.writeText('${quizId}'); alert('تم نسخ الكود بنجاح!');" style="background:#27ae60; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px;">📋 نسخ الكود للمشاركة</button>
                 </div>`;
                 
-            // تجاوز أي حظر تلقائي للصوت في متصفحات الجوال قد يوقف عمل الكود
             try { playSound(800, 'sine', 0.3, 0.1); } catch(e) {}
             
             setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'end' }), 100);
             
             btn.disabled = false;
-            btn.innerText = "🔗 معاينة وإنشاء رابط اختبار جديد";
+            btn.innerText = "🔑 إنشاء كود اختبار جديد";
 
-            // 5. حفظ الاختبار في السجل المحلي للمنصة
-            saveQuizToHistory(quizName, finalLink, quizId);
+            // 4. حفظ الاختبار في السجل المحلي للمنصة
+            saveQuizToHistory(quizName, quizId, quizId);
 
-            // 6. الحفظ في السيرفر في الخلفية
+            // 5. الحفظ في السيرفر في الخلفية
             const payload = { 
                 action: "save_quiz", 
                 quizId: quizId, 
                 quizName: quizName, 
                 questions: currentParsedQuiz,
-                quizLink: finalLink 
+                quizLink: quizId // أرسلنا الكود بدلاً من الرابط ليتم حفظه في السحابة
             };
             
             fetch(scriptURL, { 
@@ -1503,7 +1490,7 @@
             const container = document.getElementById('quizHistoryContainer');
             if(!container) return; 
 
-            container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px;">جاري جلب الروابط من السحابة... ⏳</div>`;
+            container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px;">جاري جلب الأكواد من السحابة... ⏳</div>`;
 
             fetch(`${scriptURL}?action=get_quiz_history`)
             .then(r => r.json())
@@ -1518,15 +1505,15 @@
                                 <div style="font-size:12px; color:#7f8c8d;" dir="ltr">${quiz.date}</div>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--category-bg); padding:8px; border-radius:4px; border: 1px solid #ecf0f1;">
-                                <input type="text" value="${quiz.url}" readonly style="flex:1; border:none; background:transparent; outline:none; font-family:monospace; font-size:13px; color:#34495e; direction:ltr; text-align:left;">
-                                <button onclick="navigator.clipboard.writeText('${quiz.url}'); alert('تم نسخ رابط ${quiz.name} بنجاح!');" style="background:#27ae60; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;">📋 نسخ</button>
+                                <input type="text" value="${quiz.url}" readonly style="flex:1; border:none; background:transparent; outline:none; font-family:monospace; font-size:18px; font-weight:bold; letter-spacing:2px; color:#34495e; direction:ltr; text-align:center;">
+                                <button onclick="navigator.clipboard.writeText('${quiz.url}'); alert('تم نسخ كود ${quiz.name} بنجاح!');" style="background:#27ae60; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;">📋 نسخ</button>
                                 <button onclick="deleteQuizHistory('${quiz.id}')" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; transition:0.2s;" title="حذف من السجل السحابي">🗑️</button>
                             </div>
                         </div>`;
                     });
                     container.innerHTML = html;
                 } else {
-                    container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px; background:var(--category-bg); border-radius:8px;">لا توجد روابط لاختبارات سابقة محفوظة في السحابة حتى الآن.</div>`;
+                    container.innerHTML = `<div style="text-align:center; color:#7f8c8d; font-size:14px; padding:15px; background:var(--category-bg); border-radius:8px;">لا توجد أكواد لاختبارات سابقة محفوظة في السحابة حتى الآن.</div>`;
                 }
             })
             .catch(err => {
@@ -1536,7 +1523,7 @@
 
         // ج. حذف الرابط من السحابة (جوجل شيت)
         function deleteQuizHistory(quizId) {
-            if(!confirm("⚠️ هل أنت متأكد من حذف هذا الرابط؟\n(سيتم حذفه من جميع أجهزتك نهائياً)")) return;
+            if(!confirm("⚠️ هل أنت متأكد من حذف هذا الكود؟\n(سيتم حذفه من جميع أجهزتك نهائياً)")) return;
             
             const container = document.getElementById('quizHistoryContainer');
             container.innerHTML = `<div style="text-align:center; color:#f39c12; font-size:14px; padding:15px;">جاري الحذف من السحابة... ⏳</div>`;
