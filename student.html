@@ -3,384 +3,439 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة مِحور التعليمية - بوابة الطلاب</title>
-    <meta name="theme-color" content="#2980b9">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-
+    <title>منصة مِحور - بوابة الطالب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            color: #2c3e50; 
-            min-height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        :root {
+            --primary: #2980b9;
+            --secondary: #27ae60;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --border-radius: 12px;
         }
 
-        .glass-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            z-index: -1;
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
         }
 
         .container {
-            background: #ffffff; 
-            width: 90%; 
-            max-width: 600px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
-            border-top: 6px solid #2980b9; 
-            padding: 30px; 
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-top: 20px;
+            border-top: 5px solid var(--primary);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed #eee;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
             box-sizing: border-box;
-            position: relative;
+            font-family: inherit;
+            font-size: 16px;
+            transition: 0.3s border-color;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+        }
+
+        .code-input {
+            font-size: 24px !important;
+            text-align: center;
+            letter-spacing: 5px;
+            font-family: monospace !important;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px dashed var(--primary) !important;
+            background: #f8fbff;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        button.btn-primary:hover {
+            background-color: #2471a3;
+            transform: translateY(-2px);
+        }
+
+        button.btn-success {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+            margin-top: 20px;
+        }
+
+        button.btn-success:hover {
+            background-color: #219653;
+        }
+
+        /* تنسيقات الاختبار */
+        .question-card {
+            background: #fdfefe;
+            border: 1px solid #e5e8e8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-right: 4px solid var(--primary);
+        }
+
+        .question-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f4f6f7;
+            border: 1px solid #d5dbdb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-label:hover {
+            background: #ebedef;
+        }
+
+        .option-label input[type="radio"] {
+            margin-left: 10px;
+            transform: scale(1.2);
+        }
+
+        #loading {
+            text-align: center;
+            display: none;
+            color: var(--primary);
+            font-weight: bold;
             margin: 20px 0;
         }
 
-        .header-text { text-align: center; margin-bottom: 25px; }
-        .header-text h2 { color: #2c3e50; margin: 0; font-size: 26px; font-family: 'Amiri', serif;}
-        .header-text p { color: #7f8c8d; margin-top: 5px; font-size: 15px; }
-        .author-badge {
-            background: #eaf2f8; color: #2980b9; padding: 5px 15px; border-radius: 20px;
-            font-size: 13px; font-weight: bold; display: inline-block; border: 1px solid #3498db;
-            margin-bottom: 15px;
+        .alert-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
         }
 
-        input[type="text"], input[type="number"], select, textarea {
-            width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; 
-            font-size: 16px; box-sizing: border-box; font-family: inherit; margin-bottom: 15px;
-            transition: 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #2980b9; outline: none; box-shadow: 0 0 5px rgba(41, 128, 185, 0.3);
+        .alert-error {
+            background-color: #fadbd8;
+            color: #c0392b;
+            border: 1px solid #f1948a;
         }
 
-        .btn-primary {
-            width: 100%; background: #27ae60; color: #fff; padding: 15px; border: none; 
-            border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; 
-            transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .btn-primary:hover { background: #219653; transform: translateY(-2px); }
-        .btn-primary:disabled { background: #95a5a6; cursor: not-allowed; transform: none; }
-
-        .question-card {
-            margin-bottom: 20px; background: #fff; padding: 20px; border-radius: 8px; 
-            border: 1px solid #dcdde1; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        .question-text { font-weight: bold; font-size: 17px; color: #2c3e50; margin-bottom: 15px; line-height: 1.5; }
-        
-        .radio-label {
-            display: block; margin-bottom: 10px; font-size: 16px; cursor: pointer; padding: 12px; 
-            background: #f8f9fa; border: 1px solid #bdc3c7; border-radius: 6px; transition: 0.2s;
-        }
-        .radio-label:hover { background: #eaf2f8; border-color: #2980b9; }
-        .radio-label input { margin-left: 10px; transform: scale(1.2); }
-
-        /* حماية الاختبار */
-        .no-select {
-            -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;
-            -moz-user-select: none; -ms-user-select: none; user-select: none;
-        }
-        input, textarea {
-            -webkit-user-select: text !important; -moz-user-select: text !important;
-            -ms-user-select: text !important; user-select: text !important;
-        }
-        
-        #offline-banner { 
-            display:none; background:#e74c3c; color:white; text-align:center; padding:8px; 
-            font-weight:bold; position:fixed; top:0; left:0; width:100%; z-index:99999; 
+        .alert-success {
+            background-color: #d5f5e3;
+            color: #27ae60;
+            border: 1px solid #82e0aa;
         }
     </style>
 </head>
-<body class="no-select">
-    <div class="glass-overlay"></div>
-    <div id="offline-banner">⚠️ أنت غير متصل بالإنترنت. يرجى التحقق من الشبكة!</div>
+<body>
 
-    <div class="container">
-        <div class="header-text">
-            <h2>منصة مِحور التعليمية</h2>
-            <p>بوابة التقييم والاختبارات الذكية</p>
-            <div class="author-badge">إعداد وتصميم: أ. معاذ اليعقوبي</div>
+    <div class="container" id="login-section">
+        <div class="header">
+            <h1>منصة مِحور - بوابة الاختبارات</h1>
+            <p>أدخل بياناتك وكود الاختبار للبدء</p>
         </div>
 
-        <div id="welcomePortal">
-            <h3 style="color: #2980b9; text-align: center; margin-bottom: 20px;">🎓 الدخول للاختبار</h3>
-            <input type="text" id="studentCodeInput" placeholder="أدخل كود الاختبار هنا (مثال: A1B2)" style="text-align: center; text-transform: uppercase; font-weight: bold; letter-spacing: 2px; font-size: 20px;">
-            <button onclick="submitStudentCode()" class="btn-primary">🚀 دخول</button>
+        <div id="login-alert" class="alert-box alert-error"></div>
+
+        <div class="form-group">
+            <label>اسم الطالب الثلاثي:</label>
+            <input type="text" id="studentName" placeholder="مثال: أحمد محمد عبدالله" required>
         </div>
 
-        <div id="registrationStep" style="display: none;">
-            <h3 style="color: #2980b9; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px;">📝 تسجيل بياناتك</h3>
-            
-            <label style="display: block; font-weight: bold; color: #34495e; margin-bottom: 8px;">الاسم الرباعي والقبيلة: <span style="color:red;">*</span></label>
-            <input type="text" id="stuName" placeholder="مثال: أحمد بن محمد بن علي اليعقوبي">
-
-            <label style="display: block; font-weight: bold; color: #34495e; margin-bottom: 8px;">الصف والشعبة: <span style="color:red;">*</span></label>
-            <select id="stuGrade" style="background-color: #fff;">
-                <option value="">-- يرجى الاختيار --</option>
-                <optgroup label="الصف السادس">
-                    <option value="6-1">السادس - شعبة 1</option>
-                    <option value="6-2">السادس - شعبة 2</option>
-                    <option value="6-3">السادس - شعبة 3</option>
-                    <option value="6-4">السادس - شعبة 4</option>
-                    <option value="6-5">السادس - شعبة 5</option>
-                </optgroup>
-                <optgroup label="الصف التاسع">
-                    <option value="9-1">التاسع - شعبة 1</option>
-                    <option value="9-2">التاسع - شعبة 2</option>
-                    <option value="9-3">التاسع - شعبة 3</option>
-                    <option value="9-4">التاسع - شعبة 4</option>
-                </optgroup>
-            </select>
-
-            <button onclick="startQuizProcess()" id="btnStartQuiz" class="btn-primary">بدء الاختبار الآن</button>
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <div style="flex: 1;">
+                <label>الصف:</label>
+                <select id="studentGrade">
+                    <option value="6">الصف السادس</option>
+                    <option value="9">الصف التاسع</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label>الشعبة:</label>
+                <select id="studentSection">
+                    <option value="1">شعبة 1</option>
+                    <option value="2">شعبة 2</option>
+                    <option value="3">شعبة 3</option>
+                    <option value="4">شعبة 4</option>
+                    <option value="5">شعبة 5</option>
+                </select>
+            </div>
         </div>
 
-        <div id="quizStep" style="display: none;"></div>
+        <div class="form-group" style="margin-top: 30px;">
+            <label style="text-align: center; color: var(--primary); font-size: 18px;">🔑 كود الاختبار:</label>
+            <input type="text" id="quizCode" class="code-input" placeholder="XXXX" maxlength="10" required>
+        </div>
 
+        <button class="btn-primary" id="btn-enter" onclick="fetchQuiz()">دخول للاختبار 🚀</button>
+        <div id="loading">⏳ جاري البحث عن الاختبار... يرجى الانتظار</div>
+    </div>
+
+    <div class="container" id="quiz-section" style="display: none;">
+        <div class="header">
+            <h1 id="display-quiz-name">عنوان الاختبار</h1>
+            <p>الطالب: <span id="display-student-name" style="font-weight:bold; color:var(--primary);"></span> | الصف: <span id="display-student-class"></span></p>
+        </div>
+
+        <div id="questions-wrapper">
+            </div>
+
+        <button class="btn-success" id="btn-submit" onclick="submitAnswers()">📤 تسليم الإجابات النهائية</button>
+        <div id="submit-loading" style="display:none; text-align:center; font-weight:bold; margin-top:15px; color:#27ae60;">⏳ جاري إرسال الإجابات للمعلم...</div>
+    </div>
+
+    <div class="container" id="success-section" style="display: none; text-align: center;">
+        <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
+        <h2 style="color: var(--secondary);">تم استلام إجاباتك بنجاح!</h2>
+        <p style="color: #7f8c8d; font-size: 16px; line-height: 1.6;">شكراً لك. لقد تم حفظ درجاتك وإرسالها إلى منصة المعلم بشكل آمن.<br>يمكنك إغلاق هذه الصفحة الآن.</p>
     </div>
 
     <script>
-        // رابط السيرفر الخاص بالمعلم (لا تقم بتغييره لكي تصلك البيانات)
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbz1hHj_c7vMO19JAUQCrMfBsfw4mydSLjlZP0e5CaPGsKXvB5S3ZSviRYo3ZjaQ1hc4Hg/exec';
+        // 🚨🚨🚨 ضع رابط السكربت الخاص بك هنا 🚨🚨🚨
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySwBY1zNiHN55KA6UVowKJqCcxEPGGlG8PWTLSQ9aoGGcWbxIzXuNrtpcl21ggajBFCQ/exec';
         
-        let currentQuizId = '';
-        let cheatAttempts = 0;
-        let isQuizActive = false;
+        let currentQuestions = [];
+        let cheatCount = 0;
 
-        // التحقق عند تحميل الصفحة إذا كان الطالب قد دخل عبر رابط مباشر يحتوي على الكود
-        window.onload = () => { 
-            const urlParams = new URLSearchParams(window.location.search);
-            const quizIdParam = urlParams.get('q');
-            
-            if (quizIdParam) {
-                currentQuizId = quizIdParam.trim().toUpperCase();
-                document.getElementById('welcomePortal').style.display = 'none';
-                document.getElementById('registrationStep').style.display = 'block';
+        // مراقبة خروج الطالب من الصفحة (تنبيه غش)
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && document.getElementById('quiz-section').style.display === 'block') {
+                cheatCount++;
+                alert("⚠️ تحذير: لقد قمت بالخروج من شاشة الاختبار! تم تسجيل هذه المحاولة وإرسالها للمعلم.");
             }
-        };
+        });
 
-        function submitStudentCode() {
-            const code = document.getElementById('studentCodeInput').value.trim();
-            if(code) {
-                // إعادة توجيه لنفس الصفحة مع وضع الكود في الرابط
-                window.location.href = "?q=" + code.toUpperCase();
-            } else {
-                alert("⚠️ الرجاء إدخال كود الاختبار أولاً.");
-            }
+        function showAlert(msg) {
+            const alertBox = document.getElementById('login-alert');
+            alertBox.innerText = msg;
+            alertBox.style.display = 'block';
+            setTimeout(() => alertBox.style.display = 'none', 5000);
         }
 
-        function startQuizProcess() {
-            const name = document.getElementById('stuName').value.trim();
-            const grade = document.getElementById('stuGrade').value;
-            
-            if(!name || !grade) {
-                alert("⚠️ الرجاء كتابة الاسم الرباعي واختيار الصف والشعبة للبدء!");
-                return;
+        function fetchQuiz() {
+            const name = document.getElementById('studentName').value.trim();
+            const code = document.getElementById('quizCode').value.trim().toUpperCase();
+
+            if (!name || !code) {
+                return showAlert("الرجاء إدخال اسمك وكود الاختبار بشكل صحيح.");
             }
 
-            const btn = document.getElementById('btnStartQuiz');
-            btn.disabled = true;
-            btn.innerHTML = "⏳ جاري تحضير الأسئلة...";
+            document.getElementById('btn-enter').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
 
-            // الاتصال بالسيرفر لجلب الأسئلة
-            fetch(`${scriptURL}?action=get_quiz&quizId=${currentQuizId}`)
-            .then(r => r.json())
-            .then(data => {
-                if(data.status === "success" && data.questions) {
-                    document.getElementById('registrationStep').style.display = 'none';
-                    document.getElementById('quizStep').style.display = 'block';
-                    
-                    enableAntiCheat();
-                    renderQuestionsForStudent(data.questions, name, grade);
-                } else {
-                    alert("❌ عذراً، لم يتم العثور على الاختبار. تأكد من صحة الكود من المعلم.");
-                    btn.disabled = false;
-                    btn.innerHTML = "بدء الاختبار الآن";
-                }
-            })
-            .catch(err => {
-                alert("❌ حدث خطأ في الاتصال بالإنترنت. يرجى المحاولة مرة أخرى.");
-                btn.disabled = false;
-                btn.innerHTML = "بدء الاختبار الآن";
-            });
+            // الاتصال بالسيرفر للبحث عن الكود
+            fetch(`${SCRIPT_URL}?action=get_quiz&quizId=${code}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('btn-enter').style.display = 'block';
+
+                    if (data.status === "success") {
+                        startQuizUI(data.quizName, data.questions);
+                    } else {
+                        showAlert(data.message || "عذراً، الكود غير صحيح أو الاختبار غير متاح.");
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('btn-enter').style.display = 'block';
+                    showAlert("حدث خطأ في الاتصال. تأكد من الإنترنت وحاول مجدداً.");
+                });
         }
 
-        function renderQuestionsForStudent(questions, studentName, studentGrade) {
-            let html = `
-                <div style="background: #eafaf1; border: 1px solid #27ae60; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; color: #2c3e50;">
-                    👋 أهلاً بك يا بطل: ${studentName} <br>
-                    <span style="font-size: 13px; color: #7f8c8d;">الصف: ${studentGrade.replace('-', ' شعبة ')}</span>
-                </div>
-            `;
+        function startQuizUI(quizName, questions) {
+            currentQuestions = questions;
             
-            questions.forEach((q, i) => {
-                html += `<div class="question-card">
-                            <div class="question-text">السؤال ${i+1}: ${q.question}</div>`;
-                
-                if(q.type === 'mcq') {
-                    q.options.forEach(opt => {
-                        html += `
-                        <label class="radio-label">
-                            <input type="radio" name="q_${i}" value="${opt}"> ${opt}
-                        </label>`;
+            // إخفاء تسجيل الدخول وإظهار الاختبار
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+
+            // تعبئة البيانات في الأعلى
+            document.getElementById('display-quiz-name').innerText = quizName;
+            document.getElementById('display-student-name').innerText = document.getElementById('studentName').value;
+            document.getElementById('display-student-class').innerText = document.getElementById('studentGrade').options[document.getElementById('studentGrade').selectedIndex].text + " / " + document.getElementById('studentSection').options[document.getElementById('studentSection').selectedIndex].text;
+
+            // رسم الأسئلة
+            const wrapper = document.getElementById('questions-wrapper');
+            wrapper.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                let questionHTML = `
+                    <div class="question-card">
+                        <div class="question-title">${index + 1}. ${q.question}</div>
+                `;
+
+                if (q.type === 'mcq') {
+                    questionHTML += `<div class="options-container">`;
+                    q.options.forEach((opt, optIndex) => {
+                        questionHTML += `
+                            <label class="option-label">
+                                <input type="radio" name="q_${index}" value="${opt}">
+                                ${opt}
+                            </label>
+                        `;
                     });
-                } else if(q.type === 'long') {
-                    html += `<textarea id="q_${i}" rows="5" placeholder="اكتب إجابتك بالتفصيل هنا..."></textarea>`;
-                } else {
-                    html += `<input type="text" id="q_${i}" placeholder="إجابتك...">`;
+                    questionHTML += `</div>`;
+                } 
+                else if (q.type === 'long') {
+                    questionHTML += `<textarea id="q_${index}" rows="4" placeholder="اكتب إجابتك هنا بتفصيل..."></textarea>`;
+                } 
+                else {
+                    questionHTML += `<input type="text" id="q_${index}" placeholder="إجابة قصيرة...">`;
                 }
-                html += '</div>';
+
+                questionHTML += `</div>`;
+                wrapper.innerHTML += questionHTML;
             });
-
-            html += `<button id="btnSubmitQuiz" onclick="submitStudentAnswers('${studentName}', '${studentGrade}')" class="btn-primary" style="background:#2980b9;">📤 إنهاء وتسليم الاختبار</button>`;
-
-            document.getElementById('quizStep').innerHTML = html;
         }
 
-        function submitStudentAnswers(studentName, studentGrade) {
-            disableAntiCheat();
-            
+        function submitAnswers() {
+            // تجميع الإجابات
             let answers = [];
-            let i = 0;
-            while(true) {
-                let elText = document.getElementById(`q_${i}`);
-                let elRadio = document.querySelector(`input[name="q_${i}"]:checked`);
-                let radioNodes = document.querySelectorAll(`input[name="q_${i}"]`);
-                
-                if(!elText && radioNodes.length === 0) break;
-                
-                let ans = "";
-                if(elText) ans = elText.value;
-                else if(elRadio) ans = elRadio.value;
-                
-                answers.push({ qNum: i+1, answer: ans });
-                i++;
-            }
+            let allAnswered = true;
 
-            const btnSubmit = document.getElementById('btnSubmitQuiz');
-            if(btnSubmit) {
-                btnSubmit.innerHTML = "⏳ جاري تسليم الاختبار للمعلم...";
-                btnSubmit.disabled = true;
-            }
+            for (let i = 0; i < currentQuestions.length; i++) {
+                let qType = currentQuestions[i].type;
+                let studentAnswer = "";
 
-            const payload = {
-                action: "submit_quiz_answers",
-                quizId: currentQuizId,
-                studentName: studentName,
-                studentGrade: studentGrade,
-                answers: answers,
-                cheatAttempts: cheatAttempts
-            };
+                if (qType === 'mcq') {
+                    let selected = document.querySelector(`input[name="q_${i}"]:checked`);
+                    if (selected) studentAnswer = selected.value;
+                } else {
+                    let inputField = document.getElementById(`q_${i}`);
+                    if (inputField) studentAnswer = inputField.value.trim();
+                }
 
-            fetch(scriptURL, { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-                body: JSON.stringify(payload) 
-            })
-            .then(r => r.json())
-            .then(d => {
-                showSuccessScreen(studentName, false);
-            })
-            .catch(e => {
-                // حفظ محلي في حال انقطاع النت وقت التسليم
-                let offlineSubmissions = JSON.parse(localStorage.getItem('offlineQuizSubmissions') || '[]');
-                offlineSubmissions.push(payload);
-                localStorage.setItem('offlineQuizSubmissions', JSON.stringify(offlineSubmissions));
-                showSuccessScreen(studentName, true);
-            });
-        }
+                if (!studentAnswer) {
+                    allAnswered = false;
+                }
 
-        function showSuccessScreen(studentName, offline) {
-            let msg = offline ? 
-                "تم حفظ إجاباتك في جهازك (سيتم الإرسال للمعلم عند عودة الإنترنت)." : 
-                "تم إرسال إجاباتك إلى أستاذ المادة بنجاح.";
-                
-            document.getElementById('quizStep').innerHTML = `
-                <div style="text-align: center; padding: 30px 10px;">
-                    <div style="font-size: 60px; margin-bottom: 15px;">🎉</div>
-                    <h2 style="color:#27ae60; margin-bottom: 10px;">تم استلام إجاباتك بنجاح!</h2>
-                    <p style="color: #34495e; font-size: 16px; font-weight: bold;">أحسنت يا ${studentName}</p>
-                    <p style="color: #7f8c8d; font-size: 14px; line-height: 1.6;">${msg} <br> يمكنك الآن إغلاق هذه الصفحة بأمان.</p>
-                    ${cheatAttempts > 0 ? `<div style="margin-top:20px; padding:10px; background:#fdebd0; border:1px solid #e67e22; border-radius:6px;"><p style="color:#c0392b; font-size:13px; font-weight:bold; margin:0;">⚠️ تنبيه: تم إشعار المعلم بتسجيل (${cheatAttempts}) محاولات خروج من نافذة الاختبار.</p></div>` : ''}
-                </div>
-            `;
-        }
-
-        // --- نظام حماية الاختبار (منع الغش) ---
-        function enableAntiCheat() {
-            isQuizActive = true;
-            cheatAttempts = 0;
-            
-            // منع النسخ واللصق والنقر الأيمن
-            document.addEventListener('contextmenu', preventDefaultAction);
-            document.addEventListener('copy', preventCopy);
-            document.addEventListener('cut', preventDefaultAction);
-            document.addEventListener('paste', preventPaste);
-            
-            // مراقبة خروج الطالب من الشاشة
-            document.addEventListener('visibilitychange', handleVisibilityChange);
-            window.addEventListener('blur', handleWindowBlur);
-        }
-
-        function disableAntiCheat() {
-            isQuizActive = false;
-            document.removeEventListener('contextmenu', preventDefaultAction);
-            document.removeEventListener('copy', preventCopy);
-            document.removeEventListener('cut', preventDefaultAction);
-            document.removeEventListener('paste', preventPaste);
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            window.removeEventListener('blur', handleWindowBlur);
-        }
-
-        const preventDefaultAction = (e) => { e.preventDefault(); };
-        const preventCopy = (e) => { e.preventDefault(); alert("⚠️ عذراً، عملية النسخ غير مسموحة أثناء الاختبار."); };
-        const preventPaste = (e) => { e.preventDefault(); alert("⚠️ عذراً، عملية اللصق غير مسموحة أثناء الاختبار."); };
-
-        function handleVisibilityChange() {
-            if (document.hidden && isQuizActive) registerCheatAttempt();
-        }
-
-        function handleWindowBlur() {
-            if (isQuizActive) {
-                setTimeout(() => {
-                    if(isQuizActive && document.hidden === false) registerCheatAttempt();
-                }, 100);
-            }
-        }
-
-        function registerCheatAttempt() {
-            cheatAttempts++;
-            alert(`⚠️ تحذير أمني (${cheatAttempts}): الرجاء العودة لصفحة الاختبار فوراً! يُمنع فتح تطبيقات أو نوافذ أخرى أثناء الحل.\nسيتم إبلاغ المعلم بذلك.`);
-        }
-
-        // --- مراقبة الإنترنت ---
-        window.addEventListener('online', () => { 
-            document.getElementById('offline-banner').style.display = 'none'; 
-            syncOfflineData(); 
-        });
-        window.addEventListener('offline', () => { 
-            document.getElementById('offline-banner').style.display = 'block'; 
-        });
-
-        function syncOfflineData() {
-            let offlineSubmissions = JSON.parse(localStorage.getItem('offlineQuizSubmissions') || '[]');
-            if(offlineSubmissions.length > 0) {
-                let payload = offlineSubmissions.pop(); // نأخذ آخر اختبار تم حفظه
-                fetch(scriptURL, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-                    body: JSON.stringify(payload) 
-                }).then(() => {
-                    localStorage.setItem('offlineQuizSubmissions', JSON.stringify(offlineSubmissions));
+                answers.push({
+                    question: currentQuestions[i].question,
+                    answer: studentAnswer || "لم يجب"
                 });
             }
+
+            if (!allAnswered) {
+                if (!confirm("⚠️ توجد أسئلة لم تقم بالإجابة عليها! هل أنت متأكد من رغبتك في التسليم؟")) {
+                    return;
+                }
+            }
+
+            // إعداد البيانات للإرسال
+            const payload = {
+                action: "submit",
+                studentName: document.getElementById('studentName').value,
+                grade: document.getElementById('studentGrade').value,
+                section: document.getElementById('studentSection').value,
+                studentId: document.getElementById('quizCode').value.toUpperCase(),
+                cheatCount: cheatCount,
+                answers: answers
+            };
+
+            const btn = document.getElementById('btn-submit');
+            const loading = document.getElementById('submit-loading');
+            
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+
+            // إرسال البيانات لجوجل شيت
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('quiz-section').style.display = 'none';
+                document.getElementById('success-section').style.display = 'block';
+            })
+            .catch(error => {
+                alert("حدث خطأ أثناء إرسال الإجابات. تأكد من اتصالك بالإنترنت.");
+                btn.style.display = 'block';
+                loading.style.display = 'none';
+            });
         }
     </script>
 </body>
